@@ -175,20 +175,7 @@ namespace ElectronicObserver.Observer {
                         }
                         else
                         {
-                            Response fakeResponse = new Response();
-                            fakeResponse.ResponseStatusCode = "304";
-                            fakeResponse.ResponseStatusDescription = "Not Modified";
-                            
-                            fakeResponse.ResponseHeaders.Add(new HttpHeader("Cache-Control", "public, no-cache, max-age=0"));
-                            fakeResponse.ResponseHeaders.Add(new HttpHeader("Connection", "keep-alive"));
-                            fakeResponse.ResponseHeaders.Add(new HttpHeader("Date", DateTime.Now.ToString()));
-                            fakeResponse.ResponseHeaders.Add(new HttpHeader("Last-Modified", cacheControl[path].Item1.ToString()));
-                            fakeResponse.ResponseHeaders.Add(new HttpHeader("Pragma", "public, no-cache"));
-                            fakeResponse.ResponseHeaders.Add(new HttpHeader("Server", "nginx"));
-
-                            e.Respond(fakeResponse);
-                            // Dirty reflection. I'll bother with implementing this into Titanium later. For now, this'll have to do.
-                            e.ProxySession.Request.GetType().GetProperty("CancelRequest").SetValue(e.ProxySession.Request, true);
+                            e.NotModified(cacheControl[path].Item1);
                         }
                     }
                 }
