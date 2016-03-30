@@ -114,7 +114,7 @@ namespace ElectronicObserver.Window {
 					tooltip.SetToolTip( ShipName, name );
 					CompletionTime.Text = DateTimeHelper.ToTimeRemainString( arsenal.CompletionTime );
 					CompletionTime.Tag = arsenal.CompletionTime;
-					tooltip.SetToolTip( CompletionTime, GeneralRes.TimeToCompletion + ":" + arsenal.CompletionTime.ToString() );
+					tooltip.SetToolTip( CompletionTime, GeneralRes.TimeToCompletion + ": " + arsenal.CompletionTime.ToString() );
 
 				} else if ( arsenal.State == 3 ) {
 					//complete!
@@ -138,6 +138,8 @@ namespace ElectronicObserver.Window {
 
 
 			public void ConfigurationChanged( FormArsenal parent ) {
+                ShipName.ForeColor = parent.ForeColor;
+                CompletionTime.ForeColor = parent.ForeColor;
 				ShipName.Font = parent.Font;
 				CompletionTime.Font = parent.Font;
 			}

@@ -243,7 +243,7 @@ namespace ElectronicObserver.Window {
 				int large = db.UseItems[12] != null ? db.UseItems[12].Count : 0;
 
 				ToolTipInfo.SetToolTip( FurnitureCoin,
-						string.Format( "(小) x {0} ( +{1} )\r\n(中) x {2} ( +{3} )\r\n(大) x {4} ( +{5} )\r\n",
+						string.Format( "(" + GeneralRes.Small + ") x {0} ( +{1} )\r\n(" + GeneralRes.Medium + ") x {2} ( +{3} )\r\n(" + GeneralRes.Large + ") x {4} ( +{5} )\r\n",
 							small, small * 200,
 							medium, medium * 400,
 							large, large * 700 ) );

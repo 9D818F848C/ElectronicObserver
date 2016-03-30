@@ -351,4 +351,10 @@ Maximum: {2} Steel / {3} Fuel
   <data name="Unknown" xml:space="preserve">
     <value>(Unknown)</value>
   </data>
+  <data name="Drop" xml:space="preserve">
+    <value>(Drop)</value>
+  </data>
+  <data name="Full" xml:space="preserve">
+    <value>(Full)</value>
+  </data>
 </root>

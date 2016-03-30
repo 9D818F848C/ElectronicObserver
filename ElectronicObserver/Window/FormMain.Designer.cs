@@ -60,6 +60,7 @@
 			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
 			this.StripMenu_View_Browser = new System.Windows.Forms.ToolStripMenuItem();
 			this.StripMenu_View_Log = new System.Windows.Forms.ToolStripMenuItem();
+            this.StripMenu_View_Dialogue = new System.Windows.Forms.ToolStripMenuItem();
 			this.StripMenu_WindowCapture = new System.Windows.Forms.ToolStripMenuItem();
 			this.StripMenu_WindowCapture_SubWindow = new System.Windows.Forms.ToolStripMenuItem();
 			this.StripMenu_WindowCapture_AttachAll = new System.Windows.Forms.ToolStripMenuItem();
@@ -232,6 +233,7 @@
             this.toolStripSeparator4,
             this.StripMenu_View_Browser,
             this.StripMenu_View_Log,
+            this.StripMenu_View_Dialogue,
             this.StripMenu_WindowCapture});
 			this.StripMenu_View.Name = "StripMenu_View";
 			this.StripMenu_View.Size = new System.Drawing.Size(61, 20);
@@ -379,6 +381,13 @@
 			this.StripMenu_View_Log.Size = new System.Drawing.Size(182, 22);
 			this.StripMenu_View_Log.Text = Menus.Log;
 			this.StripMenu_View_Log.Click += new System.EventHandler(this.StripMenu_View_Log_Click);
+            //
+            // StripMenu_View_Dialogue
+            //
+            this.StripMenu_View_Dialogue.Name = "StripMenu_View_Dialogue";
+            this.StripMenu_View_Dialogue.Size = new System.Drawing.Size(182, 22);
+            this.StripMenu_View_Dialogue.Text = "Dialogue";
+            this.StripMenu_View_Dialogue.Click += new System.EventHandler(this.StripMenu_View_Dialogue_Click);
 			// 
 			// StripMenu_WindowCapture
 			// 
@@ -695,6 +704,7 @@
 		private System.Windows.Forms.ToolStripMenuItem StripMenu_View_Log;
 		private System.Windows.Forms.ToolStripMenuItem StripMenu_View_Quest;
 		private System.Windows.Forms.ToolStripMenuItem StripMenu_View_Battle;
+        private System.Windows.Forms.ToolStripMenuItem StripMenu_View_Dialogue;
 		private System.Windows.Forms.ToolStripMenuItem StripMenu_Help;
 		private System.Windows.Forms.ToolStripMenuItem StripMenu_Help_Version;
 		private System.Windows.Forms.ToolStripMenuItem StripMenu_File;

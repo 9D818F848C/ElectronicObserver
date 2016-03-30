@@ -1,6 +1,5 @@
 ﻿using BrowserLib;
 using mshtml;
-using Nekoxy;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -102,6 +101,7 @@ namespace Browser {
             Thread.CurrentThread.CurrentUICulture = ui;
 
 			InitializeComponent();
+            SetUserAgent();
 
 			ServerUri = serverUri;
 			StyleSheetApplied = false;
@@ -530,7 +530,7 @@ namespace Browser {
 		public void SetProxy( string proxy ) {
 			ushort port;
 			if ( ushort.TryParse( proxy, out port ) ) {
-				WinInetUtil.SetProxyInProcessForNekoxy( port );
+				WinInetUtil.SetProxyInProcessForTitanium( port );
 			} else {
 				WinInetUtil.SetProxyInProcess( proxy, "local" );
 			}
@@ -611,6 +611,19 @@ namespace Browser {
 			Marshal.FreeHGlobal( cacheEntryInfoBuffer );
 
 		}
+
+        [DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
+        private static extern int UrlMkSetSessionOption(int dwOption, string pBuffer, int dwBufferLength, int dwReserved);
+
+        const int URLMON_OPTION_USERAGENT = 0x10000001;
+        const int URLMON_OPTION_USERAGENT_REFRESH = 0x10000002;
+
+        private void SetUserAgent()
+        {
+            string ua = "Mozilla/5.0 (Windows; U; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)";
+            UrlMkSetSessionOption(URLMON_OPTION_USERAGENT_REFRESH, null, 0, 0);
+            UrlMkSetSessionOption(URLMON_OPTION_USERAGENT, ua, ua.Length, 0);
+        }
 
         private void SetCookie()
         {

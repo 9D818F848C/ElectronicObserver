@@ -2,7 +2,10 @@
 using ElectronicObserver.Observer.kcsapi;
 using ElectronicObserver.Utility;
 using ElectronicObserver.Utility.Mathematics;
-using Nekoxy;
+using Titanium.Web.Proxy;
+using Titanium.Web.Proxy.Network;
+using Titanium.Web.Proxy.Extensions;
+using Titanium.Web.Proxy.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,6 +43,10 @@ namespace ElectronicObserver.Observer {
 
 		private Control UIControl;
 		private APIKancolleDB DBSender;
+
+        // Item 1: it's last modified time.
+        // Item 2: the time we're expected to ask for cache control.
+        private Dictionary<string, Tuple<DateTime, DateTime>> cacheControl;
 
 		private APIObserver() {
 
@@ -112,37 +119,240 @@ namespace ElectronicObserver.Observer {
 
 			DBSender = new APIKancolleDB();
 
-			HttpProxy.AfterSessionComplete += HttpProxy_AfterSessionComplete;
+            cacheControl = new Dictionary<string, Tuple<DateTime, DateTime>>();
+
+            //HttpProxy.AfterSessionComplete += HttpProxy_AfterSessionComplete;
+            //HttpProxy.AfterReadRequestHeaders += HttpProxy_AfterReadRequestHeaders;
+            //HttpProxy.AfterReadResponseHeaders += HttpProxy_AfterReadResponseHeaders;
+            ProxyServer.BeforeRequest += ProxyServer_BeforeRequest;
+            ProxyServer.BeforeResponse += ProxyServer_BeforeResponse;
+            
+            
 		}
 
+        private void ProxyServer_BeforeRequest(object sender, Titanium.Web.Proxy.EventArguments.SessionEventArgs e)
+        {
+            var request = e.ProxySession.Request;
+            string path = request.RequestUri.PathAndQuery;
+            Utility.Configuration.ConfigurationData.ConfigConnection c = Utility.Configuration.Config.Connection;
+
+            if (path.Contains("/kcsapi/"))
+            {
+                string body = e.GetRequestBodyAsString();
+
+                //保存
+                if (c.SaveReceivedData && c.SaveRequest)
+                {
+                    Task.Run((Action)(() => {
+                        SaveRequest(path, body);
+                    }));
+                }
+                UIControl.BeginInvoke((Action)(() => { LoadRequest(path, body); }));
+            }
+            if (path.Contains(".mp3"))
+            {
+                Logger.Add(1, $"Requesting audio: {path}");
+                string[] substrings = path.Split('/');
+                switch (substrings[3])
+                {
+                    case "titlecall":
+                        DialogueTranslator.Add(DialogueType.Titlecall, substrings[4], substrings[5].Split('.')[0]);
+                        break;
+                    case "kc9999":
+                        DialogueTranslator.Add(DialogueType.NPC, "npc", substrings[4].Split('.')[0]);
+                        break;
+                    default:
+                        DialogueTranslator.Add(DialogueType.Shipgirl, substrings[3].Substring(2), substrings[4].Split('.')[0]);
+                        break;
+                }
+                if (request.RequestHeaders.Where(h => h.Name == "If-Modified-Since").Count() > 0)
+                {
+                    if(cacheControl.ContainsKey(path))
+                    {
+                        if(cacheControl[path].Item2 < DateTime.Now)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            Response fakeResponse = new Response();
+                            fakeResponse.ResponseStatusCode = "304";
+                            fakeResponse.ResponseStatusDescription = "Not Modified";
+                            
+                            fakeResponse.ResponseHeaders.Add(new HttpHeader("Cache-Control", "public, no-cache, max-age=0"));
+                            fakeResponse.ResponseHeaders.Add(new HttpHeader("Connection", "keep-alive"));
+                            fakeResponse.ResponseHeaders.Add(new HttpHeader("Date", DateTime.Now.ToString()));
+                            fakeResponse.ResponseHeaders.Add(new HttpHeader("Last-Modified", cacheControl[path].Item1.ToString()));
+                            fakeResponse.ResponseHeaders.Add(new HttpHeader("Pragma", "public, no-cache"));
+                            fakeResponse.ResponseHeaders.Add(new HttpHeader("Server", "nginx"));
+
+                            e.Respond(fakeResponse);
+                            // Dirty reflection. I'll bother with implementing this into Titanium later. For now, this'll have to do.
+                            e.ProxySession.Request.GetType().GetProperty("CancelRequest").SetValue(e.ProxySession.Request, true);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ProxyServer_BeforeResponse(object sender, Titanium.Web.Proxy.EventArguments.SessionEventArgs e)
+        {
+            Utility.Configuration.ConfigurationData.ConfigConnection c = Utility.Configuration.Config.Connection;
+
+            string path = e.ProxySession.Request.RequestUri.PathAndQuery;
+            if(path.Contains(".mp3"))
+            {
+                var cacheControlHeader = e.ProxySession.Response.ResponseHeaders.Where(h => h.Name == "Cache-Control").First();
+                var lastModifiedHeader = e.ProxySession.Response.ResponseHeaders.Where(h => h.Name == "Last-Modified").First();
+                Regex re = new Regex("([0-9]+)");
+                var match = re.Match(cacheControlHeader.Value);
+                if(!string.IsNullOrWhiteSpace(match.Value))
+                {
+                    int seconds = int.Parse(match.Value);
+                    cacheControl.Add(path, new Tuple<DateTime, DateTime>(DateTime.Parse(lastModifiedHeader.Value), DateTime.Now.AddSeconds(seconds)));
+                }
+                cacheControlHeader.Value = "public, no-cache, max-age=0";
+            }
+            if (c.SaveReceivedData)
+            {
+
+                try
+                {
+
+                    if (!Directory.Exists(c.SaveDataPath))
+                        Directory.CreateDirectory(c.SaveDataPath);
+
+
+                    if (c.SaveResponse && path.Contains("/kcsapi/"))
+                    {
+
+                        // 非同期で書き出し処理するので取っておく
+                        // stringはイミュータブルなのでOK
+                        string body = e.GetResponseBodyAsString();
+
+                        Task.Run((Action)(() => {
+                            SaveResponse(path, body);
+                        }));
+
+                    }
+                    else if (path.Contains("/kcs/") &&
+                      ((c.SaveSWF && e.ResponseContentType == "application/x-shockwave-flash") || c.SaveOtherFile))
+                    {
+
+                        string saveDataPath = c.SaveDataPath; // スレッド間の競合を避けるため取っておく
+                        string tpath = string.Format("{0}\\{1}", saveDataPath, path.Substring(path.IndexOf("/kcs/") + 5).Replace("/", "\\"));
+                        {
+                            int index = tpath.IndexOf("?");
+                            if (index != -1)
+                            {
+                                if (Utility.Configuration.Config.Connection.ApplyVersion)
+                                {
+                                    string over = tpath.Substring(index + 1);
+                                    int vindex = over.LastIndexOf("VERSION=", StringComparison.CurrentCultureIgnoreCase);
+                                    if (vindex != -1)
+                                    {
+                                        string version = over.Substring(vindex + 8).Replace('.', '_');
+                                        tpath = tpath.Insert(tpath.LastIndexOf('.', index), "_v" + version);
+                                        index += version.Length + 2;
+                                    }
+
+                                }
+
+                                tpath = tpath.Remove(index);
+                            }
+                        }
+
+                        // 非同期で書き出し処理するので取っておく
+                        byte[] responseCopy = e.GetResponseBody();
+
+                        Task.Run((Action)(() => {
+                            try
+                            {
+                                lock (this)
+                                {
+                                    // 同時に書き込みが走るとアレなのでロックしておく
+
+                                    Directory.CreateDirectory(Path.GetDirectoryName(tpath));
+
+                                    //System.Diagnostics.Debug.WriteLine( oSession.fullUrl + " => " + tpath );
+                                    using (var sw = new System.IO.BinaryWriter(System.IO.File.OpenWrite(tpath)))
+                                    {
+                                        sw.Write(responseCopy);
+                                    }
+                                }
+
+                                Utility.Logger.Add(1, string.Format(LoggerRes.SavedAPI, tpath.Remove(0, saveDataPath.Length + 1)));
+
+                            }
+                            catch (IOException ex)
+                            {   //ファイルがロックされている; 頻繁に出るのでエラーレポートを残さない
+
+                                Utility.Logger.Add(3, LoggerRes.FailedSaveAPI + ex.Message);
+                            }
+                        }));
+
+                    }
+
+                }
+                catch (Exception ex)
+                {
+
+                    Utility.ErrorReporter.SendErrorReport(ex, LoggerRes.FailedSaveAPI);
+                }
+            }
 
 
 
-		/// <summary>
-		/// 通信の受信を開始します。
-		/// </summary>
-		/// <param name="portID">受信に使用するポート番号。</param>
-		/// <param name="UIControl">GUI スレッドで実行するためのオブジェクト。中身は何でもいい</param>
-		/// <returns>実際に使用されるポート番号。</returns>
-		public int Start( int portID, Control UIControl ) {
+
+            if (path.Contains("/kcsapi/") && e.ResponseContentType == "text/plain")
+            {
+
+                // 非同期でGUIスレッドに渡すので取っておく
+                // stringはイミュータブルなのでOK
+                string body = e.GetResponseBodyAsString();
+                UIControl.BeginInvoke((Action)(() => { LoadResponse(path, body); }));
+
+                // kancolle-db.netに送信する
+                if (Utility.Configuration.Config.Connection.SendDataToKancolleDB)
+                {
+                    Task.Run((Action)(() => DBSender.ExecuteSession(e)));
+                }
+
+            }
+
+            if (ServerAddress == null && path.Contains("/kcsapi/"))
+            {
+                ServerAddress = e.ProxySession.Request.RequestUri.Host;
+            }
+        }
+        
+        /// <summary>
+        /// 通信の受信を開始します。
+        /// </summary>
+        /// <param name="portID">受信に使用するポート番号。</param>
+        /// <param name="UIControl">GUI スレッドで実行するためのオブジェクト。中身は何でもいい</param>
+        /// <returns>実際に使用されるポート番号。</returns>
+        public int Start( int portID, Control UIControl ) {
 
 			Utility.Configuration.ConfigurationData.ConfigConnection c = Utility.Configuration.Config.Connection;
 
 
 			this.UIControl = UIControl;
-			HttpProxy.Shutdown();
+           
 			try {
 
-				if ( c.UseUpstreamProxy )
-					HttpProxy.UpstreamProxyConfig = new ProxyConfig( ProxyConfigType.SpecificProxy, c.UpstreamProxyAddress, c.UpstreamProxyPort );
-				else if ( c.UseSystemProxy )
-					HttpProxy.UpstreamProxyConfig = new ProxyConfig( ProxyConfigType.SystemProxy );
-				else
-					HttpProxy.UpstreamProxyConfig = new ProxyConfig( ProxyConfigType.DirectAccess );
+                //if ( c.UseUpstreamProxy )
+                //	HttpProxy.UpstreamProxyConfig = new ProxyConfig( ProxyConfigType.SpecificProxy, c.UpstreamProxyAddress, c.UpstreamProxyPort );
+                //else if ( c.UseSystemProxy )
+                //	HttpProxy.UpstreamProxyConfig = new ProxyConfig( ProxyConfigType.SystemProxy );
+                //else
+                //	HttpProxy.UpstreamProxyConfig = new ProxyConfig( ProxyConfigType.DirectAccess );
 
-				HttpProxy.Startup( portID, false, false );
-				ProxyPort = portID;
-
+                //HttpProxy.Startup( portID, false, false );
+                var endPoint = new ExplicitProxyEndPoint(System.Net.IPAddress.Any, portID, false);
+                ProxyPort = portID;
+                ProxyServer.AddEndPoint(endPoint);
+                ProxyServer.Start();
 
 				ProxyStarted();
 				Utility.Logger.Add( 2, string.Format( LoggerRes.APIObserverStarted, portID ) );
@@ -162,7 +372,7 @@ namespace ElectronicObserver.Observer {
 		/// </summary>
 		public void Stop() {
 
-			HttpProxy.Shutdown();
+            ProxyServer.Stop();
 
 			Utility.Logger.Add( 2, LoggerRes.APIObserverStopped );
 		}
@@ -179,135 +389,38 @@ namespace ElectronicObserver.Observer {
 
 
 
-		void HttpProxy_AfterSessionComplete( Session session ) {
+		//void HttpProxy_AfterSessionComplete( Session session ) {
 
-			Utility.Configuration.ConfigurationData.ConfigConnection c = Utility.Configuration.Config.Connection;
+		//	Utility.Configuration.ConfigurationData.ConfigConnection c = Utility.Configuration.Config.Connection;
 
-			string baseurl = session.Request.PathAndQuery;
+		//	string baseurl = session.Request.PathAndQuery;
 
-			//debug
-			//Utility.Logger.Add( 1, baseurl );
-
-
-			// request
-			if ( baseurl.Contains( "/kcsapi/" ) ) {
-
-				string url = baseurl;
-				string body = session.Request.BodyAsString;
-
-				//保存
-				if ( c.SaveReceivedData && c.SaveRequest ) {
-					Task.Run( (Action)( () => {
-						SaveRequest( url, body );
-					} ) );
-				}
-				UIControl.BeginInvoke( (Action)( () => { LoadRequest( url, body ); } ) );
-			}
+		//	//debug
+		//	//Utility.Logger.Add( 1, baseurl );
 
 
+		//	// request
+		//	if ( baseurl.Contains( "/kcsapi/" ) ) {
 
-			//response
-			//保存
-			if ( c.SaveReceivedData ) {
+		//		string url = baseurl;
+		//		string body = session.Request.BodyAsString;
 
-				try {
-
-					if ( !Directory.Exists( c.SaveDataPath ) )
-						Directory.CreateDirectory( c.SaveDataPath );
-
-
-					if ( c.SaveResponse && baseurl.Contains( "/kcsapi/" ) ) {
-
-						// 非同期で書き出し処理するので取っておく
-						// stringはイミュータブルなのでOK
-						string url = baseurl;
-						string body = session.Response.BodyAsString;
-
-						Task.Run( (Action)( () => {
-							SaveResponse( url, body );
-						} ) );
-
-					} else if ( baseurl.Contains( "/kcs/" ) &&
-						( ( c.SaveSWF && session.Response.MimeType == "application/x-shockwave-flash" ) || c.SaveOtherFile ) ) {
-
-						string saveDataPath = c.SaveDataPath; // スレッド間の競合を避けるため取っておく
-						string tpath = string.Format( "{0}\\{1}", saveDataPath, baseurl.Substring( baseurl.IndexOf( "/kcs/" ) + 5 ).Replace( "/", "\\" ) );
-						{
-							int index = tpath.IndexOf( "?" );
-							if ( index != -1 ) {
-								if ( Utility.Configuration.Config.Connection.ApplyVersion ) {
-									string over = tpath.Substring( index + 1 );
-									int vindex = over.LastIndexOf( "VERSION=", StringComparison.CurrentCultureIgnoreCase );
-									if ( vindex != -1 ) {
-										string version = over.Substring( vindex + 8 ).Replace( '.', '_' );
-										tpath = tpath.Insert( tpath.LastIndexOf( '.', index ), "_v" + version );
-										index += version.Length + 2;
-									}
-
-								}
-
-								tpath = tpath.Remove( index );
-							}
-						}
-
-						// 非同期で書き出し処理するので取っておく
-						byte[] responseCopy = new byte[session.Response.Body.Length];
-						Array.Copy( session.Response.Body, responseCopy, session.Response.Body.Length );
-
-						Task.Run( (Action)( () => {
-							try {
-								lock ( this ) {
-									// 同時に書き込みが走るとアレなのでロックしておく
-
-									Directory.CreateDirectory( Path.GetDirectoryName( tpath ) );
-
-									//System.Diagnostics.Debug.WriteLine( oSession.fullUrl + " => " + tpath );
-									using ( var sw = new System.IO.BinaryWriter( System.IO.File.OpenWrite( tpath ) ) ) {
-										sw.Write( responseCopy );
-									}
-								}
-
-								Utility.Logger.Add( 1, string.Format( LoggerRes.SavedAPI, tpath.Remove( 0, saveDataPath.Length + 1 ) ) );
-
-							} catch ( IOException ex ) {	//ファイルがロックされている; 頻繁に出るのでエラーレポートを残さない
-
-								Utility.Logger.Add( 3, LoggerRes.FailedSaveAPI + ex.Message );
-							}
-						} ) );
-
-					}
-
-				} catch ( Exception ex ) {
-
-					Utility.ErrorReporter.SendErrorReport( ex, LoggerRes.FailedSaveAPI );
-				}
-			}
+		//		//保存
+		//		if ( c.SaveReceivedData && c.SaveRequest ) {
+		//			Task.Run( (Action)( () => {
+		//				SaveRequest( url, body );
+		//			} ) );
+		//		}
+		//		UIControl.BeginInvoke( (Action)( () => { LoadRequest( url, body ); } ) );
+		//	}
 
 
 
+		//	//response
+		//	//保存
+			
 
-			if ( baseurl.Contains( "/kcsapi/" ) && session.Response.MimeType == "text/plain" ) {
-
-				// 非同期でGUIスレッドに渡すので取っておく
-				// stringはイミュータブルなのでOK
-				string url = baseurl;
-				string body = session.Response.BodyAsString;
-				UIControl.BeginInvoke( (Action)( () => { LoadResponse( url, body ); } ) );
-
-				// kancolle-db.netに送信する
-				if ( Utility.Configuration.Config.Connection.SendDataToKancolleDB ) {
-					Task.Run( (Action)( () => DBSender.ExecuteSession( session ) ) );
-				}
-
-			}
-
-
-
-			if ( ServerAddress == null && baseurl.Contains( "/kcsapi/" ) ) {
-				ServerAddress = session.Request.Headers.Host;
-			}
-
-		}
+		//}
 
 
 
@@ -317,7 +430,7 @@ namespace ElectronicObserver.Observer {
 
 			try {
 
-				Utility.Logger.Add( 1, LoggerRes.RecievedRequest + shortpath );
+				//Utility.Logger.Add( 1, LoggerRes.RecievedRequest + shortpath );
 
 				SystemEvents.UpdateTimerEnabled = false;
 
@@ -353,7 +466,7 @@ namespace ElectronicObserver.Observer {
 
 			try {
 
-				Utility.Logger.Add( 1, LoggerRes.RecievedResponse + shortpath );
+				//Utility.Logger.Add( 1, LoggerRes.RecievedResponse + shortpath );
 
 				SystemEvents.UpdateTimerEnabled = false;
 

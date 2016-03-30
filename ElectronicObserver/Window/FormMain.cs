@@ -62,6 +62,7 @@ namespace ElectronicObserver.Window {
 		public FormBrowserHost fBrowser;
 		public FormWindowCapture fWindowCapture;
         public FormXPCalculator fXPCalculator;
+        public FormDialogue fDialogue;
 
 		#endregion
 
@@ -190,6 +191,7 @@ namespace ElectronicObserver.Window {
 			SubForms.Add( fBrowser = new FormBrowserHost( this ) );
 			SubForms.Add( fWindowCapture = new FormWindowCapture( this ) );
             SubForms.Add(fXPCalculator = new FormXPCalculator(this));
+            SubForms.Add(fDialogue = new FormDialogue(this));
 
 
 			ConfigurationChanged();		//設定から初期化
@@ -1244,11 +1246,16 @@ namespace ElectronicObserver.Window {
             fXPCalculator.Show(MainDockPanel);
         }
 
-		#endregion
+        private void StripMenu_View_Dialogue_Click(object sender, EventArgs e)
+        {
+            fDialogue.Show(MainDockPanel);
+        }
+
+        #endregion
 
 
 
 
 
-	}
+    }
 }

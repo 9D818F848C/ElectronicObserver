@@ -129,7 +129,9 @@ namespace ElectronicObserver.Window {
 
 
 			public void ConfigurationChanged( FormDock parent ) {
-				ShipName.Font = parent.Font;
+                ShipName.ForeColor = parent.ForeColor;
+                RepairTime.ForeColor = parent.ForeColor;
+                ShipName.Font = parent.Font;
 				RepairTime.Font = parent.Font;
 			}
 		}

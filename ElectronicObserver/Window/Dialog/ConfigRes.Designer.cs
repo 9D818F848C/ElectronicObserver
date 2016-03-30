@@ -163,6 +163,15 @@ namespace ElectronicObserver.Window.Dialog {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to レコードの自動保存：.
+        /// </summary>
+        internal static string AutosavePeriod {
+            get {
+                return ResourceManager.GetString("AutosavePeriod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 自動更新する.
         /// </summary>
         internal static string AutoUpdate {
@@ -186,6 +195,24 @@ namespace ElectronicObserver.Window.Dialog {
         internal static string Autumn25 {
             get {
                 return ResourceManager.GetString("Autumn25", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to バーの色を滑らかに変化させる.
+        /// </summary>
+        internal static string BarColorMorphing {
+            get {
+                return ResourceManager.GetString("BarColorMorphing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HP・資源等のバーの色を、艦これUIと同様に滑らかに変化させるか指定します。.
+        /// </summary>
+        internal static string BarColorMorphingTooltip {
+            get {
+                return ResourceManager.GetString("BarColorMorphingTooltip", resourceCulture);
             }
         }
         
@@ -356,6 +383,15 @@ namespace ElectronicObserver.Window.Dialog {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 現在時刻.
+        /// </summary>
+        internal static string CurrentTime {
+            get {
+                return ResourceManager.GetString("CurrentTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to デイリー.
         /// </summary>
         internal static string Daily {
@@ -434,6 +470,15 @@ namespace ElectronicObserver.Window.Dialog {
         internal static string DockEnd {
             get {
                 return ResourceManager.GetString("DockEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to しない.
+        /// </summary>
+        internal static string DontSave {
+            get {
+                return ResourceManager.GetString("DontSave", resourceCulture);
             }
         }
         
@@ -673,6 +718,44 @@ namespace ElectronicObserver.Window.Dialog {
         internal static string LayoutSearch {
             get {
                 return ResourceManager.GetString("LayoutSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ロック中でもフロートウィンドウを閉じる.
+        /// </summary>
+        internal static string LockFloatWindow {
+            get {
+                return ResourceManager.GetString("LockFloatWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 上記「レイアウトをロックする」が有効な時でも、
+        ///フロートウィンドウ(本体とは分離したウィンドウ)を閉じられるようにするかを指定します。
+        ///よくウィンドウを一時的に開く方は有効にすると便利です。.
+        /// </summary>
+        internal static string LockFloatWindowTooltip {
+            get {
+                return ResourceManager.GetString("LockFloatWindowTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to レイアウトをロックする.
+        /// </summary>
+        internal static string LockLayout {
+            get {
+                return ResourceManager.GetString("LockLayout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to サイズやレイアウトの変更を防止するかを指定します。.
+        /// </summary>
+        internal static string LockLayoutTooltip {
+            get {
+                return ResourceManager.GetString("LockLayoutTooltip", resourceCulture);
             }
         }
         
@@ -934,6 +1017,15 @@ namespace ElectronicObserver.Window.Dialog {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 1日ごと.
+        /// </summary>
+        internal static string SaveDaily {
+            get {
+                return ResourceManager.GetString("SaveDaily", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to エラーが発生した際に記録を残します。
         ///記録されたファイルを送信していただければバグ修正に役立てることができます。
         ///デフォルトでは実行フォルダ内 ErrorReport フォルダに保存されます。.
@@ -950,6 +1042,15 @@ namespace ElectronicObserver.Window.Dialog {
         internal static string SaveErrorReport {
             get {
                 return ResourceManager.GetString("SaveErrorReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1時間ごと.
+        /// </summary>
+        internal static string SaveHourly {
+            get {
+                return ResourceManager.GetString("SaveHourly", resourceCulture);
             }
         }
         
@@ -1067,6 +1168,24 @@ namespace ElectronicObserver.Window.Dialog {
         internal static string ShowAircraft {
             get {
                 return ResourceManager.GetString("ShowAircraft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 泊地修理タイマを表示する.
+        /// </summary>
+        internal static string ShowAnchorageTimer {
+            get {
+                return ResourceManager.GetString("ShowAnchorageTimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 艦隊一覧の泊地修理タイマを表示するかを指定します。.
+        /// </summary>
+        internal static string ShowAnchorageTimerTooltip {
+            get {
+                return ResourceManager.GetString("ShowAnchorageTimerTooltip", resourceCulture);
             }
         }
         
@@ -1190,6 +1309,15 @@ namespace ElectronicObserver.Window.Dialog {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 時計表示：.
+        /// </summary>
+        internal static string TimeDisplay {
+            get {
+                return ResourceManager.GetString("TimeDisplay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 艦これに接続してから操作してください。.
         /// </summary>
         internal static string TryAgainAfterConnect {
@@ -1217,6 +1345,24 @@ namespace ElectronicObserver.Window.Dialog {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 演習更新まで.
+        /// </summary>
+        internal static string UntilPvPReset {
+            get {
+                return ResourceManager.GetString("UntilPvPReset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 任務更新まで.
+        /// </summary>
+        internal static string UntilQuestReset {
+            get {
+                return ResourceManager.GetString("UntilQuestReset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 上流プロキシを利用する：.
         /// </summary>
         internal static string UseProxy {
@@ -1231,6 +1377,44 @@ namespace ElectronicObserver.Window.Dialog {
         internal static string UseProxyHint {
             get {
                 return ResourceManager.GetString("UseProxyHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to システムプロキシを利用.
+        /// </summary>
+        internal static string UseSystemProxy {
+            get {
+                return ResourceManager.GetString("UseSystemProxy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to システムのプロキシ設定を利用します。.
+        /// </summary>
+        internal static string UseSystemProxyTooltip {
+            get {
+                return ResourceManager.GetString("UseSystemProxyTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 通知・BGM音量にシステム設定を利用する.
+        /// </summary>
+        internal static string UseSystemVolume {
+            get {
+                return ResourceManager.GetString("UseSystemVolume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 通知・BGM等の本体音量設定に、システム音量設定を利用するかを指定します。
+        ///無効の場合は個別に音量を設定できますが、音量ミキサ等で調整できなくなります。
+        ///有効の場合は音量ミキサ等で調整できますが、個別の音量設定は無視されます。.
+        /// </summary>
+        internal static string UseSystemVolumeTooltip {
+            get {
+                return ResourceManager.GetString("UseSystemVolumeTooltip", resourceCulture);
             }
         }
         

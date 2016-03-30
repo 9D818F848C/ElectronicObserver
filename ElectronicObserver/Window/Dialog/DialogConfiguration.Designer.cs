@@ -296,8 +296,8 @@
 			this.Connection_UseSystemProxy.Name = "Connection_UseSystemProxy";
 			this.Connection_UseSystemProxy.Size = new System.Drawing.Size(135, 19);
 			this.Connection_UseSystemProxy.TabIndex = 9;
-			this.Connection_UseSystemProxy.Text = "システムプロキシを利用";
-			this.ToolTipInfo.SetToolTip(this.Connection_UseSystemProxy, "システムのプロキシ設定を利用します。");
+			this.Connection_UseSystemProxy.Text = ConfigRes.UseSystemProxy;
+			this.ToolTipInfo.SetToolTip(this.Connection_UseSystemProxy, ConfigRes.UseSystemProxyTooltip);
 			this.Connection_UseSystemProxy.UseVisualStyleBackColor = true;
 			// 
 			// Connection_UpstreamProxyPort
@@ -453,7 +453,7 @@
 			this.Connection_SaveDataPath.AllowDrop = true;
 			this.Connection_SaveDataPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.Connection_SaveDataPath.Location = new System.Drawing.Point(64, 3);
+			this.Connection_SaveDataPath.Location = new System.Drawing.Point(104, 3);
 			this.Connection_SaveDataPath.Name = "Connection_SaveDataPath";
 			this.Connection_SaveDataPath.Size = new System.Drawing.Size(284, 23);
 			this.Connection_SaveDataPath.TabIndex = 3;
@@ -518,12 +518,12 @@
 			// UI_BarColorMorphing
 			// 
 			this.UI_BarColorMorphing.AutoSize = true;
-			this.UI_BarColorMorphing.Location = new System.Drawing.Point(8, 64);
+			this.UI_BarColorMorphing.Location = new System.Drawing.Point(8, 128);
 			this.UI_BarColorMorphing.Name = "UI_BarColorMorphing";
 			this.UI_BarColorMorphing.Size = new System.Drawing.Size(167, 19);
 			this.UI_BarColorMorphing.TabIndex = 11;
-			this.UI_BarColorMorphing.Text = "バーの色を滑らかに変化させる";
-			this.ToolTipInfo.SetToolTip(this.UI_BarColorMorphing, "HP・資源等のバーの色を、艦これUIと同様に滑らかに変化させるか指定します。");
+			this.UI_BarColorMorphing.Text = ConfigRes.BarColorMorphing;
+			this.ToolTipInfo.SetToolTip(this.UI_BarColorMorphing, ConfigRes.BarColorMorphingTooltip);
 			this.UI_BarColorMorphing.UseVisualStyleBackColor = true;
 			// 
 			// UI_SubFontApply
@@ -763,9 +763,8 @@
 			this.Control_UseSystemVolume.Name = "Control_UseSystemVolume";
 			this.Control_UseSystemVolume.Size = new System.Drawing.Size(230, 19);
 			this.Control_UseSystemVolume.TabIndex = 4;
-			this.Control_UseSystemVolume.Text = "通知・BGM音量にシステム設定を利用する";
-			this.ToolTipInfo.SetToolTip(this.Control_UseSystemVolume, "通知・BGM等の本体音量設定に、システム音量設定を利用するかを指定します。\r\n無効の場合は個別に音量を設定できますが、音量ミキサ等で調整できなくなります。\r\n有効" +
-        "の場合は音量ミキサ等で調整できますが、個別の音量設定は無視されます。");
+			this.Control_UseSystemVolume.Text = ConfigRes.UseSystemVolume;
+			this.ToolTipInfo.SetToolTip(this.Control_UseSystemVolume, ConfigRes.UseSystemVolumeTooltip);
 			this.Control_UseSystemVolume.UseVisualStyleBackColor = true;
 			// 
 			// Control_RecordAutoSaving
@@ -773,9 +772,9 @@
 			this.Control_RecordAutoSaving.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.Control_RecordAutoSaving.FormattingEnabled = true;
 			this.Control_RecordAutoSaving.Items.AddRange(new object[] {
-            "しない",
-            "1時間ごと",
-            "1日ごと"});
+            ConfigRes.DontSave,
+            ConfigRes.SaveHourly,
+            ConfigRes.SaveDaily});
 			this.Control_RecordAutoSaving.Location = new System.Drawing.Point(124, 35);
 			this.Control_RecordAutoSaving.Name = "Control_RecordAutoSaving";
 			this.Control_RecordAutoSaving.Size = new System.Drawing.Size(121, 23);
@@ -788,7 +787,7 @@
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(112, 15);
 			this.label9.TabIndex = 2;
-			this.label9.Text = "レコードの自動保存：";
+			this.label9.Text = ConfigRes.AutosavePeriod;
 			// 
 			// Control_ConditionBorder
 			// 
@@ -907,9 +906,8 @@
 			this.Life_CanCloseFloatWindowInLock.Name = "Life_CanCloseFloatWindowInLock";
 			this.Life_CanCloseFloatWindowInLock.Size = new System.Drawing.Size(197, 19);
 			this.Life_CanCloseFloatWindowInLock.TabIndex = 10;
-			this.Life_CanCloseFloatWindowInLock.Text = "ロック中でもフロートウィンドウを閉じる";
-			this.ToolTipInfo.SetToolTip(this.Life_CanCloseFloatWindowInLock, "上記「レイアウトをロックする」が有効な時でも、\r\nフロートウィンドウ(本体とは分離したウィンドウ)を閉じられるようにするかを指定します。\r\nよくウィンドウを一時的" +
-        "に開く方は有効にすると便利です。");
+			this.Life_CanCloseFloatWindowInLock.Text = ConfigRes.LockFloatWindow;
+			this.ToolTipInfo.SetToolTip(this.Life_CanCloseFloatWindowInLock, ConfigRes.LockFloatWindowTooltip);
 			this.Life_CanCloseFloatWindowInLock.UseVisualStyleBackColor = true;
 			// 
 			// Life_LockLayout
@@ -919,8 +917,8 @@
 			this.Life_LockLayout.Name = "Life_LockLayout";
 			this.Life_LockLayout.Size = new System.Drawing.Size(122, 19);
 			this.Life_LockLayout.TabIndex = 9;
-			this.Life_LockLayout.Text = "レイアウトをロックする";
-			this.ToolTipInfo.SetToolTip(this.Life_LockLayout, "サイズやレイアウトの変更を防止するかを指定します。");
+			this.Life_LockLayout.Text = ConfigRes.LockLayout;
+			this.ToolTipInfo.SetToolTip(this.Life_LockLayout, ConfigRes.LockLayoutTooltip);
 			this.Life_LockLayout.UseVisualStyleBackColor = true;
 			// 
 			// label24
@@ -930,17 +928,17 @@
 			this.label24.Name = "label24";
 			this.label24.Size = new System.Drawing.Size(67, 15);
 			this.label24.TabIndex = 8;
-			this.label24.Text = "時計表示：";
+			this.label24.Text = ConfigRes.TimeDisplay;
 			// 
 			// Life_ClockFormat
 			// 
 			this.Life_ClockFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.Life_ClockFormat.FormattingEnabled = true;
 			this.Life_ClockFormat.Items.AddRange(new object[] {
-            "現在時刻",
-            "演習更新まで",
-            "任務更新まで"});
-			this.Life_ClockFormat.Location = new System.Drawing.Point(81, 135);
+            ConfigRes.CurrentTime,
+            ConfigRes.UntilPvPReset,
+            ConfigRes.UntilQuestReset});
+			this.Life_ClockFormat.Location = new System.Drawing.Point(101, 135);
 			this.Life_ClockFormat.Name = "Life_ClockFormat";
 			this.Life_ClockFormat.Size = new System.Drawing.Size(121, 23);
 			this.Life_ClockFormat.TabIndex = 7;
@@ -1068,8 +1066,8 @@
 			this.FormFleet_ShowAnchorageRepairingTimer.Name = "FormFleet_ShowAnchorageRepairingTimer";
 			this.FormFleet_ShowAnchorageRepairingTimer.Size = new System.Drawing.Size(152, 19);
 			this.FormFleet_ShowAnchorageRepairingTimer.TabIndex = 10;
-			this.FormFleet_ShowAnchorageRepairingTimer.Text = "泊地修理タイマを表示する";
-			this.ToolTipInfo.SetToolTip(this.FormFleet_ShowAnchorageRepairingTimer, "艦隊一覧の泊地修理タイマを表示するかを指定します。");
+            this.FormFleet_ShowAnchorageRepairingTimer.Text = ConfigRes.ShowAnchorageTimer;
+			this.ToolTipInfo.SetToolTip(this.FormFleet_ShowAnchorageRepairingTimer, ConfigRes.ShowAnchorageTimerTooltip);
 			this.FormFleet_ShowAnchorageRepairingTimer.UseVisualStyleBackColor = true;
 			// 
 			// FormFleet_AirSuperiorityMethod

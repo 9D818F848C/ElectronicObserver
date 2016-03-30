@@ -201,7 +201,7 @@ namespace ElectronicObserver.Window {
 						}
 					}
 
-					sb.AppendFormat( "(練巡強化: {0} / S勝利: {1})\r\n", (int)( expbase * bonus ), (int)( (int)( expbase * 1.2 ) * bonus ) );
+					sb.AppendFormat( "(" + GeneralRes.TrainingBonus + ": {0} /" + GeneralRes.SVictory + ": {1})\r\n", (int)( expbase * bonus ), (int)( (int)( expbase * 1.2 ) * bonus ) );
 
 
 				}

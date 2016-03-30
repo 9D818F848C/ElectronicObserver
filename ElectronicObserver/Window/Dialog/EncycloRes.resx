@@ -351,4 +351,10 @@ HP1あたり: 鋼 {0:F2} / 燃 {1:F2}
   <data name="Unknown" xml:space="preserve">
     <value>(不明)</value>
   </data>
+  <data name="Drop" xml:space="preserve">
+    <value>(ドロップ)</value>
+  </data>
+  <data name="Full" xml:space="preserve">
+    <value>(満員)</value>
+  </data>
 </root>

@@ -1,4 +1,5 @@
 ﻿using ElectronicObserver.Utility.Storage;
+using ElectronicObserver.Window;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,7 +87,7 @@ namespace ElectronicObserver.Data.ShipGroup {
 		public override string ToString() {
 
 			if ( Expressions == null )
-				return "(なし)";
+				return GeneralRes.None;
 
 			StringBuilder sb = new StringBuilder();
 			foreach ( var ex in Expressions ) {
@@ -95,11 +96,11 @@ namespace ElectronicObserver.Data.ShipGroup {
 				else if ( sb.Length == 0 )
 					sb.Append( ex.ToString() );
 				else
-					sb.AppendFormat( " {0} {1}", ex.ExternalAnd ? "かつ" : "または", ex.ToString() );
+					sb.AppendFormat( " {0} {1}", ex.ExternalAnd ? GeneralRes.And : GeneralRes.Or, ex.ToString() );
 			}
 
 			if ( sb.Length == 0 )
-				sb.Append( "(なし)" );
+				sb.Append( GeneralRes.None );
 			return sb.ToString();
 		}
 

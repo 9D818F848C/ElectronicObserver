@@ -76,16 +76,17 @@
     <Reference Include="DynamicJson">
       <HintPath>..\Libraries\DynamicJson.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.14.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\log4net.2.0.4\lib\net45-full\log4net.dll</HintPath>
+    <Reference Include="Ionic.Zip, Version=1.9.8.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.9.8\lib\net20\Ionic.Zip.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Nekoxy">
-      <HintPath>..\packages\Nekoxy.1.5.1.19\lib\net45\Nekoxy.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -104,8 +105,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="TrotiNet">
-      <HintPath>..\packages\Nekoxy.1.5.1.19\lib\net45\TrotiNet.dll</HintPath>
+    <Reference Include="Titanium.Web.Proxy, Version=2.1.95.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Titanium.Web.Proxy.2.1.95\lib\net45\Titanium.Web.Proxy.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +207,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>NotifierRes.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utility\DialogueTranslator.cs" />
     <Compile Include="Utility\ThemeManager.cs" />
     <Compile Include="Utility\DynamicTranslator.cs" />
     <Compile Include="Window\Dialog\ConfigRes.Designer.cs">
@@ -221,6 +224,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>NotifyRes.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Window\FormDialogue.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Window\FormDialogue.Designer.cs">
+      <DependentUpon>FormDialogue.cs</DependentUpon>
     </Compile>
     <Compile Include="Window\FormXPCalculator.cs">
       <SubType>Form</SubType>
@@ -657,6 +666,18 @@
     <EmbeddedResource Include="Window\Dialog\DialogDevelopmentRecordViewer.en.resx">
       <DependentUpon>DialogDevelopmentRecordViewer.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Window\Dialog\DialogDropRecordViewer.en.resx">
+      <DependentUpon>DialogDropRecordViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Window\Dialog\DialogShipGroupColumnFilter.en.resx">
+      <DependentUpon>DialogShipGroupColumnFilter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Window\Dialog\DialogShipGroupFilter.en.resx">
+      <DependentUpon>DialogShipGroupFilter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Window\Dialog\DialogShipGroupSortOrder.en.resx">
+      <DependentUpon>DialogShipGroupSortOrder.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Window\Dialog\EncycloRes.en.resx" />
     <EmbeddedResource Include="Window\Dialog\EncycloRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -666,6 +687,10 @@
     <EmbeddedResource Include="Window\Dialog\NotifyRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>NotifyRes.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Window\FormDialogue.resx">
+      <DependentUpon>FormDialogue.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Window\FormXPCalculator.en.resx">
       <DependentUpon>FormXPCalculator.cs</DependentUpon>
@@ -847,6 +872,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="74eo.ico" />
+    <Content Include="makecert.exe" />
     <Content Include="Other\Information\apilist.txt" />
     <None Include="Other\Information\kcmemo.md" />
     <Content Include="Other\Information\todo.txt" />

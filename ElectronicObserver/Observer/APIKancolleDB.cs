@@ -1,5 +1,4 @@
 ﻿using ElectronicObserver.Utility;
-using Nekoxy;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -75,29 +74,29 @@ namespace ElectronicObserver.Observer {
 		/// <summary>
 		/// read the after-session, determinate whether it will send to kancolle-db.net
 		/// </summary>
-		public void ExecuteSession( Session session ) {
+		public void ExecuteSession(Titanium.Web.Proxy.EventArguments.SessionEventArgs e) {
 
 			if ( string.IsNullOrEmpty( OAuth ) ) {
 				return;
 			}
 
-			// find the url in dict.
-			string url = session.Request.PathAndQuery;
+            // find the url in dict.
+            string url = e.ProxySession.Request.RequestUri.PathAndQuery;
 
 			if ( apis.Contains( url ) ) {
-				PostToServer( session );
+				PostToServer( e );
 			}
 
 		}
 
 		private static Regex RequestRegex = new Regex( @"&api(_|%5F)token=[0-9a-f]+|api(_|%5F)token=[0-9a-f]+&?", RegexOptions.Compiled );
 
-		private void PostToServer( Session session ) {
+		private void PostToServer(Titanium.Web.Proxy.EventArguments.SessionEventArgs e) {
 
 			string oauth = OAuth;
-			string url = session.Request.PathAndQuery;
-			string request = session.Request.BodyAsString;
-			string response = session.Response.BodyAsString;
+            string url = e.ProxySession.Request.RequestUri.PathAndQuery;
+            string request = e.GetRequestBodyAsString();
+            string response = e.GetResponseBodyAsString();
 
 			request = RequestRegex.Replace( request, "" );
 
@@ -120,13 +119,13 @@ namespace ElectronicObserver.Observer {
 					post.Add( "requestbody", request );
 					post.Add( "responsebody", response );
 
-					wc.UploadValuesCompleted += ( sender, e ) => {
-						if ( e.Error != null ) {
+					wc.UploadValuesCompleted += ( sender, ev ) => {
+						if ( ev.Error != null ) {
 
 							// 結構頻繁に出るのでレポートは残さない方針で　申し訳ないです
 							//Utility.ErrorReporter.SendErrorReport( e.Error, string.Format( "艦これ統計データベースへの {0} の送信に失敗しました。", url.Substring( url.IndexOf( "/api" ) + 1 ) ) );
                             
-							Utility.Logger.Add( 3, string.Format( LoggerRes.FailedDatabaseSend, url.Substring( url.IndexOf( "/api" ) + 1 ), e.Error.Message ) );
+							Utility.Logger.Add( 3, string.Format( LoggerRes.FailedDatabaseSend, url.Substring( url.IndexOf( "/api" ) + 1 ), ev.Error.Message ) );
 
 						} else {
 							Utility.Logger.Add( 1, string.Format( LoggerRes.SentDatabase, url.Substring( url.IndexOf( "/api" ) + 1 ) ) );

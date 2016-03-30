@@ -232,6 +232,15 @@ namespace ElectronicObserver.Window.Dialog {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (ドロップ).
+        /// </summary>
+        internal static string Drop {
+            get {
+                return ResourceManager.GetString("Drop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 図鑑番号:.
         /// </summary>
         internal static string EncyclopediaNumber {
@@ -390,6 +399,15 @@ namespace ElectronicObserver.Window.Dialog {
         internal static string Flagship {
             get {
                 return ResourceManager.GetString("Flagship", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (満員).
+        /// </summary>
+        internal static string Full {
+            get {
+                return ResourceManager.GetString("Full", resourceCulture);
             }
         }
         
