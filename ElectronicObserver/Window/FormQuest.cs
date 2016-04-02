@@ -20,7 +20,7 @@ namespace ElectronicObserver.Window {
 
 		private DataGridViewCellStyle CSDefaultLeft, CSDefaultCenter;
 		private DataGridViewCellStyle[] CSCategories;
-
+		private bool IsLoaded = false;
 
 		public FormQuest( FormMain parent ) {
 			InitializeComponent();
@@ -43,8 +43,8 @@ namespace ElectronicObserver.Window {
 			CSDefaultCenter = new DataGridViewCellStyle( CSDefaultLeft );
 			CSDefaultCenter.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-			CSCategories = new DataGridViewCellStyle[8];
-			for ( int i = 0; i < 8; i++ ) {
+			CSCategories = new DataGridViewCellStyle[9];
+			for ( int i = 0; i < CSCategories.Length; i++ ) {
 				CSCategories[i] = new DataGridViewCellStyle( CSDefaultCenter );
 
 				Color c;
@@ -70,7 +70,10 @@ namespace ElectronicObserver.Window {
 					case 7:		//改装
 						c = Color.FromArgb( 0xDD, 0xCC, 0xFF );
 						break;
-					case 8:		//その他
+					case 8:		//出撃(2)
+						c = Color.FromArgb( 0xFF, 0xCC, 0xCC );
+						break;
+					case 9:		//その他
 					default:
 						c = CSDefaultCenter.BackColor;
 						break;
@@ -83,7 +86,7 @@ namespace ElectronicObserver.Window {
             }
 
 			QuestView.DefaultCellStyle = CSDefaultCenter;
-			QuestView_Category.DefaultCellStyle = CSCategories[8 - 1];
+			QuestView_Category.DefaultCellStyle = CSCategories[CSCategories.Length - 1];
 			QuestView_Name.DefaultCellStyle = CSDefaultLeft;
 			QuestView_Progress.DefaultCellStyle = CSDefaultLeft;
 
@@ -127,6 +130,7 @@ namespace ElectronicObserver.Window {
 
 			Icon = ResourceManager.ImageToIcon( ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormQuest] );
 
+			IsLoaded = true;
 		}
 
 
@@ -224,8 +228,10 @@ namespace ElectronicObserver.Window {
 				row.Cells[QuestView_Category.Index].Value = q.Category;
 				row.Cells[QuestView_Category.Index].Style = CSCategories[Math.Min( q.Category - 1, 8 - 1 )];
 				row.Cells[QuestView_Name.Index].Value = q.QuestID;
-				row.Cells[QuestView_Name.Index].ToolTipText = string.Format( "{0} : {1}\r\n{2}", q.QuestID, q.Name, q.Description );
-
+				{
+					var progress = KCDatabase.Instance.QuestProgress[q.QuestID];
+					row.Cells[QuestView_Name.Index].ToolTipText = string.Format( "{0} : {1}\r\n{2}\r\n{3}", q.QuestID, q.Name, q.Description, progress != null ? progress.GetClearCondition() : "" );
+				}
 				{
 					string value;
 					double tag;
@@ -237,7 +243,7 @@ namespace ElectronicObserver.Window {
 					} else {
 
 						if ( KCDatabase.Instance.QuestProgress.Progresses.ContainsKey( q.QuestID ) ) {
-							var p = KCDatabase.Instance.QuestProgress.Progresses[q.QuestID];
+							var p = KCDatabase.Instance.QuestProgress[q.QuestID];
 
 							value = p.ToString();
 							tag = p.ProgressPercentage;
@@ -273,7 +279,7 @@ namespace ElectronicObserver.Window {
 			}
 
 
-			if ( KCDatabase.Instance.Quest.Quests.Count != KCDatabase.Instance.Quest.Count ) {
+			if ( KCDatabase.Instance.Quest.Quests.Count < KCDatabase.Instance.Quest.Count ) {
 				int index = QuestView.Rows.Add();
 				QuestView.Rows[index].Cells[QuestView_State.Index].Value = null;
 				QuestView.Rows[index].Cells[QuestView_Name.Index].Value = string.Format( "(" + GeneralRes.UnacquiredQuests + " x {0})", ( KCDatabase.Instance.Quest.Count - KCDatabase.Instance.Quest.Quests.Count ) );
@@ -288,6 +294,7 @@ namespace ElectronicObserver.Window {
 			//更新時にソートする
 			if ( QuestView.SortedColumn != null )
 				QuestView.Sort( QuestView.SortedColumn, QuestView.SortOrder == SortOrder.Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending );
+
 
 			QuestView.ResumeLayout();
 		}
@@ -439,11 +446,6 @@ namespace ElectronicObserver.Window {
 
 		}
 
-		protected override string GetPersistString() {
-			return "Quest";
-		}
-
-
 
 		private void MenuMain_ColumnFilter_Click( object sender, EventArgs e ) {
 
@@ -465,6 +467,81 @@ namespace ElectronicObserver.Window {
 		}
 
 
+		private void QuestView_ColumnWidthChanged( object sender, DataGridViewColumnEventArgs e ) {
+
+			if ( IsLoaded )
+				Utility.Configuration.Config.FormQuest.ColumnWidth = QuestView.Columns.Cast<DataGridViewColumn>().Select( c => c.Width ).ToList();
+
+		}
+
+
+
+
+		private void QuestView_CellMouseDown( object sender, DataGridViewCellMouseEventArgs e ) {
+
+			if ( e.Button == System.Windows.Forms.MouseButtons.Right && e.RowIndex >= 0 ) {
+				QuestView.ClearSelection();
+				QuestView.Rows[e.RowIndex].Selected = true;
+			}
+
+		}
+
+		private void MenuProgress_Increment_Click( object sender, EventArgs e ) {
+
+			var rows = QuestView.SelectedRows;
+
+			if ( rows != null && rows.Count > 0 && rows[0].Index != -1 ) {
+
+				int id = rows[0].Cells[QuestView_Name.Index].Value as int? ?? -1;
+
+				var quest = KCDatabase.Instance.Quest[id];
+				var progress = KCDatabase.Instance.QuestProgress[id];
+
+				if ( id != -1 && quest != null && progress != null ) {
+
+					try {
+						progress.Increment();
+						Updated();
+
+					} catch ( Exception ) {
+						Utility.Logger.Add( 3, "この任務の進捗を変更することはできません。" );
+						System.Media.SystemSounds.Hand.Play();
+					}
+				}
+			}
+		}
+
+		private void MenuProgress_Decrement_Click( object sender, EventArgs e ) {
+
+			var rows = QuestView.SelectedRows;
+
+			if ( rows != null && rows.Count > 0 && rows[0].Index != -1 ) {
+
+				int id = rows[0].Cells[QuestView_Name.Index].Value as int? ?? -1;
+
+				var quest = KCDatabase.Instance.Quest[id];
+				var progress = KCDatabase.Instance.QuestProgress[id];
+
+				if ( id != -1 && quest != null && progress != null ) {
+
+					try {
+						progress.Decrement();
+						Updated();
+
+					} catch ( Exception ) {
+						Utility.Logger.Add( 3, "この任務の進捗を変更することはできません。" );
+						System.Media.SystemSounds.Hand.Play();
+					}
+				}
+			}
+		}
+
+
+
+
+		protected override string GetPersistString() {
+			return "Quest";
+		}
 
 	}
 }

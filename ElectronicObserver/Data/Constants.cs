@@ -195,6 +195,8 @@ namespace ElectronicObserver.Data {
 					return ConstantsRes.AirBattle;
 				case 8:
 					return ConstantsRes.LargeResourceNode;
+				case 9:
+					return ConstantsRes.LandNode;
 				default:
 					return ConstantsRes.Unknown;
 			}
@@ -216,6 +218,8 @@ namespace ElectronicObserver.Data {
 					return ConstantsRes.NightDayBattle;
 				case 4:
 					return ConstantsRes.AirBattle;
+				case 6:
+					return "空襲戦";
 				default:
 					return ConstantsRes.Unknown;
 			}
@@ -548,6 +552,14 @@ namespace ElectronicObserver.Data {
 					return ConstantsRes.AAGun + "/" + ConstantsRes.AAGun + ConstantsRes.Radar;
 				case 14:
 					return ConstantsRes.HAGun + "/" + ConstantsRes.AAGun + "/" + ConstantsRes.Radar;
+				case 15:
+                    return ConstantsRes.HAGun + "/" + ConstantsRes.AAGun;
+				case 16:
+					return ConstantsRes.HAGun + "/" + ConstantsRes.AAGun + "/" + ConstantsRes.Radar;
+				case 17:
+					return ConstantsRes.HAGun + "/" + ConstantsRes.AAGun;
+				case 18:
+					return "集中機銃";
 				default:
 					return ConstantsRes.Unknown;
 			}
@@ -712,6 +724,8 @@ namespace ElectronicObserver.Data {
 				case 7:
 					return ConstantsRes.Modernization;
 				case 8:
+					return ConstantsRes.Sortie;
+				case 9:
 					return ConstantsRes.Other;
 				default:
 					return ConstantsRes.Unknown;
@@ -747,6 +761,8 @@ namespace ElectronicObserver.Data {
 					return ConstantsRes.TaskForce;
 				case 2:
 					return ConstantsRes.SurfaceFleet;
+				case 3:
+					return ConstantsRes.TransportFleet;
 				default:
 					return ConstantsRes.Unknown;
 			}

@@ -55,7 +55,7 @@ namespace ElectronicObserver.Window {
 		}
 
 		private bool IsRowsUpdating;
-
+		private int _splitterDistance;
 
 
 		public FormShipGroup( FormMain parent ) {
@@ -64,7 +64,7 @@ namespace ElectronicObserver.Window {
 			ControlHelper.SetDoubleBuffered( ShipView );
 
 			IsRowsUpdating = true;
-
+			_splitterDistance = -1;
 
 			foreach ( DataGridViewColumn column in ShipView.Columns ) {
 				column.MinimumWidth = 2;
@@ -203,7 +203,9 @@ namespace ElectronicObserver.Window {
 			CSIsLocked.Font =
 				config.UI.MainFont;
 
-			splitContainer1.SplitterDistance = config.FormShipGroup.SplitterDistance;
+			foreach ( System.Windows.Forms.Control c in TabPanel.Controls )
+				c.Font = Font;
+
 			MenuGroup_AutoUpdate.Checked = config.FormShipGroup.AutoUpdate;
 			MenuGroup_ShowStatusBar.Checked = config.FormShipGroup.ShowStatusBar;
             BackColor = Utility.ThemeManager.GetColor(Utility.Configuration.Config.UI.Theme, Utility.ThemeColors.BackgroundColor);
@@ -214,6 +216,27 @@ namespace ElectronicObserver.Window {
             StatusBar.BackColor = Utility.ThemeManager.GetColor(Utility.Configuration.Config.UI.Theme, Utility.ThemeColors.BackgroundColor);
         }
 
+
+		// レイアウトロード時に呼ばれる
+		public void ConfigureFromPersistString( string persistString ) {
+
+			string[] args = persistString.Split( "?=&".ToCharArray() );
+
+			for ( int i = 1; i < args.Length - 1; i += 2 ) {
+				switch ( args[i] ) {
+					case "SplitterDistance":
+						// 直接変えるとサイズが足りないか何かで変更が適用されないことがあるため、 Resize イベント中に変更する(ために値を記録する)
+						// しかし Resize イベントだけだと呼ばれないことがあるため、直接変えてもおく
+						// つらい
+						splitContainer1.SplitterDistance = _splitterDistance = int.Parse( args[i + 1] );
+						break;
+				}
+			}
+		}
+
+		protected override string GetPersistString() {
+			return "ShipGroup?SplitterDistance=" + splitContainer1.SplitterDistance;
+		}
 
 
 		/// <summary>
@@ -486,6 +509,9 @@ namespace ElectronicObserver.Window {
 			var group = KCDatabase.Instance.ShipGroup[(int)target.Tag];
 			var currentGroup = CurrentGroup;
 
+			int headIndex = 0;
+			List<int> selectedIDList = new List<int>();
+
 			if ( group == null ) {
 				Utility.Logger.Add( 3, GeneralRes.NonexistentGroup );
 				return;
@@ -495,8 +521,13 @@ namespace ElectronicObserver.Window {
 
 				UpdateMembers( currentGroup );
 
-				if ( CurrentGroup.GroupID != group.GroupID )
+				if ( CurrentGroup.GroupID != group.GroupID ) {
 					ShipView.Rows.Clear();		//別グループの行の並び順を引き継がせないようにする
+
+				} else {
+					headIndex = ShipView.FirstDisplayedScrollingRowIndex;
+					selectedIDList = ShipView.SelectedRows.Cast<DataGridViewRow>().Select( r => (int)r.Cells[ShipView_ID.Index].Value ).ToList();
+				}
 			}
 
 
@@ -508,6 +539,20 @@ namespace ElectronicObserver.Window {
 
 			BuildShipView( SelectedTab );
 			SelectedTab.BackColor = TabActiveColor;
+
+
+			if ( 0 <= headIndex && headIndex < ShipView.Rows.Count )
+				ShipView.FirstDisplayedScrollingRowIndex = headIndex;
+
+			if ( selectedIDList.Count > 0 ) {
+				ShipView.ClearSelection();
+				for ( int i = 0; i < ShipView.Rows.Count; i++ ) {
+					var row = ShipView.Rows[i];
+					if ( selectedIDList.Contains( (int)row.Cells[ShipView_ID.Index].Value ) ) {
+						row.Selected = true;
+					}
+				}
+			}
 
 		}
 
@@ -545,10 +590,10 @@ namespace ElectronicObserver.Window {
 			var group = CurrentGroup;
 			if ( KCDatabase.Instance.Ships.Count > 0 && group != null ) {
 				if ( ShipView.Rows.GetRowCount( DataGridViewElementStates.Selected ) >= 2 ) {
-					var ships = ShipView.SelectedRows.Cast<DataGridViewRow>().Select( r => KCDatabase.Instance.Ships[(int)r.Cells[ShipView_ID.Index].Value] );
+					var levels = ShipView.SelectedRows.Cast<DataGridViewRow>().Select( r => (int)r.Cells[ShipView_Level.Index].Value );
 					Status_ShipCount.Text = string.Format( GeneralRes.SelectedShips, ShipView.Rows.GetRowCount( DataGridViewElementStates.Selected ), group.Members.Count );
-					Status_LevelTotal.Text = string.Format( GeneralRes.TotalLevel, ships.Sum( s => s.Level ) );
-					Status_LevelAverage.Text = string.Format( GeneralRes.AverageLevel, ships.Average( s => s.Level ) );
+					Status_LevelTotal.Text = string.Format( GeneralRes.TotalLevel, levels.Sum() );
+					Status_LevelAverage.Text = string.Format( GeneralRes.AverageLevel, levels.Average() );
 
 				} else {
 					Status_ShipCount.Text = string.Format( GeneralRes.TotalShips, group.Members.Count );
@@ -907,7 +952,7 @@ namespace ElectronicObserver.Window {
 				MenuMember_AddToGroup.Enabled = false;
 				MenuMember_CreateGroup.Enabled = false;
 				MenuMember_Exclude.Enabled = false;
-				
+
 			} else {
 				MenuMember_AddToGroup.Enabled = true;
 				MenuMember_CreateGroup.Enabled = true;
@@ -1522,8 +1567,6 @@ namespace ElectronicObserver.Window {
 
 		void SystemShuttingDown() {
 
-
-			Utility.Configuration.Config.FormShipGroup.SplitterDistance = splitContainer1.SplitterDistance;
 			Utility.Configuration.Config.FormShipGroup.AutoUpdate = MenuGroup_AutoUpdate.Checked;
 			Utility.Configuration.Config.FormShipGroup.ShowStatusBar = MenuGroup_ShowStatusBar.Checked;
 
@@ -1544,8 +1587,16 @@ namespace ElectronicObserver.Window {
 		}
 
 
-		protected override string GetPersistString() {
-			return "ShipGroup";
+		private void FormShipGroup_Resize( object sender, EventArgs e ) {
+			if ( _splitterDistance != -1 && splitContainer1.Height > 0 ) {
+				try {
+					splitContainer1.SplitterDistance = _splitterDistance;
+					_splitterDistance = -1;
+
+				} catch ( Exception ) {
+					// *ぷちっ*
+				}
+			}
 		}
 
 

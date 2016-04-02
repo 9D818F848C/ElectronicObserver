@@ -101,6 +101,7 @@ namespace Browser {
             Thread.CurrentThread.CurrentUICulture = ui;
 
 			InitializeComponent();
+            SetUserAgent();
 
 			ServerUri = serverUri;
 			StyleSheetApplied = false;
@@ -117,12 +118,12 @@ namespace Browser {
 
 				control.ValueChanged += ToolMenu_Other_Volume_ValueChanged;
 				control.Tag = false;
-			
+
 				var host = new ToolStripControlHost( control, "ToolMenu_Other_Volume_VolumeControlHost" );
 
 				control.Size = new Size( host.Width - control.Margin.Horizontal, host.Height - control.Margin.Vertical );
 				control.Location = new Point( control.Margin.Left, control.Margin.Top );
-				
+
 
 				ToolMenu_Other_Volume.DropDownItems.Add( host );
 			}
@@ -259,7 +260,11 @@ namespace Browser {
 
 		private void Browser_Navigating( object sender, WebBrowserNavigatingEventArgs e ) {
 
-			IsKanColleLoaded = false;
+			// note: ここを有効にすると別ページに切り替えた際にきちんとセーフティが働くが、代わりにまれに誤検知して撮影できなくなる時がある
+			// 無効にするとセーフティは働かなくなるが誤検知がなくなる
+			// セーフティを切ってでも誤検知しなくしたほうがいいので無効化
+
+			//IsKanColleLoaded = false;
 
 		}
 
@@ -522,8 +527,15 @@ namespace Browser {
 		}
 
 
-		public void SetProxy( string address, int port ) {
-			Fiddler.URLMonInterop.SetProxyInProcess( string.Format( "{0}:{1}", address, port ), "<local>" );
+		public void SetProxy( string proxy ) {
+			ushort port;
+			if ( ushort.TryParse( proxy, out port ) ) {
+				WinInetUtil.SetProxyInProcessForTitanium( port );
+			} else {
+				WinInetUtil.SetProxyInProcess( proxy, "local" );
+			}
+
+			//AddLog( 1, "setproxy:" + proxy );
 		}
 
 
@@ -599,6 +611,19 @@ namespace Browser {
 			Marshal.FreeHGlobal( cacheEntryInfoBuffer );
 
 		}
+
+        [DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
+        private static extern int UrlMkSetSessionOption(int dwOption, string pBuffer, int dwBufferLength, int dwReserved);
+
+        const int URLMON_OPTION_USERAGENT = 0x10000001;
+        const int URLMON_OPTION_USERAGENT_REFRESH = 0x10000002;
+
+        private void SetUserAgent()
+        {
+            string ua = "Mozilla/5.0 (Windows; U; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)";
+            UrlMkSetSessionOption(URLMON_OPTION_USERAGENT_REFRESH, null, 0, 0);
+            UrlMkSetSessionOption(URLMON_OPTION_USERAGENT, ua, ua.Length, 0);
+        }
 
         private void SetCookie()
         {
@@ -682,6 +707,10 @@ namespace Browser {
 				control.Value = (decimal)volume;
 				control.Tag = true;
 			}
+
+			Configuration.Volume = volume;
+			Configuration.IsMute = mute;
+			ConfigurationUpdated();
 		}
 
 
@@ -768,7 +797,7 @@ namespace Browser {
 		void ToolMenu_Other_Volume_ValueChanged( object sender, EventArgs e ) {
 
 			var control = ToolMenu_Other_Volume_VolumeControl;
-				
+
 			try {
 				if ( (bool)control.Tag )
 					_volumeManager.Volume = (float)( control.Value / 100 );
@@ -776,7 +805,7 @@ namespace Browser {
 
 			} catch ( Exception ) {
 				control.BackColor = Color.MistyRose;
-				
+
 			}
 
 		}
@@ -810,6 +839,9 @@ namespace Browser {
 
 		private void ToolMenu_Other_AppliesStyleSheet_Click( object sender, EventArgs e ) {
 			Configuration.AppliesStyleSheet = ToolMenu_Other_AppliesStyleSheet.Checked;
+			if ( Configuration.AppliesStyleSheet ) {
+				ApplyStyleSheet();
+			}
 			ConfigurationUpdated();
 		}
 
@@ -854,7 +886,7 @@ namespace Browser {
             BeginInvoke((MethodInvoker)(() => { SetCookie(); }));
         }
 
-		private void SizeAdjuster_Click( object sender, EventArgs e ) {
+		private void SizeAdjuster_DoubleClick( object sender, EventArgs e ) {
 			ToolMenu.Visible =
 			Configuration.IsToolMenuVisible = true;
 			ConfigurationUpdated();

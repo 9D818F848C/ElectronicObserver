@@ -193,7 +193,7 @@
     <value>Open from another file (&amp;O)...</value>
   </data>
   <data name="Load" xml:space="preserve">
-    <value>Load(&amp;L)</value>
+    <value>Load (&amp;L)</value>
   </data>
   <data name="LoadAPIFromFile" xml:space="preserve">
     <value>Load API data from file (&amp;L)...</value>
@@ -296,5 +296,14 @@
   </data>
   <data name="ResourceChart" xml:space="preserve">
     <value>Resource Chart (&amp;C)</value>
+  </data>
+  <data name="BuildRecord" xml:space="preserve">
+    <value>Construction Record (&amp;R)</value>
+  </data>
+  <data name="DevRecord" xml:space="preserve">
+    <value>Development Record (&amp;V)</value>
+  </data>
+  <data name="DropRecord" xml:space="preserve">
+    <value>Drop Record (&amp;D)</value>
   </data>
 </root>

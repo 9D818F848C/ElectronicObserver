@@ -1,5 +1,6 @@
 ﻿using ElectronicObserver.Data;
 using ElectronicObserver.Data.ShipGroup;
+using ElectronicObserver.Utility.Data;
 using ElectronicObserver.Utility.Mathematics;
 using ElectronicObserver.Window.Support;
 using System;
@@ -170,7 +171,12 @@ namespace ElectronicObserver.Window.Dialog {
 				_dtRightOperand_shiptype.Columns.AddRange( new DataColumn[]{ 
 					new DataColumn( "Value", typeof( int ) ), 
 					new DataColumn( "Display", typeof( string ) ) } );
-				foreach ( var st in KCDatabase.Instance.ShipTypes.Values )
+				foreach ( var st in KCDatabase.Instance.MasterShips.Values
+					.Where( s => !s.IsAbyssalShip )
+					.Select( s => s.ShipType )
+					.Distinct()
+					.OrderBy( i => i )
+					.Select( i => KCDatabase.Instance.ShipTypes[i] ) )
 					_dtRightOperand_shiptype.Rows.Add( st.TypeID, st.Name );
 				_dtRightOperand_shiptype.AcceptChanges();
 			}
@@ -207,10 +213,10 @@ namespace ElectronicObserver.Window.Dialog {
 				_dtRightOperand_equipment.Columns.AddRange( new DataColumn[]{ 
 					new DataColumn( "Value", typeof( int ) ), 
 					new DataColumn( "Display", typeof( string ) ) } );
-				_dtRightOperand_equipment.Rows.Add( -1, "(なし)" );
+				_dtRightOperand_equipment.Rows.Add( -1, GeneralRes.None );
 				foreach ( var eq in KCDatabase.Instance.MasterEquipments.Values.Where( eq => !eq.IsAbyssalEquipment ).OrderBy( eq => eq.CategoryType ) )
 					_dtRightOperand_equipment.Rows.Add( eq.EquipmentID, eq.Name );
-				_dtRightOperand_equipment.Rows.Add( 0, "(未開放)" );
+				_dtRightOperand_equipment.Rows.Add( 0, GeneralRes.Undeveloped );
 				_dtRightOperand_equipment.AcceptChanges();
 			}
 
@@ -328,7 +334,7 @@ namespace ElectronicObserver.Window.Dialog {
 				rows[i].CreateCells( ConstFilterView );
 
 				var ship = KCDatabase.Instance.Ships[values[i]];
-				rows[i].SetValues( values[i], ship == null ? "(未在籍)" : ship.NameWithLevel );
+				rows[i].SetValues( values[i], ship == null ? GeneralRes.NotEnrolled : ship.NameWithLevel );
 			}
 
 			ConstFilterView.Rows.AddRange( rows );
@@ -479,7 +485,7 @@ namespace ElectronicObserver.Window.Dialog {
 						break;
 					case ".Level":
 						RightOperand_NumericUpDown.Minimum = 1;
-						RightOperand_NumericUpDown.Maximum = 150;
+						RightOperand_NumericUpDown.Maximum = ExpTable.ShipMaximumLevel;
 						break;
 					case ".ExpTotal":
 					case ".ExpNextRemodel":
@@ -502,7 +508,7 @@ namespace ElectronicObserver.Window.Dialog {
 					case ".RepairingDockID":
 						RightOperand_NumericUpDown.Minimum = -1;
 						RightOperand_NumericUpDown.Maximum = 4;
-						Description.Text = "-1=未入渠, 1～4=入渠中(ドック番号)";
+						Description.Text = GeneralRes.RepairingDockId;
 						break;
 					case ".RepairTime":
 						RightOperand_NumericUpDown.Minimum = 0;
@@ -626,15 +632,15 @@ namespace ElectronicObserver.Window.Dialog {
 
 
 
-		// 選択を基にUIの更新
-		private void ExpressionView_SelectionChanged( object sender, EventArgs e ) {
-
-			int index = ExpressionView.SelectedRows.Count == 0 ? -1 : ExpressionView.SelectedRows[0].Index;
+		/// <summary>
+		/// 選択された行をもとに、 ExpressionDetailView を更新します。
+		/// </summary>
+		/// <param name="index">対象となる行のインデックス。</param>
+		private void UpdateExpressionDetailView( int index ) {
 
 			if ( index < 0 || _group.Expressions.Expressions.Count <= index ) return;
 
 			var ex = _group.Expressions.Expressions[index];
-
 
 
 			// detail の更新と expression の初期化
@@ -647,6 +653,13 @@ namespace ElectronicObserver.Window.Dialog {
 			}
 
 			ExpressionDetailView.Rows.AddRange( rows );
+		}
+
+
+		// 選択を基にUIの更新
+		private void ExpressionView_SelectionChanged( object sender, EventArgs e ) {
+
+			UpdateExpressionDetailView( ExpressionView.SelectedRows.Count == 0 ? -1 : ExpressionView.SelectedRows[0].Index );
 
 		}
 
@@ -686,15 +699,15 @@ namespace ElectronicObserver.Window.Dialog {
 			int selectedrow = GetSelectedRow( ExpressionView );
 
 			if ( selectedrow == -1 ) {
-				MessageBox.Show( "対象となる行を選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk );
+				MessageBox.Show( GeneralRes.SelectTargetRow, Properties.Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Asterisk );
 				return;
 			}
+
+			ExpressionDetailView.Rows.Clear();
 
 			_group.Expressions.Expressions.RemoveAt( selectedrow );
 			ExpressionView.Rows.RemoveAt( selectedrow );
 
-			if ( ExpressionView.Rows.Count == 0 )
-				ExpressionDetailView.Rows.Clear();
 
 			ExpressionUpdated();
 		}
@@ -753,7 +766,7 @@ namespace ElectronicObserver.Window.Dialog {
 
 			int procrow = GetSelectedRow( ExpressionView );
 			if ( procrow == -1 ) {
-				MessageBox.Show( "対象となる式(左側)の行を選択してください。\r\n行が存在しない場合は追加してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk );
+				MessageBox.Show( GeneralRes.SelectLeftExpressionLine, Properties.Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Asterisk );
 				return;
 			}
 
@@ -770,13 +783,13 @@ namespace ElectronicObserver.Window.Dialog {
 
 			int procrow = GetSelectedRow( ExpressionView );
 			if ( procrow == -1 ) {
-				MessageBox.Show( "対象となる式列(左側)を選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk );
+				MessageBox.Show( GeneralRes.SelectTargetExpression, Properties.Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Asterisk );
 				return;
 			}
 
 			int selectedrow = GetSelectedRow( ExpressionDetailView );
 			if ( selectedrow == -1 ) {
-				MessageBox.Show( "対象となる行を選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk );
+				MessageBox.Show( GeneralRes.SelectTargetRow, Properties.Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Asterisk );
 				return;
 			}
 
@@ -794,13 +807,13 @@ namespace ElectronicObserver.Window.Dialog {
 
 			int procrow = GetSelectedRow( ExpressionView );
 			if ( procrow == -1 ) {
-				MessageBox.Show( "対象となる式列(左側)を選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk );
+				MessageBox.Show( GeneralRes.SelectTargetExpression, Properties.Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Asterisk );
 				return;
 			}
 
 			int selectedrow = GetSelectedRow( ExpressionDetailView );
 			if ( selectedrow == -1 ) {
-				MessageBox.Show( "対象となる行を選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk );
+				MessageBox.Show( GeneralRes.SelectTargetRow, Properties.Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Asterisk );
 				return;
 			}
 
@@ -928,6 +941,9 @@ namespace ElectronicObserver.Window.Dialog {
 
 				ExpressionUpdated();
 			}
+
+			
+			UpdateExpressionDetailView( e.RowIndex );
 		}
 
 		private void ConstFilterView_CellContentClick( object sender, DataGridViewCellEventArgs e ) {
@@ -976,7 +992,8 @@ namespace ElectronicObserver.Window.Dialog {
 			if ( e.RowIndex < 0 ) return;
 
 			int procrow = GetSelectedRow( ExpressionView );
-			if ( procrow == -1 ) {
+			if ( procrow < 0 || procrow >= _group.Expressions.Expressions.Count ||
+				e.RowIndex >= _group.Expressions[procrow].Expressions.Count ) {
 				return;
 			}
 
@@ -1015,7 +1032,7 @@ namespace ElectronicObserver.Window.Dialog {
 						if ( ship != null ) {
 							Description.Text = ship.NameWithLevel;
 						} else {
-							Description.Text = "(未在籍)";
+							Description.Text = GeneralRes.NotEnrolled;
 						}
 					} break;
 
@@ -1024,18 +1041,18 @@ namespace ElectronicObserver.Window.Dialog {
 						if ( ship != null ) {
 							Description.Text = ship.ShipTypeName + " " + ship.NameWithClass;
 						} else {
-							Description.Text = "(存在せず)";
+							Description.Text = GeneralRes.DoesNotExist;
 						}
 					} break;
 
 				case ".RepairTime": {
-						Description.Text = string.Format( "(ミリ秒単位) {0}", DateTimeHelper.ToTimeRemainString( DateTimeHelper.FromAPITimeSpan( intvalue ) ) );
+						Description.Text = string.Format( GeneralRes.Milliseconds, DateTimeHelper.ToTimeRemainString( DateTimeHelper.FromAPITimeSpan( intvalue ) ) );
 					} break;
 
 				case ".MasterShip.AlbumNo": {
 						var ship = KCDatabase.Instance.MasterShips.Values.FirstOrDefault( s => s.AlbumNo == intvalue );
 						if ( ship == null )
-							Description.Text = "(存在せず)";
+							Description.Text = GeneralRes.DoesNotExist;
 						else
 							Description.Text = ship.ShipTypeName + " " + ship.NameWithClass;
 
@@ -1043,11 +1060,11 @@ namespace ElectronicObserver.Window.Dialog {
 
 				case ".MasterShip.RemodelBeforeShipID": {
 						if ( intvalue == 0 ) {
-							Description.Text = "(未改装)";
+							Description.Text = GeneralRes.NotRemodeled;
 						} else {
 							var ship = KCDatabase.Instance.MasterShips[intvalue];
 							if ( ship == null )
-								Description.Text = "(存在せず)";
+								Description.Text = GeneralRes.DoesNotExist;
 							else {
 								var before = ship.RemodelBeforeShip;
 								Description.Text = ship.NameWithClass + " ← " + ( before == null ? "×" : before.NameWithClass );
@@ -1057,11 +1074,11 @@ namespace ElectronicObserver.Window.Dialog {
 
 				case ".MasterShip.RemodelAfterShipID": {
 						if ( intvalue == 0 ) {
-							Description.Text = "(最終改装)";
+							Description.Text = GeneralRes.FinalRemodel;
 						} else {
 							var ship = KCDatabase.Instance.MasterShips[intvalue];
 							if ( ship == null )
-								Description.Text = "(存在せず)";
+								Description.Text = GeneralRes.DoesNotExist;
 							else {
 								var after = ship.RemodelAfterShip;
 								Description.Text = ship.NameWithClass + " → " + ( after == null ? "×" : after.NameWithClass );
@@ -1110,7 +1127,7 @@ namespace ElectronicObserver.Window.Dialog {
 
 		private void ClearConstFilter_Click( object sender, EventArgs e ) {
 
-			if ( MessageBox.Show( ConstFilterSelector.Text + " を初期化します。\r\nよろしいですか?", "初期化の確認",
+			if ( MessageBox.Show( ConstFilterSelector.Text + GeneralRes.WillBeInitialized, GeneralRes.ConfirmInitialize,
 				MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2 )
 				== System.Windows.Forms.DialogResult.Yes ) {
 
@@ -1127,7 +1144,7 @@ namespace ElectronicObserver.Window.Dialog {
 
 		private void ConvertToExpression_Click( object sender, EventArgs e ) {
 
-			if ( MessageBox.Show( "現在の包含/除外リストを式に変換します。\r\n逆変換はできません。\r\nよろしいですか？", "確認",
+			if ( MessageBox.Show( GeneralRes.ConvertToExpression, GeneralRes.Confirm,
 					MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1 )
 					== System.Windows.Forms.DialogResult.Yes ) {
 
@@ -1158,22 +1175,22 @@ namespace ElectronicObserver.Window.Dialog {
 
 
 		private void ButtonMenu_Click( object sender, EventArgs e ) {
-			Menu.Show( ButtonMenu, ButtonMenu.Width / 2, ButtonMenu.Height / 2 );
+			SubMenu.Show( ButtonMenu, ButtonMenu.Width / 2, ButtonMenu.Height / 2 );
 		}
 
 		private void Menu_ImportFilter_Click( object sender, EventArgs e ) {
 
 
-			if ( MessageBox.Show( "クリップボードからフィルタをインポートします。\r\n現在のフィルタは破棄されます。(包含/除外フィルタは維持されます)\r\nよろしいですか？\r\n",
-					"フィルタのインポートの確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question )
+			if ( MessageBox.Show( GeneralRes.FilterImportDialog,
+					GeneralRes.ConfirmFilterImport, MessageBoxButtons.YesNo, MessageBoxIcon.Question )
 				== System.Windows.Forms.DialogResult.No )
 				return;
 
 			string data = Clipboard.GetText();
 
 			if ( string.IsNullOrEmpty( data ) ) {
-				MessageBox.Show( "クリップボードが空です。\r\nフィルタデータをコピーしたうえで再度選択してください。\r\n",
-					"インポートできません", MessageBoxButtons.OK, MessageBoxIcon.Information );
+				MessageBox.Show( GeneralRes.FilterClipboardEmpty,
+					GeneralRes.CannotImport, MessageBoxButtons.OK, MessageBoxIcon.Information );
 				return;
 			}
 
@@ -1182,7 +1199,7 @@ namespace ElectronicObserver.Window.Dialog {
 				using ( var str = new StringReader( data ) ) {
 					var exp = (ExpressionManager)_group.Expressions.Load( str );
 					if ( exp == null )
-						throw new ArgumentException( "インポートできないデータ形式です。" );
+						throw new ArgumentException( GeneralRes.WrongImportFormat );
 					else
 						_group.Expressions = exp;
 				}
@@ -1191,7 +1208,7 @@ namespace ElectronicObserver.Window.Dialog {
 
 			} catch ( Exception ex ) {
 
-				MessageBox.Show( "フィルタのインポートに失敗しました。\r\n" + ex.Message, "インポートできません", MessageBoxButtons.OK, MessageBoxIcon.Error );
+				MessageBox.Show( GeneralRes.FilterImportFailed + ex.Message, GeneralRes.CannotImport, MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 
 		}
@@ -1205,12 +1222,12 @@ namespace ElectronicObserver.Window.Dialog {
 
 				Clipboard.SetText( str.ToString() );
 
-				MessageBox.Show( "フィルタをクリップボードにエクスポートしました。\r\n「フィルタのインポート」で取り込んだり、\r\nメモ帳等に貼り付けて保存したりしてください。\r\n",
-					"フィルタのエクスポート", MessageBoxButtons.OK, MessageBoxIcon.Information );
+				MessageBox.Show( GeneralRes.FilterExportDialog,
+					GeneralRes.FilterExport, MessageBoxButtons.OK, MessageBoxIcon.Information );
 
 			} catch ( Exception ex ) {
 
-				MessageBox.Show( "フィルタのエクスポートに失敗しました。\r\n" + ex.Message, "エクスポートできません", MessageBoxButtons.OK, MessageBoxIcon.Error );
+				MessageBox.Show( GeneralRes.FilterExportFailed + ex.Message, GeneralRes.CannotExport, MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 
 		}

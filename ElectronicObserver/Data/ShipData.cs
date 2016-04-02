@@ -901,10 +901,11 @@ namespace ElectronicObserver.Data {
 						case 7:		//艦爆
 						case 8:		//艦攻
 						case 11:	//水爆
-						case 14:	//爆雷
-						case 15:	//ソナー
+						case 14:	//ソナー
+						case 15:	//爆雷
 						case 25:	//オートジャイロ
 						case 26:	//対潜哨戒機
+						case 40:	//大型ソナー
 							eqpower += slot.MasterEquipment.ASW;
 							break;
 					}
@@ -921,8 +922,8 @@ namespace ElectronicObserver.Data {
 				basepower *= GetHPDamageBonus();
 
 				//対潜シナジー
-				if ( SlotInstanceMaster.Where( s => s != null && s.CategoryType == 14 ).Count() > 0 &&
-					 SlotInstanceMaster.Where( s => s != null && s.CategoryType == 15 ).Count() > 0 )
+				if ( SlotInstanceMaster.Where( s => s != null && ( s.CategoryType == 14 || s.CategoryType == 40 ) ).Any() &&		//ソナー or 大型ソナー
+					 SlotInstanceMaster.Where( s => s != null && s.CategoryType == 15 ).Any() )			//爆雷
 					basepower *= 1.15;
 
 				//キャップ
@@ -1146,11 +1147,7 @@ namespace ElectronicObserver.Data {
 		public override void LoadFromResponse( string apiname, dynamic data ) {
 
 			switch ( apiname ) {
-				case "api_port/port":
-				case "api_get_member/ship2":
-				case "api_get_member/ship3":
-				case "api_req_kousyou/getship":
-				case "api_get_member/ship_deck":
+				default:
 					base.LoadFromResponse( apiname, (object)data );
 
 					HPCurrent = (int)RawData.api_nowhp;
@@ -1166,6 +1163,10 @@ namespace ElectronicObserver.Data {
 					Fuel = (int)data.api_fuel;
 					Ammo = (int)data.api_bull;
 					_aircraft = (int[])data.api_onslot;
+					break;
+
+				case "api_req_kaisou/slot_exchange_index":
+					_slot = (int[])data.api_slot;
 					break;
 			}
 

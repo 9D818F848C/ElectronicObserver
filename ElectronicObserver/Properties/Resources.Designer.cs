@@ -335,7 +335,7 @@ namespace ElectronicObserver.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ウィンドウ レイアウトを復元しました。.
+        ///   Looks up a localized string similar to {0}からウィンドウ レイアウトを復元しました。.
         /// </summary>
         internal static string LayoutLoaded {
             get {
@@ -344,7 +344,7 @@ namespace ElectronicObserver.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ウィンドウ レイアウトを保存しました。.
+        ///   Looks up a localized string similar to {0}へウィンドウ レイアウトを保存しました。.
         /// </summary>
         internal static string LayoutSaved {
             get {
@@ -510,7 +510,7 @@ namespace ElectronicObserver.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 一六型改三.
+        ///   Looks up a localized string similar to 二〇型.
         /// </summary>
         internal static string Version {
             get {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ElectronicObserver.Window;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -96,7 +97,7 @@ namespace ElectronicObserver.Data.ShipGroup {
 
 		public override string ToString() {
 			var exp = Expressions.Where( p => p.Enabled );
-			return string.Format( "({0}){1}", exp.Count() == 0 ? "なし" : string.Join( InternalAnd ? " かつ " : " または ", exp ), Inverse ? " を満たさない" : "" );
+			return string.Format( "({0}){1}", exp.Count() == 0 ? GeneralRes.None : string.Join( InternalAnd ? GeneralRes.And : GeneralRes.Or, exp ), Inverse ? GeneralRes.IsNotTrue : "" );
 		}
 
 

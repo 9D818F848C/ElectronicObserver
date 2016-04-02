@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ExpressionView_Enabled.ToolTipText" xml:space="preserve">
+    <value>Enable/Disable</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="ExpressionView_Enabled.Width" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="ExpressionView_ExternalAndOr.HeaderText" xml:space="preserve">
+    <value>Outside</value>
+  </data>
+  <data name="ExpressionView_ExternalAndOr.Width" type="System.Int32, mscorlib">
+    <value>57</value>
+  </data>
+  <data name="ExpressionView_Inverse.HeaderText" xml:space="preserve">
+    <value>Neg.</value>
+  </data>
+  <data name="ExpressionView_Inverse.ToolTipText" xml:space="preserve">
+    <value>Negate condition.</value>
+  </data>
+  <data name="ExpressionView_Inverse.Width" type="System.Int32, mscorlib">
+    <value>40</value>
+  </data>
+  <data name="ExpressionView_InternalAndOr.HeaderText" xml:space="preserve">
+    <value>Inside</value>
+  </data>
+  <data name="ExpressionView_InternalAndOr.Width" type="System.Int32, mscorlib">
+    <value>48</value>
+  </data>
+  <data name="ExpressionView_Expression.HeaderText" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="ExpressionView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 301</value>
+  </data>
+  <data name="LabelResult.Size" type="System.Drawing.Size, System.Drawing">
+    <value>312, 78</value>
+  </data>
+  <data name="Expression_Delete.Text" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Expression_Add.Text" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="splitContainer3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 417</value>
+  </data>
+  <data name="splitContainer3.SplitterDistance" type="System.Int32, mscorlib">
+    <value>301</value>
+  </data>
+  <data name="ExpressionDetailView_LeftOperand.HeaderText" xml:space="preserve">
+    <value>Left Side</value>
+  </data>
+  <data name="ExpressionDetailView_Operator.HeaderText" xml:space="preserve">
+    <value>Condition</value>
+  </data>
+  <data name="ExpressionDetailView_RightOperand.HeaderText" xml:space="preserve">
+    <value>Right Side</value>
+  </data>
+  <data name="ExpressionDetailView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>456, 301</value>
+  </data>
+  <data name="RightOperand_ComboBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>295, 5</value>
+  </data>
+  <data name="RightOperand_ComboBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>156, 23</value>
+  </data>
+  <data name="RightOperand_NumericUpDown.Location" type="System.Drawing.Point, System.Drawing">
+    <value>295, 5</value>
+  </data>
+  <data name="RightOperand_NumericUpDown.Size" type="System.Drawing.Size, System.Drawing">
+    <value>156, 23</value>
+  </data>
+  <data name="Operator.Location" type="System.Drawing.Point, System.Drawing">
+    <value>144, 5</value>
+  </data>
+  <data name="Operator.Size" type="System.Drawing.Size, System.Drawing">
+    <value>147, 23</value>
+  </data>
+  <data name="LeftOperand.Size" type="System.Drawing.Size, System.Drawing">
+    <value>135, 23</value>
+  </data>
+  <data name="Description.Size" type="System.Drawing.Size, System.Drawing">
+    <value>82, 15</value>
+  </data>
+  <data name="Description.Text" xml:space="preserve">
+    <value>(Description)</value>
+  </data>
+  <data name="ExpressionDetail_Delete.Text" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="ExpressionDetail_Edit.Text" xml:space="preserve">
+    <value>Overwrite</value>
+  </data>
+  <data name="ExpressionDetail_Add.Text" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="RightOperand_TextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>295, 5</value>
+  </data>
+  <data name="RightOperand_TextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>156, 23</value>
+  </data>
+  <data name="splitContainer2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>456, 417</value>
+  </data>
+  <data name="splitContainer2.SplitterDistance" type="System.Int32, mscorlib">
+    <value>301</value>
+  </data>
+  <data name="splitContainer1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>778, 417</value>
+  </data>
+  <data name="splitContainer1.SplitterDistance" type="System.Int32, mscorlib">
+    <value>318</value>
+  </data>
+  <data name="ButtonCancel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>705, 454</value>
+  </data>
+  <data name="ButtonCancel.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ButtonOK.Location" type="System.Drawing.Point, System.Drawing">
+    <value>624, 454</value>
+  </data>
+  <data name="tabPage1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>784, 423</value>
+  </data>
+  <data name="tabPage1.Text" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="ConvertToExpression.Text" xml:space="preserve">
+    <value>Convert</value>
+  </data>
+  <data name="ConvertToExpression.ToolTip" xml:space="preserve">
+    <value>Change this exclusion/inclusion list to a filter expression.
+This cannot be undone.</value>
+  </data>
+  <data name="OptimizeConstFilter.Text" xml:space="preserve">
+    <value>Optimise</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>472, 30</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>This is a list of ships added or removed from the group regardless of any filters.
+To add, please select from the main group window like a normal group.</value>
+  </data>
+  <data name="ClearConstFilter.Text" xml:space="preserve">
+    <value>Initialize</value>
+  </data>
+  <data name="ClearConstFilter.ToolTip" xml:space="preserve">
+    <value>Remove all contents from this list.</value>
+  </data>
+  <data name="ConstFilterView_Name.HeaderText" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ConstFilterView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>600, 286</value>
+  </data>
+  <data name="ConstFilterSelector.Items" xml:space="preserve">
+    <value>Include List</value>
+  </data>
+  <data name="ConstFilterSelector.Items1" xml:space="preserve">
+    <value>Exclude List</value>
+  </data>
+  <data name="tabPage2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 24</value>
+  </data>
+  <data name="tabPage2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>616, 375</value>
+  </data>
+  <data name="tabPage2.Text" xml:space="preserve">
+    <value>Include/Exclude List</value>
+  </data>
+  <data name="tabControl1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>792, 451</value>
+  </data>
+  <data name="ButtonMenu.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 454</value>
+  </data>
+  <data name="ButtonMenu.Text" xml:space="preserve">
+    <value>Menu ▼</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>792, 489</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Filter Settings</value>
+  </data>
+</root>

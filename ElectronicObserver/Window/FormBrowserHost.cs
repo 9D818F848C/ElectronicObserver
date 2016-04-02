@@ -1,4 +1,5 @@
 ﻿using BrowserLib;
+using ElectronicObserver.Observer;
 using ElectronicObserver.Resource;
 using ElectronicObserver.Properties;
 using ElectronicObserver.Utility.Mathematics;
@@ -103,8 +104,9 @@ namespace ElectronicObserver.Window {
             ForeColor = Utility.ThemeManager.GetColor(Utility.Configuration.Config.UI.Theme, Utility.ThemeColors.MainFontColor);
             Configuration.Theme = (uint)Utility.Configuration.Config.UI.Theme;
             Browser.AsyncRemoteRun(() => Browser.Proxy.ConfigurationChanged(Configuration));
-        }
-
+			Font = Utility.Configuration.Config.UI.MainFont;
+			Browser.AsyncRemoteRun( () => Browser.Proxy.ConfigurationChanged( Configuration ) );
+		}
 
 		//ロード直後の適用ではレイアウトがなぜか崩れるのでこのタイミングでも適用
 		void InitialAPIReceived( string apiname, dynamic data ) {
@@ -206,6 +208,10 @@ namespace ElectronicObserver.Window {
 			c.ToolMenuDockStyle = (DockStyle)config.ToolMenuDockStyle;
 			c.IsToolMenuVisible = config.IsToolMenuVisible;
 			c.ConfirmAtRefresh = config.ConfirmAtRefresh;
+			// volume
+			if ( Utility.Configuration.Config.BGMPlayer.SyncBrowserMute ) {
+				Utility.SyncBGMPlayer.Instance.IsMute = config.IsMute;
+			}
 		}
 
 		public void GetIconResource() {
@@ -277,15 +283,13 @@ namespace ElectronicObserver.Window {
 
 				Utility.Configuration.Instance.ConfigurationChanged += ConfigurationChanged;
 
-				Observer.APIObserver.Instance.APIList["api_start2"].ResponseReceived +=
+				APIObserver.Instance.APIList["api_start2"].ResponseReceived +=
 					( string apiname, dynamic data ) => InitialAPIReceived( apiname, data );
 
 				// プロキシをセット
-				Browser.AsyncRemoteRun( () =>
-					Browser.Proxy.SetProxy( Utility.Configuration.Config.Connection.UpstreamProxyAddress, Observer.APIObserver.Instance.ProxyPort ) );
-				Observer.APIObserver.Instance.ProxyStarted += () => {
-					Browser.AsyncRemoteRun( () =>
-						Browser.Proxy.SetProxy( Utility.Configuration.Config.Connection.UpstreamProxyAddress, Observer.APIObserver.Instance.ProxyPort ) );
+				Browser.AsyncRemoteRun( () => Browser.Proxy.SetProxy( BuildDownstreamProxy() ) );
+				APIObserver.Instance.ProxyStarted += () => {
+					Browser.AsyncRemoteRun( () => Browser.Proxy.SetProxy( BuildDownstreamProxy() ) );
 				};
 
 				++initializeCompletionCount;
@@ -296,6 +300,27 @@ namespace ElectronicObserver.Window {
 				}
 			} ) );
 		}
+
+		private string BuildDownstreamProxy() {
+			var config = Utility.Configuration.Config.Connection;
+
+			if ( !string.IsNullOrEmpty( config.DownstreamProxy ) ) {
+				return config.DownstreamProxy;
+
+			} else if ( config.UseSystemProxy ) {
+				return APIObserver.Instance.ProxyPort.ToString();
+
+			} else if ( config.UseUpstreamProxy ) {
+				return string.Format(
+					"http=127.0.0.1:{0};https={1}:{2}",
+					APIObserver.Instance.ProxyPort,
+					config.UpstreamProxyAddress,
+					config.UpstreamProxyPort );
+			} else {
+				return string.Format( "http=127.0.0.1:{0}", APIObserver.Instance.ProxyPort );
+			}
+		}
+
 
 		void Browser_Faulted( Exception e ) {
 			if ( Browser.Proxy == null ) {

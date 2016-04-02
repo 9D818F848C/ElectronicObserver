@@ -53,9 +53,9 @@ This project is licensed under the MIT License, for more information, see [here.
 ### Libraries Used
 ---
 
-* [DynamicJson](http://dynamicjson.codeplex.com/)
-* [DockPanel Suite](http://dockpanelsuite.com/)
-* [FiddlerCore](http://www.telerik.com/fiddler/fiddlercore)
+* [DynamicJson](http://dynamicjson.codeplex.com/) (JSON read/write) - [Ms-PL](https://github.com/andanteyk/ElectronicObserver/blob/master/Licenses/Ms-PL.txt)
+* [DockPanel Suite](http://dockpanelsuite.com/) (Window layout) - [MIT License](https://github.com/andanteyk/ElectronicObserver/blob/master/Licenses/DockPanelSuite.txt)
+* [Titanium Web Proxy](https://github.com/RyuuKitsune/Titanium-Web-Proxy) (Network capture) - [MIT License](https://github.com/RyuuKitsune/Titanium-Web-Proxy/blob/master/LICENSE)
 
 ### Contact/Other
 ---

@@ -52,40 +52,22 @@
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BCMakeCert">
-      <HintPath>..\packages\FiddlerCore.4.4.8.4\lib\net40\BCMakeCert.dll</HintPath>
+    <Reference Include="DynamicJson">
+      <HintPath>..\Libraries\DynamicJson.dll</HintPath>
     </Reference>
-    <Reference Include="CertMaker">
-      <HintPath>..\packages\FiddlerCore.4.4.8.4\lib\net40\CertMaker.dll</HintPath>
-    </Reference>
-    <Reference Include="FiddlerCore4">
-      <HintPath>..\packages\FiddlerCore.4.4.8.4\lib\net40\FiddlerCore4.dll</HintPath>
+    <Reference Include="Ionic.Zip, Version=1.9.8.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.9.8\lib\net20\Ionic.Zip.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
@@ -109,12 +91,14 @@
     <Compile Include="Data\ArsenalData.cs" />
     <Compile Include="Data\Battle\BattleAirBattle.cs" />
     <Compile Include="Data\Battle\BattleCombinedAirBattle.cs" />
+    <Compile Include="Data\Battle\BattleCombinedAirRaid.cs" />
     <Compile Include="Data\Battle\BattleCombinedNightOnly.cs" />
     <Compile Include="Data\Battle\BattleCombinedNormalDay.cs" />
     <Compile Include="Data\Battle\BattleCombinedNormalNight.cs" />
     <Compile Include="Data\Battle\BattleCombinedWater.cs" />
     <Compile Include="Data\Battle\BattleData.cs" />
     <Compile Include="Data\Battle\BattleDay.cs" />
+    <Compile Include="Data\Battle\BattleAirRaid.cs" />
     <Compile Include="Data\Battle\BattleManager.cs" />
     <Compile Include="Data\Battle\BattleNight.cs" />
     <Compile Include="Data\Battle\BattleNightOnly.cs" />
@@ -201,6 +185,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>NotifierRes.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utility\DialogueTranslator.cs" />
     <Compile Include="Utility\ThemeManager.cs" />
     <Compile Include="Utility\DynamicTranslator.cs" />
     <Compile Include="Window\Dialog\ConfigRes.Designer.cs">
@@ -217,6 +202,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>NotifyRes.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Window\FormDialogue.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Window\FormDialogue.Designer.cs">
+      <DependentUpon>FormDialogue.cs</DependentUpon>
     </Compile>
     <Compile Include="Window\FormXPCalculator.cs">
       <SubType>Form</SubType>
@@ -244,15 +235,26 @@
     <Compile Include="Notifier\NotifierManager.cs" />
     <Compile Include="Observer\APIKancolleDB.cs" />
     <Compile Include="Observer\kcsapi\api_get_member\material.cs" />
+    <Compile Include="Observer\kcsapi\api_get_member\payitem.cs" />
+    <Compile Include="Observer\kcsapi\api_get_member\record.cs" />
+    <Compile Include="Observer\kcsapi\api_get_member\require_info.cs" />
     <Compile Include="Observer\kcsapi\api_get_member\ship_deck.cs" />
+    <Compile Include="Observer\kcsapi\api_req_combined_battle\ld_airbattle.cs" />
     <Compile Include="Observer\kcsapi\api_req_hensei\combined.cs" />
+    <Compile Include="Observer\kcsapi\api_req_hensei\preset_select.cs" />
     <Compile Include="Observer\kcsapi\api_req_kaisou\marriage.cs" />
     <Compile Include="Observer\kcsapi\api_req_kaisou\open_exslot.cs" />
+    <Compile Include="Observer\kcsapi\api_req_kaisou\slot_exchange_index.cs" />
+    <Compile Include="Observer\kcsapi\api_req_kousyou\remodel_slotlist.cs" />
     <Compile Include="Observer\kcsapi\api_req_map\select_eventmap_rank.cs" />
+    <Compile Include="Observer\kcsapi\api_req_member\updatecomment.cs" />
     <Compile Include="Observer\kcsapi\api_req_mission\result.cs" />
     <Compile Include="Observer\kcsapi\api_req_ranking\getlist.cs" />
     <Compile Include="Observer\kcsapi\api_req_sortie\airbattle.cs" />
+    <Compile Include="Observer\kcsapi\api_req_sortie\ld_airbattle.cs" />
     <Compile Include="Resource\Record\ResourceRecord.cs" />
+    <Compile Include="Utility\SyncBGMPlayer.cs" />
+    <Compile Include="Utility\MediaPlayer.cs" />
     <Compile Include="Utility\PathHelper.cs" />
     <Compile Include="Utility\Storage\DataStorage.cs" />
     <Compile Include="Observer\APIBase.cs" />
@@ -353,12 +355,6 @@
     <Compile Include="Window\Control\ShipStatusResource.Designer.cs">
       <DependentUpon>ShipStatusResource.cs</DependentUpon>
     </Compile>
-    <Compile Include="Window\Control\StatusBar.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Window\Control\StatusBar.Designer.cs">
-      <DependentUpon>StatusBar.cs</DependentUpon>
-    </Compile>
     <Compile Include="Window\Control\StatusBarModule.cs" />
     <Compile Include="Window\Control\WindowCaptureButton.cs">
       <SubType>Component</SubType>
@@ -384,17 +380,47 @@
     <Compile Include="Window\Dialog\DialogConfiguration.Designer.cs">
       <DependentUpon>DialogConfiguration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Window\Dialog\DialogConfigurationBGMPlayer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Window\Dialog\DialogConfigurationBGMPlayer.Designer.cs">
+      <DependentUpon>DialogConfigurationBGMPlayer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Window\Dialog\DialogConfigurationNotifier.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Window\Dialog\DialogConfigurationNotifier.Designer.cs">
       <DependentUpon>DialogConfigurationNotifier.cs</DependentUpon>
     </Compile>
+    <Compile Include="Window\Dialog\DialogConstructionRecordViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Window\Dialog\DialogConstructionRecordViewer.Designer.cs">
+      <DependentUpon>DialogConstructionRecordViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Window\Dialog\DialogDevelopmentRecordViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Window\Dialog\DialogDevelopmentRecordViewer.Designer.cs">
+      <DependentUpon>DialogDevelopmentRecordViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Window\Dialog\DialogDropRecordViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Window\Dialog\DialogDropRecordViewer.Designer.cs">
+      <DependentUpon>DialogDropRecordViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Window\Dialog\DialogEquipmentList.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Window\Dialog\DialogEquipmentList.Designer.cs">
       <DependentUpon>DialogEquipmentList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Window\Dialog\DialogHalloween.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Window\Dialog\DialogHalloween.Designer.cs">
+      <DependentUpon>DialogHalloween.cs</DependentUpon>
     </Compile>
     <Compile Include="Window\Dialog\DialogLocalAPILoader.cs">
       <SubType>Form</SubType>
@@ -407,7 +433,6 @@
     <Compile Include="Data\ShipData.cs" />
     <Compile Include="Data\ShipDataMaster.cs" />
     <Compile Include="Data\ShipType.cs" />
-    <Compile Include="DynamicJson.cs" />
     <Compile Include="Window\Dialog\DialogLocalAPILoader2.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -616,6 +641,24 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ConfigRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Window\Dialog\DialogConstructionRecordViewer.en.resx">
+      <DependentUpon>DialogConstructionRecordViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Window\Dialog\DialogDevelopmentRecordViewer.en.resx">
+      <DependentUpon>DialogDevelopmentRecordViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Window\Dialog\DialogDropRecordViewer.en.resx">
+      <DependentUpon>DialogDropRecordViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Window\Dialog\DialogShipGroupColumnFilter.en.resx">
+      <DependentUpon>DialogShipGroupColumnFilter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Window\Dialog\DialogShipGroupFilter.en.resx">
+      <DependentUpon>DialogShipGroupFilter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Window\Dialog\DialogShipGroupSortOrder.en.resx">
+      <DependentUpon>DialogShipGroupSortOrder.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Window\Dialog\EncycloRes.en.resx" />
     <EmbeddedResource Include="Window\Dialog\EncycloRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -625,6 +668,10 @@
     <EmbeddedResource Include="Window\Dialog\NotifyRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>NotifyRes.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Window\FormDialogue.resx">
+      <DependentUpon>FormDialogue.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Window\FormXPCalculator.en.resx">
       <DependentUpon>FormXPCalculator.cs</DependentUpon>
@@ -660,9 +707,6 @@
     <EmbeddedResource Include="Window\Control\ShipStatusResource.resx">
       <DependentUpon>ShipStatusResource.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Window\Control\StatusBar.resx">
-      <DependentUpon>StatusBar.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Window\Control\WindowCaptureButton.resx">
       <DependentUpon>WindowCaptureButton.cs</DependentUpon>
     </EmbeddedResource>
@@ -675,11 +719,26 @@
     <EmbeddedResource Include="Window\Dialog\DialogConfiguration.resx">
       <DependentUpon>DialogConfiguration.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Window\Dialog\DialogConfigurationBGMPlayer.resx">
+      <DependentUpon>DialogConfigurationBGMPlayer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Window\Dialog\DialogConfigurationNotifier.resx">
       <DependentUpon>DialogConfigurationNotifier.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Window\Dialog\DialogConstructionRecordViewer.resx">
+      <DependentUpon>DialogConstructionRecordViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Window\Dialog\DialogDevelopmentRecordViewer.resx">
+      <DependentUpon>DialogDevelopmentRecordViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Window\Dialog\DialogDropRecordViewer.resx">
+      <DependentUpon>DialogDropRecordViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Window\Dialog\DialogEquipmentList.resx">
       <DependentUpon>DialogEquipmentList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Window\Dialog\DialogHalloween.resx">
+      <DependentUpon>DialogHalloween.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Window\Dialog\DialogLocalAPILoader.resx">
       <DependentUpon>DialogLocalAPILoader.cs</DependentUpon>
@@ -778,6 +837,9 @@
     <EmbeddedResource Include="Window\Integrate\FormIntegrated.resx">
       <DependentUpon>FormIntegrated.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Assets.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -830,6 +892,10 @@
     <ProjectReference Include="..\DockPanelSuite\WinFormsUI\WinFormsUI.csproj">
       <Project>{c75532c4-765b-418e-b09b-46d36b2abdb1}</Project>
       <Name>WinFormsUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Titanium-Web-Proxy\Titanium.Web.Proxy\Titanium.Web.Proxy.csproj">
+      <Project>{8d73a1be-868c-42d2-9ece-f32cc1a02906}</Project>
+      <Name>Titanium.Web.Proxy</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

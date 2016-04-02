@@ -525,4 +525,82 @@ More details, as well as an access key, can be found on the site below. (opens y
   <data name="ThemeRestartWarning" xml:space="preserve">
     <value>A restart will be required for theme changes to take full effect.</value>
   </data>
+  <data name="AirSuperiorityMethod" xml:space="preserve">
+    <value>Air superiority:</value>
+  </data>
+  <data name="AutosavePeriod" xml:space="preserve">
+    <value>Record autosave:</value>
+  </data>
+  <data name="BarColorMorphing" xml:space="preserve">
+    <value>Smooth bar colors</value>
+  </data>
+  <data name="BarColorMorphingTooltip" xml:space="preserve">
+    <value>Smooth out color transitions of HP/Resource bars to match Kancolle's UI.</value>
+  </data>
+  <data name="CurrentTime" xml:space="preserve">
+    <value>Current JST</value>
+  </data>
+  <data name="DisplayEquipLevels" xml:space="preserve">
+    <value>Show equipment levels/plane XP</value>
+  </data>
+  <data name="DisplayEquipLevelsTooltip" xml:space="preserve">
+    <value>Displays the improvement level of equipment and plane XP on their icon.</value>
+  </data>
+  <data name="DontSave" xml:space="preserve">
+    <value>Don't save</value>
+  </data>
+  <data name="IgnorePlaneXP" xml:space="preserve">
+    <value>Ignore plane XP</value>
+  </data>
+  <data name="LockFloatWindow" xml:space="preserve">
+    <value>Close floating windows when locked</value>
+  </data>
+  <data name="LockFloatWindowTooltip" xml:space="preserve">
+    <value>When layout locking is enabled, allows you to close floating windows (those not docked to the main application) individually.
+This setting is useful if you only periodically open some windows.</value>
+  </data>
+  <data name="LockLayout" xml:space="preserve">
+    <value>Lock layout</value>
+  </data>
+  <data name="LockLayoutTooltip" xml:space="preserve">
+    <value>When enabled, prevents the docking/undocking of windows and changes to window size.</value>
+  </data>
+  <data name="SaveDaily" xml:space="preserve">
+    <value>Daily</value>
+  </data>
+  <data name="SaveHourly" xml:space="preserve">
+    <value>Hourly</value>
+  </data>
+  <data name="ShowAnchorageTimer" xml:space="preserve">
+    <value>Show anchorage repair timer</value>
+  </data>
+  <data name="ShowAnchorageTimerTooltip" xml:space="preserve">
+    <value>Display an anchorage repair timer with the fleet list.</value>
+  </data>
+  <data name="TimeDisplay" xml:space="preserve">
+    <value>Time display:</value>
+  </data>
+  <data name="UntilPvPReset" xml:space="preserve">
+    <value>Until PvP reset</value>
+  </data>
+  <data name="UntilQuestReset" xml:space="preserve">
+    <value>Until daily reset</value>
+  </data>
+  <data name="UseSystemProxy" xml:space="preserve">
+    <value>Use system proxy</value>
+  </data>
+  <data name="UseSystemProxyTooltip" xml:space="preserve">
+    <value>Use your system proxy settings.</value>
+  </data>
+  <data name="UseSystemVolume" xml:space="preserve">
+    <value>Use system volume for notifications and BGM</value>
+  </data>
+  <data name="UseSystemVolumeTooltip" xml:space="preserve">
+    <value>Sets whether to use the system's volume settings for notifications and BGM.
+When this setting is disabled, you cannot change the volume settings individually through Windows.
+When this setting is enabled, you must use the Windows Volume Mixer to change the volume.</value>
+  </data>
+  <data name="UsingPlaneXPBeta" xml:space="preserve">
+    <value>Using plane XP (beta)</value>
+  </data>
 </root>

@@ -38,8 +38,6 @@ namespace ElectronicObserver.Window {
 			ControlHelper.SetDoubleBuffered( TableBottom );
 
 
-			ConfigurationChanged();
-
 			HPBars = new List<ShipStatusHP>( 18 );
 
 
@@ -77,6 +75,9 @@ namespace ElectronicObserver.Window {
 			AirStage2Enemy.ImageList =
 				ResourceManager.Instance.Equipments;
 
+
+			ConfigurationChanged();
+
 			BaseLayoutPanel.Visible = false;
 
 
@@ -98,11 +99,13 @@ namespace ElectronicObserver.Window {
 			o.APIList["api_req_battle_midnight/battle"].ResponseReceived += Updated;
 			o.APIList["api_req_battle_midnight/sp_midnight"].ResponseReceived += Updated;
 			o.APIList["api_req_sortie/airbattle"].ResponseReceived += Updated;
+			o.APIList["api_req_sortie/ld_airbattle"].ResponseReceived += Updated;
 			o.APIList["api_req_combined_battle/battle"].ResponseReceived += Updated;
 			o.APIList["api_req_combined_battle/midnight_battle"].ResponseReceived += Updated;
 			o.APIList["api_req_combined_battle/sp_midnight"].ResponseReceived += Updated;
 			o.APIList["api_req_combined_battle/airbattle"].ResponseReceived += Updated;
 			o.APIList["api_req_combined_battle/battle_water"].ResponseReceived += Updated;
+			o.APIList["api_req_combined_battle/ld_airbattle"].ResponseReceived += Updated;
 			o.APIList["api_req_combined_battle/battleresult"].ResponseReceived += Updated;
 			o.APIList["api_req_practice/battle"].ResponseReceived += Updated;
 			o.APIList["api_req_practice/midnight_battle"].ResponseReceived += Updated;
@@ -132,7 +135,8 @@ namespace ElectronicObserver.Window {
 
 
 				case "api_req_sortie/battle":
-				case "api_req_practice/battle": {
+				case "api_req_practice/battle":
+				case "api_req_sortie/ld_airbattle": {
 
 						SetFormation( bm.BattleDay );
 						SetSearchingResult( bm.BattleDay );
@@ -177,7 +181,8 @@ namespace ElectronicObserver.Window {
 					} break;
 
 				case "api_req_combined_battle/battle":
-				case "api_req_combined_battle/battle_water": {
+				case "api_req_combined_battle/battle_water":
+				case "api_req_combined_battle/ld_airbattle": {
 
 						SetFormation( bm.BattleDay );
 						SetSearchingResult( bm.BattleDay );
@@ -689,7 +694,7 @@ namespace ElectronicObserver.Window {
 					ShipData ship = bd.Initial.FriendFleet.MembersInstance[i];
 
 					ToolTipInfo.SetToolTip( HPBars[i],
-						string.Format( "{0} {1} Lv. {1}\r\nHP: ({2} → {3})/{4} ({5}) [{6}]\r\n" + GeneralRes.DamageDone + ": {7}",
+						string.Format( "{0} {1} Lv. {2}\r\nHP: ({3} → {4})/{5} ({6}) [{7}]\r\n" + GeneralRes.DamageDone + ": {8}",
 							ship.MasterShip.ShipTypeName,
 							ship.MasterShip.NameWithClass,
 							ship.Level,
@@ -722,8 +727,9 @@ namespace ElectronicObserver.Window {
 						);
 				}
 			}
-
-			HPBars[bd.MVPShipIndex].BackColor = Utility.ThemeManager.GetColor(Utility.Configuration.Config.UI.Theme, Utility.ThemeColors.MVPHighlight);
+            
+			foreach ( int i in bd.MVPShipIndexes )
+				HPBars[i].BackColor = Utility.ThemeManager.GetColor(Utility.Configuration.Config.UI.Theme, Utility.ThemeColors.MVPHighlight);
 
             FleetCombined.Visible = false;
 			for ( int i = 12; i < 18; i++ ) {
@@ -813,7 +819,7 @@ namespace ElectronicObserver.Window {
 							Math.Max( HPBars[i + 12].Value, 0 ),
 							HPBars[i + 12].MaximumValue,
 							HPBars[i + 12].Value - HPBars[i + 12].PrevValue,
-							Constants.GetDamageState( (double)HPBars[i + 12].Value / HPBars[i + 12].MaximumValue, ship.MasterShip.IsLandBase, isEscaped ),
+							Constants.GetDamageState( (double)HPBars[i + 12].Value / HPBars[i + 12].MaximumValue, isPractice, ship.MasterShip.IsLandBase, isEscaped ),
 							attackDamages[i + 12]
 							)
 						);
@@ -822,11 +828,11 @@ namespace ElectronicObserver.Window {
 					else HPBars[i + 12].BackColor = Utility.ThemeManager.GetColor(Utility.Configuration.Config.UI.Theme, Utility.ThemeColors.BackgroundColor);
                 }
 			}
-
-
-            HPBars[bd.MVPShipIndex].BackColor = Utility.ThemeManager.GetColor(Utility.Configuration.Config.UI.Theme, Utility.ThemeColors.MVPHighlight);
-            HPBars[12 + bd.MVPShipCombinedIndex].BackColor = Utility.ThemeManager.GetColor(Utility.Configuration.Config.UI.Theme, Utility.ThemeColors.MVPHighlight);
-        }
+			foreach ( int i in bd.MVPShipIndexes )
+				HPBars[i].BackColor = Utility.ThemeManager.GetColor(Utility.Configuration.Config.UI.Theme, Utility.ThemeColors.MVPHighlight);
+			foreach ( int i in bd.MVPShipCombinedIndexes )
+				HPBars[12 + i].BackColor = Utility.ThemeManager.GetColor(Utility.Configuration.Config.UI.Theme, Utility.ThemeColors.MVPHighlight);
+		}
 
 
 		/// <summary>
@@ -900,6 +906,35 @@ namespace ElectronicObserver.Window {
 
 
 		/// <summary>
+		/// 空襲戦における勝利ランクを計算します。情報不足のため正確ではありません。
+		/// </summary>
+		/// <param name="countFriend">戦闘に参加した自軍艦数。</param>
+		/// <param name="sunkFriend">撃沈された自軍艦数。</param>
+		/// <param name="friendrate">自軍損害率。</param>
+		private static int GetWinRankAirRaid( int countFriend, int sunkFriend, double friendrate ) {
+			int rank;
+
+			if ( friendrate <= 0.0 )
+				rank = 7;	//SS
+			else if ( friendrate < 0.1 )
+				rank = 5;	//A
+			else if ( friendrate < 0.2 )
+				rank = 4;	//B
+			else if ( friendrate < 0.5 )
+				rank = 3;	//C
+			else
+				rank = 2;	//D
+
+			/*/// 撃沈艦があってもランクは変わらない(撃沈ありA勝利が確認されている)
+			if ( sunkFriend > 0 )
+				rank--;
+			//*/
+
+			return rank;
+		}
+
+
+		/// <summary>
 		/// 損害率と戦績予測を設定します。
 		/// </summary>
 		private void SetDamageRateNormal( BattleData bd, int[] initialHPs ) {
@@ -933,7 +968,11 @@ namespace ElectronicObserver.Window {
 				int sunkFriend = resultHPs.Take( countFriend ).Count( v => v <= 0 );
 				int sunkEnemy = resultHPs.Skip( 6 ).Take( countEnemy ).Count( v => v <= 0 );
 
-				int rank = GetWinRank( countFriend, countEnemy, sunkFriend, sunkEnemy, friendrate, enemyrate, resultHPs[6] <= 0 );
+				int rank;
+				if ( bd is BattleAirRaid )
+					rank = GetWinRankAirRaid( countFriend, sunkFriend, friendrate );
+				else
+					rank = GetWinRank( countFriend, countEnemy, sunkFriend, sunkEnemy, friendrate, enemyrate, resultHPs[6] <= 0 );
 
 
 				WinRank.Text = Constants.GetWinRank( rank );
@@ -979,7 +1018,11 @@ namespace ElectronicObserver.Window {
 				int sunkFriend = resultHPs.Take( countFriend ).Count( v => v <= 0 ) + resultHPs.Skip( 12 ).Take( countFriendCombined ).Count( v => v <= 0 );
 				int sunkEnemy = resultHPs.Skip( 6 ).Take( countEnemy ).Count( v => v <= 0 );
 
-				int rank = GetWinRank( countFriend + countFriendCombined, countEnemy, sunkFriend, sunkEnemy, friendrate, enemyrate, resultHPs[6] <= 0 );
+				int rank;
+				if ( bd is BattleCombinedAirRaid )
+					rank = GetWinRankAirRaid( countFriend, sunkFriend, friendrate );
+				else
+					rank = GetWinRank( countFriend + countFriendCombined, countEnemy, sunkFriend, sunkEnemy, friendrate, enemyrate, resultHPs[6] <= 0 );
 
 
 				WinRank.Text = Constants.GetWinRank( rank );
@@ -1020,7 +1063,7 @@ namespace ElectronicObserver.Window {
 				int index = pd.SearchlightIndexEnemy;
 				if ( index != -1 ) {
 					AirStage1Enemy.Text = "#" + ( index + 1 );
-					AirStage1Enemy.ForeColor = SystemColors.ControlText;	
+					AirStage1Enemy.ForeColor = SystemColors.ControlText;
 					AirStage1Enemy.ImageAlign = ContentAlignment.MiddleLeft;
 					AirStage1Enemy.ImageIndex = (int)ResourceManager.EquipmentContent.Searchlight;
 					ToolTipInfo.SetToolTip( AirStage1Enemy, GeneralRes.SearchlightUsed + ": " + pd.SearchlightEnemyInstance.NameWithClass );
@@ -1088,8 +1131,17 @@ namespace ElectronicObserver.Window {
 			SubFont = Utility.Configuration.Config.UI.SubFont;
             ForeColor = Utility.ThemeManager.GetColor(Utility.Configuration.Config.UI.Theme, Utility.ThemeColors.MainFontColor);
             BackColor = Utility.ThemeManager.GetColor(Utility.Configuration.Config.UI.Theme, Utility.ThemeColors.BackgroundColor);
-        }
 
+			if ( HPBars != null ) {
+				foreach ( var b in HPBars ) {
+					b.MainFont = MainFont;
+					b.SubFont = SubFont;
+                    b.ForeColor = ForeColor;
+					b.HPBar.ColorMorphing = Utility.Configuration.Config.UI.BarColorMorphing;
+					b.HPBar.SetBarColorScheme( Utility.Configuration.Config.UI.BarColorScheme.Select( col => col.ColorData ).ToArray() );
+				}
+			}
+		}
 
 
 		private void TableTop_CellPaint( object sender, TableLayoutCellPaintEventArgs e ) {

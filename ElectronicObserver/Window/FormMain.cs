@@ -31,8 +31,15 @@ namespace ElectronicObserver.Window {
 
 		public DockPanel MainPanel { get { return MainDockPanel; } }
 		public FormWindowCapture WindowCapture { get { return fWindowCapture; } }
+		private int ClockFormat;
 
-        #endregion
+		/// <summary>
+		/// 音量設定用フラグ
+		/// -1 = 無効, そうでなければ現在の試行回数
+		/// </summary>
+		private int _volumeUpdateState = 0;
+
+		#endregion
 
         //Singleton
         public static FormMain Instance;
@@ -55,6 +62,7 @@ namespace ElectronicObserver.Window {
 		public FormBrowserHost fBrowser;
 		public FormWindowCapture fWindowCapture;
         public FormXPCalculator fXPCalculator;
+        public FormDialogue fDialogue;
 
 		#endregion
 
@@ -96,7 +104,11 @@ namespace ElectronicObserver.Window {
         }
 
 		private async void FormMain_Load( object sender, EventArgs e ) {
+			if ( !Directory.Exists( "Settings" ) )
+				Directory.CreateDirectory( "Settings" );
 
+
+			Utility.Configuration.Instance.Load();
 			Utility.Logger.Instance.LogAdded += new Utility.LogAddedEventHandler( ( Utility.Logger.LogData data ) => {
 				if ( InvokeRequired ) {
 					// Invokeはメッセージキューにジョブを投げて待つので、別のBeginInvokeされたジョブが既にキューにあると、
@@ -118,9 +130,38 @@ namespace ElectronicObserver.Window {
 			RecordManager.Instance.Load();
 			KCDatabase.Instance.Load();
 			NotifierManager.Instance.Initialize( this );
+			SyncBGMPlayer.Instance.ConfigurationChanged();
 
-
+			#region Icon settings
 			Icon = ResourceManager.Instance.AppIcon;
+
+			StripMenu_File_Configuration.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormConfiguration];
+
+			StripMenu_View_Fleet.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormFleet];
+			StripMenu_View_FleetOverview.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormFleet];
+			StripMenu_View_ShipGroup.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormShipGroup];
+			StripMenu_View_Dock.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormDock];
+			StripMenu_View_Arsenal.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormArsenal];
+			StripMenu_View_Headquarters.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormHeadQuarters];
+			StripMenu_View_Quest.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormQuest];
+			StripMenu_View_Information.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormInformation];
+			StripMenu_View_Compass.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormCompass];
+			StripMenu_View_Battle.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormBattle];
+			StripMenu_View_Browser.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormBrowser];
+			StripMenu_View_Log.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormLog];
+			StripMenu_WindowCapture.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormWindowCapture];
+
+			StripMenu_Tool_EquipmentList.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormEquipmentList];
+			StripMenu_Tool_DropRecord.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormDropRecord];
+			StripMenu_Tool_DevelopmentRecord.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormDevelopmentRecord];
+			StripMenu_Tool_ConstructionRecord.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormConstructionRecord];
+			StripMenu_Tool_ResourceChart.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormResourceChart];
+			StripMenu_Tool_AlbumMasterShip.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormAlbumShip];
+			StripMenu_Tool_AlbumMasterEquipment.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormAlbumEquipment];
+
+			StripMenu_Help_Version.Image = ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.AppIcon];
+			#endregion
+
 
 			APIObserver.Instance.Start( Utility.Configuration.Config.Connection.Port, this );
 
@@ -150,10 +191,14 @@ namespace ElectronicObserver.Window {
 			SubForms.Add( fBrowser = new FormBrowserHost( this ) );
 			SubForms.Add( fWindowCapture = new FormWindowCapture( this ) );
             SubForms.Add(fXPCalculator = new FormXPCalculator(this));
+            SubForms.Add(fDialogue = new FormDialogue(this));
+
+
+			ConfigurationChanged();		//設定から初期化
 
 			LoadLayout( Configuration.Config.Life.LayoutFilePath );
 
-			ConfigurationChanged();		//設定から初期化
+
 
 			SoftwareInformation.CheckUpdate();
 
@@ -170,12 +215,28 @@ namespace ElectronicObserver.Window {
 				}
 			}
 
+
+			// 🎃
+			if ( DateTime.Now.Month == 10 && DateTime.Now.Day == 31 ) {
+				APIObserver.Instance.APIList["api_port/port"].ResponseReceived += CallPumpkinHead;
+			}
+
 			// 完了通知（ログインページを開く）
 			fBrowser.InitializeApiCompleted();
 
 			UIUpdateTimer.Start();
-
+            
 			Utility.Logger.Add( 2, Resources.StartupComplete );
+
+		}
+
+
+		private void FormMain_Shown( object sender, EventArgs e ) {
+			// Load で設定すると無視されるかバグる(タスクバーに出なくなる)のでここで設定
+			TopMost = Utility.Configuration.Config.Life.TopMost;
+
+			// HACK: タスクバーに表示されなくなる不具合への応急処置　効くかは知らない
+			Show();
 		}
 
 
@@ -186,9 +247,11 @@ namespace ElectronicObserver.Window {
 
 			StripMenu_Debug.Enabled = StripMenu_Debug.Visible = c.Debug.EnableDebugMenu;
 			StripStatus.Visible = c.Life.ShowStatusBar;
-			TopMost = c.Life.TopMost;
 
-            
+            // Load で TopMost を変更するとバグるため(前述)
+            if (UIUpdateTimer.Enabled)
+                TopMost = c.Life.TopMost;
+
 
             Font = c.UI.MainFont;
             //StripMenu.Font = Font;
@@ -199,7 +262,26 @@ namespace ElectronicObserver.Window {
             StripMenu.ForeColor = Utility.ThemeManager.GetColor(c.UI.Theme, Utility.ThemeColors.MainFontColor);
             StripStatus.BackColor = Utility.ThemeManager.GetColor(c.UI.Theme, Utility.ThemeColors.BackgroundColor);
             StripStatus.ForeColor = Utility.ThemeManager.GetColor(c.UI.Theme, Utility.ThemeColors.MainFontColor);
-        }
+
+			ClockFormat = c.Life.ClockFormat;
+			MainDockPanel.Skin.AutoHideStripSkin.TextFont = Font;
+			MainDockPanel.Skin.DockPaneStripSkin.TextFont = Font;
+
+
+			if ( c.Life.LockLayout ) {
+				//MainDockPanel.AllowChangeLayout = false;
+				FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			} else {
+				//MainDockPanel.AllowChangeLayout = true;
+				FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+			}
+
+			StripMenu_File_Layout_LockLayout.Checked = c.Life.LockLayout;
+			//MainDockPanel.CanCloseFloatWindowInLock = c.Life.CanCloseFloatWindowInLock;
+
+			if ( !c.Control.UseSystemVolume )
+				_volumeUpdateState = -1;
+		}
         
 		private void StripMenu_Debug_LoadAPIFromFile_Click( object sender, EventArgs e ) {
 
@@ -230,11 +312,69 @@ namespace ElectronicObserver.Window {
 
 			SystemEvents.OnUpdateTimerTick();
 
-			// 東京標準時で表示
-			DateTime now = TimeZoneInfo.ConvertTimeBySystemTimeZoneId( DateTime.UtcNow, "Tokyo Standard Time" );
-			StripStatus_Clock.Text = now.ToString( "HH:mm:ss" );
-			StripStatus_Clock.ToolTipText = now.ToString( "yyyy/MM/dd (ddd)" );
+			// 東京標準時
+			DateTime now = DateTime.UtcNow + new TimeSpan( 9, 0, 0 );
+
+			switch ( ClockFormat ) {
+				case 0:	//時計表示
+					StripStatus_Clock.Text = now.ToString( "HH\\:mm\\:ss" );
+					StripStatus_Clock.ToolTipText = now.ToString( "yyyy\\/MM\\/dd (ddd)" );
+					break;
+
+				case 1:	//演習更新まで
+					{
+						DateTime border = now.Date.AddHours( 3 );
+						while ( border < now )
+							border = border.AddHours( 12 );
+
+						TimeSpan ts = border - now;
+						StripStatus_Clock.Text = string.Format( "{0:D2}:{1:D2}:{2:D2}", (int)ts.TotalHours, ts.Minutes, ts.Seconds );
+						StripStatus_Clock.ToolTipText = now.ToString( "yyyy\\/MM\\/dd (ddd) HH\\:mm\\:ss" );
+
+					} break;
+
+				case 2:	//任務更新まで
+					{
+						DateTime border = now.Date.AddHours( 5 );
+						if ( border < now )
+							border = border.AddHours( 24 );
+
+						TimeSpan ts = border - now;
+						StripStatus_Clock.Text = string.Format( "{0:D2}:{1:D2}:{2:D2}", (int)ts.TotalHours, ts.Minutes, ts.Seconds );
+						StripStatus_Clock.ToolTipText = now.ToString( "yyyy\\/MM\\/dd (ddd) HH\\:mm\\:ss" );
+
+					} break;
+			}
+
+
+			// WMP コントロールによって音量が勝手に変えられてしまうため、前回終了時の音量の再設定を試みる。
+			// 10回試行してダメなら諦める(例外によるラグを防ぐため)
+			// 起動直後にやらないのはちょっと待たないと音量設定が有効にならないから
+			if ( _volumeUpdateState != -1 && _volumeUpdateState < 10 && Utility.Configuration.Config.Control.UseSystemVolume ) {
+
+				try {
+					uint id = (uint)System.Diagnostics.Process.GetCurrentProcess().Id;
+					float volume =  Utility.Configuration.Config.Control.LastVolume;
+					bool mute = Utility.Configuration.Config.Control.LastIsMute;
+
+					BrowserLib.VolumeManager.SetApplicationVolume( id, volume );
+					BrowserLib.VolumeManager.SetApplicationMute( id, mute );
+
+					SyncBGMPlayer.Instance.SetInitialVolume( (int)( volume * 100 ) );
+					foreach ( var not in NotifierManager.Instance.GetNotifiers() )
+						not.SetInitialVolume( (int)( volume * 100 ) );
+
+					_volumeUpdateState = -1;
+
+				} catch ( Exception ) {
+
+					_volumeUpdateState++;
+				}
+			}
+
 		}
+
+
 
 
 		private void FormMain_FormClosing( object sender, FormClosingEventArgs e ) {
@@ -254,14 +394,25 @@ namespace ElectronicObserver.Window {
 
 			fBrowser.CloseBrowser();
 
-			if ( !Directory.Exists( "Settings" ) )
-				Directory.CreateDirectory( "Settings" );
 
 			SystemEvents.OnSystemShuttingDown();
 
 
 			SaveLayout( Configuration.Config.Life.LayoutFilePath );
 
+
+			// 音量の保存
+			{
+				try {
+					uint id = (uint)System.Diagnostics.Process.GetCurrentProcess().Id;
+					Utility.Configuration.Config.Control.LastVolume = BrowserLib.VolumeManager.GetApplicationVolume( id );
+					Utility.Configuration.Config.Control.LastIsMute = BrowserLib.VolumeManager.GetApplicationMute( id );
+
+				} catch ( Exception ) {
+					/* ぷちっ */
+				}
+
+			}
 		}
 
 		private void FormMain_FormClosed( object sender, FormClosedEventArgs e ) {
@@ -311,18 +462,23 @@ namespace ElectronicObserver.Window {
 					return fBattle;
 				case "FleetOverview":
 					return fFleetOverview;
-				case "ShipGroup":
-					return fShipGroup;
+				//case "ShipGroup":
+				//	return fShipGroup;
 				case "Browser":
 					return fBrowser;
 				case "WindowCapture":
 					return fWindowCapture;
 				default:
+					if ( persistString.StartsWith( "ShipGroup" ) ) {
+						fShipGroup.ConfigureFromPersistString( persistString );
+						return fShipGroup;
+					}
 					if ( persistString.StartsWith( FormIntegrate.PREFIX ) ) {
 						return FormIntegrate.FromPersistString( this, persistString );
 					}
 					return null;
 			}
+
 		}
 
 
@@ -343,21 +499,6 @@ namespace ElectronicObserver.Window {
 
 					MainDockPanel.LoadFromXml( stream, new DeserializeDockContent( GetDockContentFromPersistString ) );
 
-					//一度全ウィンドウを読み込むことでフォームを初期化する
-					foreach ( var x in MainDockPanel.Contents ) {
-						if ( x.DockHandler.DockState == DockState.Hidden ) {
-							x.DockHandler.Show( MainDockPanel );
-							x.DockHandler.Hide();
-						} else {
-							x.DockHandler.Activate();
-						}
-					}
-
-					// checkme: このコードの存在意義
-					/*/
-					if ( MainDockPanel.Contents.Count > 0 )
-						MainDockPanel.Contents.First().DockHandler.Activate();
-					//*/
 
 					fWindowCapture.AttachAll();
 
@@ -403,14 +544,15 @@ namespace ElectronicObserver.Window {
 
 					using ( var archive = new ZipArchive( stream, ZipArchiveMode.Read ) ) {
 
+						MainDockPanel.SuspendLayout( true );
+
 						WindowPlacementManager.LoadWindowPlacement( this, archive.GetEntry( "WindowPlacement.xml" ).Open() );
 						LoadSubWindowsLayout( archive.GetEntry( "SubWindowLayout.xml" ).Open() );
-
 					}
 				}
 
-
-				Utility.Logger.Add( 2, Resources.LayoutLoaded );
+                
+				Utility.Logger.Add( 2, string.Format(Resources.LayoutLoaded, path) );
 
 			} catch ( FileNotFoundException ) {
 
@@ -429,8 +571,10 @@ namespace ElectronicObserver.Window {
 				fBrowser.Show( MainDockPanel );
 
 			} catch ( Exception ex ) {
-
 				Utility.ErrorReporter.SendErrorReport( ex, LoggerRes.FailedLoadLayout );
+			} finally {
+
+				MainDockPanel.ResumeLayout( true, true );
 			}
 
 		}
@@ -452,8 +596,8 @@ namespace ElectronicObserver.Window {
 					}
 				}
 
-
-				Utility.Logger.Add( 2, Resources.LayoutSaved );
+                
+				Utility.Logger.Add( 2, string.Format(Resources.LayoutSaved, path) );
 
 			} catch ( Exception ex ) {
 
@@ -684,7 +828,7 @@ namespace ElectronicObserver.Window {
 
 							foreach ( dynamic elem in json.api_data.api_mst_ship ) {
 
-								var ship = KCDatabase.Instance.MasterShips[ (int)elem.api_id ];
+								var ship = KCDatabase.Instance.MasterShips[(int)elem.api_id];
 
 								if ( elem.api_name != "なし" && ship != null && ship.IsAbyssalShip ) {
 
@@ -951,63 +1095,100 @@ namespace ElectronicObserver.Window {
 
 		}
 
+		private void StripMenu_File_Layout_Change_Click( object sender, EventArgs e ) {
+
+			using ( var dialog = new SaveFileDialog() ) {
+
+				dialog.Filter = "Layout Archive|*.zip|File|*";
+				dialog.Title = "レイアウト ファイルの保存";
+
+
+				PathHelper.InitSaveFileDialog( Utility.Configuration.Config.Life.LayoutFilePath, dialog );
+
+				if ( dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK ) {
+
+					Utility.Configuration.Config.Life.LayoutFilePath = PathHelper.GetPathFromSaveFileDialog( dialog );
+					SaveLayout( Utility.Configuration.Config.Life.LayoutFilePath );
+
+				}
+			}
+
+		}
+
+
 		private void StripMenu_Tool_ResourceChart_Click( object sender, EventArgs e ) {
 
 			new Dialog.DialogResourceChart().Show( this );
 
 		}
 
+		private void StripMenu_Tool_DropRecord_Click( object sender, EventArgs e ) {
 
-
-		private void StripMenu_Browser_ScreenShot_Click( object sender, EventArgs e ) {
-
-			fBrowser.SaveScreenShot();
-
-		}
-
-		private void StripMenu_Browser_Refresh_Click( object sender, EventArgs e ) {
-
-			fBrowser.RefreshBrowser();
-
-		}
-
-		private void StripMenu_Browser_NavigateToLogInPage_Click( object sender, EventArgs e ) {
-
-			if ( MessageBox.Show( Resources.AskLogin, Resources.Confirm, MessageBoxButtons.YesNo, MessageBoxIcon.Question )
-				== System.Windows.Forms.DialogResult.Yes ) {
-
-				fBrowser.NavigateToLogInPage();
+			if ( KCDatabase.Instance.MasterShips.Count == 0 ) {
+				MessageBox.Show( GeneralRes.KancolleMustBeLoaded, GeneralRes.NoMasterData, MessageBoxButtons.OK, MessageBoxIcon.Error );
+				return;
 			}
-		}
 
-		private void StripMenu_Browser_Navigate_Click( object sender, EventArgs e ) {
-
-			using ( var dialog = new Window.Dialog.DialogTextInput( Resources.AskNavTitle, Resources.AskNavText ) ) {
-
-				if ( dialog.ShowDialog( this ) == System.Windows.Forms.DialogResult.OK ) {
-
-					fBrowser.Navigate( dialog.InputtedText );
-				}
+			if ( RecordManager.Instance.ShipDrop.Record.Count == 0 ) {
+				MessageBox.Show( GeneralRes.NoDropData, Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Error );
+				return;
 			}
+
+			new Dialog.DialogDropRecordViewer().Show( this );
+
 		}
 
 
-		private void StripMenu_Browser_Zoom_Decr20_Click( object sender, EventArgs e ) {
+		private void StripMenu_Tool_DevelopmentRecord_Click( object sender, EventArgs e ) {
 
-			Utility.Configuration.Config.FormBrowser.ZoomRate =
-				Math.Max( Utility.Configuration.Config.FormBrowser.ZoomRate - 20, 10 );
+			if ( KCDatabase.Instance.MasterShips.Count == 0 ) {
+				MessageBox.Show( GeneralRes.KancolleMustBeLoaded, GeneralRes.NoMasterData, MessageBoxButtons.OK, MessageBoxIcon.Error );
+				return;
+			}
 
-			fBrowser.ApplyZoom();
+			if ( RecordManager.Instance.Development.Record.Count == 0 ) {
+				MessageBox.Show( GeneralRes.NoDevData, Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Error );
+				return;
+			}
+			new Dialog.DialogDevelopmentRecordViewer().Show( this );
+
+		}
+        
+		private void StripMenu_Tool_ConstructionRecord_Click( object sender, EventArgs e ) {
+
+			if ( KCDatabase.Instance.MasterShips.Count == 0 ) {
+				MessageBox.Show( GeneralRes.KancolleMustBeLoaded, GeneralRes.NoMasterData, MessageBoxButtons.OK, MessageBoxIcon.Error );
+				return;
+			}
+
+			if ( RecordManager.Instance.Construction.Record.Count == 0 ) {
+				MessageBox.Show( GeneralRes.NoBuildData, Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Error );
+				return;
+			}
+
+			new Dialog.DialogConstructionRecordViewer().Show( this );
+
 		}
 
-		private void StripMenu_Browser_Zoom_Incr20_Click( object sender, EventArgs e ) {
 
-			Utility.Configuration.Config.FormBrowser.ZoomRate =
-				Math.Min( Utility.Configuration.Config.FormBrowser.ZoomRate + 20, 1000 );
 
-			fBrowser.ApplyZoom();
+		private void StripMenu_File_Layout_LockLayout_Click( object sender, EventArgs e ) {
+
+			Utility.Configuration.Config.Life.LockLayout = StripMenu_File_Layout_LockLayout.Checked;
+			ConfigurationChanged();
+
 		}
 
+
+
+
+
+
+		private void CallPumpkinHead( string apiname, dynamic data ) {
+			new DialogHalloween().Show( this );
+			APIObserver.Instance.APIList["api_port/port"].ResponseReceived -= CallPumpkinHead;
+		}
+        
 		private void StripMenu_WindowCapture_AttachAll_Click( object sender, EventArgs e ) {
 			fWindowCapture.AttachAll();
 		}
@@ -1088,10 +1269,16 @@ namespace ElectronicObserver.Window {
             fXPCalculator.Show(MainDockPanel);
         }
 
-		#endregion
+        private void StripMenu_View_Dialogue_Click(object sender, EventArgs e)
+        {
+            fDialogue.Show(MainDockPanel);
+        }
 
-		
+        #endregion
 
 
-	}
+
+
+
+    }
 }

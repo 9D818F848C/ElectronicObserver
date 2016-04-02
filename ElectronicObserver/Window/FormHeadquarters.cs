@@ -77,6 +77,7 @@ namespace ElectronicObserver.Window {
 			o.APIList["api_req_kousyou/createship_speedchange"].RequestReceived += Updated;
 			o.APIList["api_req_kousyou/destroyship"].RequestReceived += Updated;
 			o.APIList["api_req_kousyou/destroyitem2"].RequestReceived += Updated;
+			o.APIList["api_req_member/updatecomment"].RequestReceived += Updated;
 
 			o.APIList["api_get_member/basic"].ResponseReceived += Updated;
 			o.APIList["api_get_member/slot_item"].ResponseReceived += Updated;
@@ -242,7 +243,7 @@ namespace ElectronicObserver.Window {
 				int large = db.UseItems[12] != null ? db.UseItems[12].Count : 0;
 
 				ToolTipInfo.SetToolTip( FurnitureCoin,
-						string.Format( "(小) x {0} ( +{1} )\r\n(中) x {2} ( +{3} )\r\n(大) x {4} ( +{5} )\r\n",
+						string.Format( "(" + GeneralRes.Small + ") x {0} ( +{1} )\r\n(" + GeneralRes.Medium + ") x {2} ( +{3} )\r\n(" + GeneralRes.Large + ") x {4} ( +{5} )\r\n",
 							small, small * 200,
 							medium, medium * 400,
 							large, large * 700 ) );

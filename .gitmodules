@@ -2,3 +2,6 @@
 	path = DockPanelSuite
 	url = https://github.com/ryuukitsune/dockpanelsuite.git
 	ignore = dirty
+[submodule "Titanium-Web-Proxy"]
+	path = Titanium-Web-Proxy
+	url = https://github.com/RyuuKitsune/Titanium-Web-Proxy.git

@@ -31,7 +31,6 @@ namespace ElectronicObserver.Window {
 				ShipName = new Label();
 				ShipName.Text = "???";
 				ShipName.Anchor = AnchorStyles.Left;
-				ShipName.Font = parent.Font;
 				ShipName.ForeColor = parent.ForeColor;
 				ShipName.TextAlign = ContentAlignment.MiddleLeft;
 				ShipName.Padding = new Padding( 0, 1, 0, 1 );
@@ -44,7 +43,6 @@ namespace ElectronicObserver.Window {
 				CompletionTime = new Label();
 				CompletionTime.Text = "";
 				CompletionTime.Anchor = AnchorStyles.Left;
-				CompletionTime.Font = parent.Font;
 				CompletionTime.ForeColor = parent.ForeColor;
 				CompletionTime.Tag = null;
 				CompletionTime.TextAlign = ContentAlignment.MiddleLeft;
@@ -54,6 +52,7 @@ namespace ElectronicObserver.Window {
 				CompletionTime.AutoSize = true;
 				CompletionTime.Visible = true;
 
+				ConfigurationChanged( parent );
 
 				tooltip = parent.ToolTipInfo;
 				#endregion
@@ -92,7 +91,7 @@ namespace ElectronicObserver.Window {
 				ArsenalData arsenal = db.Arsenals[arsenalID];
 				bool showShipName = Utility.Configuration.Config.FormArsenal.ShowShipName;
 
-
+				CompletionTime.BackColor = Color.Transparent;
 				tooltip.SetToolTip( ShipName, null );
 				tooltip.SetToolTip( CompletionTime, null );
 
@@ -101,13 +100,13 @@ namespace ElectronicObserver.Window {
 					ShipName.Text = "";
 					CompletionTime.Text = "";
 					CompletionTime.Tag = null;
-					
+
 				} else if ( arsenal.State == 0 ) {
 					//empty
 					ShipName.Text = "----";
 					CompletionTime.Text = "";
 					CompletionTime.Tag = null;
-					
+
 				} else if ( arsenal.State == 2 ) {
 					//building
 					string name = showShipName ? db.MasterShips[arsenal.ShipID].Name : "???";
@@ -115,7 +114,7 @@ namespace ElectronicObserver.Window {
 					tooltip.SetToolTip( ShipName, name );
 					CompletionTime.Text = DateTimeHelper.ToTimeRemainString( arsenal.CompletionTime );
 					CompletionTime.Tag = arsenal.CompletionTime;
-					tooltip.SetToolTip( CompletionTime, GeneralRes.TimeToCompletion + ":" + arsenal.CompletionTime.ToString() );
+					tooltip.SetToolTip( CompletionTime, GeneralRes.TimeToCompletion + ": " + arsenal.CompletionTime.ToString() );
 
 				} else if ( arsenal.State == 3 ) {
 					//complete!
@@ -124,7 +123,7 @@ namespace ElectronicObserver.Window {
 					tooltip.SetToolTip( ShipName, name );
 					CompletionTime.Text = GeneralRes.Complete + "!";
 					CompletionTime.Tag = null;
-					
+
 				}
 
 			}
@@ -133,8 +132,28 @@ namespace ElectronicObserver.Window {
 			public void Refresh( int arsenalID ) {
 
 				if ( CompletionTime.Tag != null ) {
-					CompletionTime.Text = DateTimeHelper.ToTimeRemainString( (DateTime)CompletionTime.Tag );
+
+					var time = (DateTime)CompletionTime.Tag;
+
+					CompletionTime.Text = DateTimeHelper.ToTimeRemainString( time );
+
+					if ( Utility.Configuration.Config.FormArsenal.BlinkAtCompletion && ( time - DateTime.Now ).TotalMilliseconds <= Utility.Configuration.Config.NotifierConstruction.AccelInterval ) {
+						CompletionTime.BackColor = DateTime.Now.Second % 2 == 0 ? Color.LightGreen : Color.Transparent;
+					}
+
+				} else if ( Utility.Configuration.Config.FormArsenal.BlinkAtCompletion && !string.IsNullOrWhiteSpace( CompletionTime.Text ) ) {
+					//完成しているので
+					CompletionTime.BackColor = DateTime.Now.Second % 2 == 0 ? Color.LightGreen : Color.Transparent;
 				}
+			}
+
+
+			public void ConfigurationChanged( FormArsenal parent ) {
+                ShipName.ForeColor = parent.ForeColor;
+                CompletionTime.ForeColor = parent.ForeColor;
+				ShipName.Font = parent.Font;
+				CompletionTime.Font = parent.Font;
+				CompletionTime.BackColor = Color.Transparent;
 			}
 
 		}
@@ -150,8 +169,6 @@ namespace ElectronicObserver.Window {
 
 			ControlHelper.SetDoubleBuffered( TableArsenal );
 
-			ConfigurationChanged();
-
 			TableArsenal.SuspendLayout();
 			ControlArsenal = new TableArsenalControl[4];
 			for ( int i = 0; i < ControlArsenal.Length; i++ ) {
@@ -161,20 +178,23 @@ namespace ElectronicObserver.Window {
 
 			_buildingID = -1;
 
+			ConfigurationChanged();
+
 			Icon = ResourceManager.ImageToIcon( ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormArsenal] );
 		}
 
 
-		
+
 		private void FormArsenal_Load( object sender, EventArgs e ) {
 
 			APIObserver o = APIObserver.Instance;
 
-			o.APIList["api_req_kousyou/createship"].RequestReceived += Updated;
-			o.APIList["api_req_kousyou/createship_speedchange"].RequestReceived += Updated;
+			o["api_req_kousyou/createship"].RequestReceived += Updated;
+			o["api_req_kousyou/createship_speedchange"].RequestReceived += Updated;
 
-			o.APIList["api_get_member/kdock"].ResponseReceived += Updated;
-			o.APIList["api_req_kousyou/getship"].ResponseReceived += Updated;
+			o["api_get_member/kdock"].ResponseReceived += Updated;
+			o["api_req_kousyou/getship"].ResponseReceived += Updated;
+			o["api_get_member/require_info"].ResponseReceived += Updated;
 
 			Utility.Configuration.Instance.ConfigurationChanged += ConfigurationChanged;
 
@@ -188,7 +208,7 @@ namespace ElectronicObserver.Window {
 				ArsenalData arsenal = KCDatabase.Instance.Arsenals[_buildingID];
 				ShipDataMaster ship = KCDatabase.Instance.MasterShips[arsenal.ShipID];
 				string name;
-				
+
 				if ( Utility.Configuration.Config.Log.ShowSpoiler && Utility.Configuration.Config.FormArsenal.ShowShipName ) {
 
 					name = string.Format( "{0}「{1}」", ship.ShipTypeName, ship.NameWithClass );
@@ -215,7 +235,7 @@ namespace ElectronicObserver.Window {
 			if ( apiname == "api_req_kousyou/createship" ) {
 				_buildingID = int.Parse( data["api_kdock_id"] );
 			}
-			
+
 			UpdateUI();
 		}
 
@@ -246,7 +266,12 @@ namespace ElectronicObserver.Window {
 			MenuMain_ShowShipName.Checked = Utility.Configuration.Config.FormArsenal.ShowShipName;
             ForeColor = Utility.ThemeManager.GetColor(Utility.Configuration.Config.UI.Theme, Utility.ThemeColors.MainFontColor);
             BackColor = Utility.ThemeManager.GetColor(Utility.Configuration.Config.UI.Theme, Utility.ThemeColors.BackgroundColor);
-        }
+        
+			if ( ControlArsenal != null ) {
+				foreach ( var c in ControlArsenal )
+					c.ConfigurationChanged( this );
+			}
+		}
 
 
 		private void MenuMain_ShowShipName_CheckedChanged( object sender, EventArgs e ) {
@@ -267,7 +292,7 @@ namespace ElectronicObserver.Window {
 		}
 
 
-		
+
 	}
 
 }

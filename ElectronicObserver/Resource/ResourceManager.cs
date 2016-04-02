@@ -39,7 +39,7 @@ namespace ElectronicObserver.Resource {
 		#region Constants
 
 		public static string AssetFilePath { get { return "Assets.zip"; } }
-		
+
 		#endregion
 
 
@@ -62,6 +62,7 @@ namespace ElectronicObserver.Resource {
 			ItemFurnitureCoin,
 			ItemBlueprint,
 			ItemCatapult,
+			ItemPresentBox,
 			FormArsenal,
 			FormBattle,
 			FormCompass,
@@ -79,6 +80,10 @@ namespace ElectronicObserver.Resource {
 			FormConfiguration,
 			FormEquipmentList,
 			FormWindowCapture,
+			FormDropRecord,
+			FormDevelopmentRecord,
+			FormConstructionRecord,
+			FormResourceChart,
 			FleetNoShip,
 			FleetDocking,
 			FleetSortieDamaged,
@@ -124,6 +129,11 @@ namespace ElectronicObserver.Resource {
 			ParameterAircraft,
 			ParameterSpeed,
 			ParameterRange,
+			BattleFormationEnemyLineAhead,
+			BattleFormationEnemyDoubleLine,
+			BattleFormationEnemyDiamond,
+			BattleFormationEnemyEchelon,
+			BattleFormationEnemyLineAbreast,
 		}
 
 		public enum EquipmentContent {
@@ -163,6 +173,7 @@ namespace ElectronicObserver.Resource {
 			FlyingBoat,
 			Ration,
 			Supplies,
+			AmphibiousVehicle,
 			Locked,
 			Unknown,
 		}
@@ -238,6 +249,7 @@ namespace ElectronicObserver.Resource {
 					LoadImageFromArchive( Icons, archive, mstpath + @"Item/FurnitureCoin.png", "Item_FurnitureCoin" );
 					LoadImageFromArchive( Icons, archive, mstpath + @"Item/Blueprint.png", "Item_Blueprint" );
 					LoadImageFromArchive( Icons, archive, mstpath + @"Item/Catapult.png", "Item_Catapult" );
+					LoadImageFromArchive( Icons, archive, mstpath + @"Item/PresentBox.png", "Item_PresentBox" );
 
 					LoadImageFromArchive( Icons, archive, mstpath + @"Form/Arsenal.png", "Form_Arsenal" );
 					LoadImageFromArchive( Icons, archive, mstpath + @"Form/Battle.png", "Form_Battle" );
@@ -256,6 +268,10 @@ namespace ElectronicObserver.Resource {
 					LoadImageFromArchive( Icons, archive, mstpath + @"Form/Configuration.png", "Form_Configuration" );
 					LoadImageFromArchive( Icons, archive, mstpath + @"Form/EquipmentList.png", "Form_EquipmentList" );
 					LoadImageFromArchive( Icons, archive, mstpath + @"Form/WindowCapture.png", "Form_WindowCapture" );
+					LoadImageFromArchive( Icons, archive, mstpath + @"Form/DropRecord.png", "Form_DropRecord" );
+					LoadImageFromArchive( Icons, archive, mstpath + @"Form/DevelopmentRecord.png", "Form_DevelopmentRecord" );
+					LoadImageFromArchive( Icons, archive, mstpath + @"Form/ConstructionRecord.png", "Form_ConstructionRecord" );
+					LoadImageFromArchive( Icons, archive, mstpath + @"Form/ResourceChart.png", "Form_DropRecord" );
 
 					LoadImageFromArchive( Icons, archive, mstpath + @"Fleet/NoShip.png", "Fleet_NoShip" );
 					LoadImageFromArchive( Icons, archive, mstpath + @"Fleet/Docking.png", "Fleet_Docking" );
@@ -307,6 +323,11 @@ namespace ElectronicObserver.Resource {
 					LoadImageFromArchive( Icons, archive, mstpath + @"Parameter/Speed.png", "Parameter_Speed" );
 					LoadImageFromArchive( Icons, archive, mstpath + @"Parameter/Range.png", "Parameter_Range" );
 
+					LoadImageFromArchive( Icons, archive, mstpath + @"Battle/FormationEnemy01.png", "Battle_FormationEnemy_LineAhead" );
+					LoadImageFromArchive( Icons, archive, mstpath + @"Battle/FormationEnemy02.png", "Battle_FormationEnemy_DoubleLine" );
+					LoadImageFromArchive( Icons, archive, mstpath + @"Battle/FormationEnemy03.png", "Battle_FormationEnemy_Diamond" );
+					LoadImageFromArchive( Icons, archive, mstpath + @"Battle/FormationEnemy04.png", "Battle_FormationEnemy_Echelon" );
+					LoadImageFromArchive( Icons, archive, mstpath + @"Battle/FormationEnemy05.png", "Battle_FormationEnemy_LineAbreast" );
 
 
 					// ------------------------ equipments ------------------------
@@ -347,6 +368,7 @@ namespace ElectronicObserver.Resource {
 					LoadImageFromArchive( Equipments, archive, mstpath + @"Equipment/FlyingBoat.png", "Equipment_FlyingBoat" );
 					LoadImageFromArchive( Equipments, archive, mstpath + @"Equipment/Ration.png", "Equipment_Ration" );
 					LoadImageFromArchive( Equipments, archive, mstpath + @"Equipment/Supplies.png", "Equipment_Supplies" );
+					LoadImageFromArchive( Equipments, archive, mstpath + @"Equipment/AmphibiousVehicle.png", "Equipment_AmphibiousVehicle" );
 					LoadImageFromArchive( Equipments, archive, mstpath + @"Equipment/Locked.png", "Equipment_Locked" );
 					LoadImageFromArchive( Equipments, archive, mstpath + @"Equipment/Unknown.png", "Equipment_Unknown" );
 
@@ -478,6 +500,60 @@ namespace ElectronicObserver.Resource {
 		/// <returns>コピーに成功すれば true 。それ以外は false 。</returns>
 		public static bool CopyFromArchive( string source, string destination, bool checkexist = true ) {
 			return CopyFromArchive( AssetFilePath, source, destination, checkexist );
+		}
+
+		/// <summary>
+		/// アーカイブからファイルを選択し、ストリームを開きます。
+		/// </summary>
+		/// <param name="archivePath">アーカイブの場所。</param>
+		/// <param name="source">アーカイブ内のファイルのパス。</param>
+		/// <returns>ファイルのストリーム。オープンに失敗した場合は null を返します。</returns>
+		public static MemoryStream GetStreamFromArchive( string archivePath, string source ) {
+
+			using ( var stream = File.OpenRead( archivePath ) ) {
+
+				using ( var archive = new ZipArchive( stream, ZipArchiveMode.Read ) ) {
+
+					string entrypath = @"Assets/" + source;
+
+					var entry = archive.GetEntry( entrypath );
+
+					if ( entry == null ) {
+						Utility.Logger.Add( 3, string.Format( "{0} は存在しません。", entrypath ) );
+						return null;
+					}
+
+
+					try {
+
+						byte[] bytes;
+						using ( MemoryStream ms = new MemoryStream() ) {
+							var st = entry.Open();
+							st.CopyTo( ms );
+							bytes = ms.ToArray();
+							st.Close();
+						}
+
+						return new MemoryStream( bytes );
+
+					} catch ( Exception ex ) {
+
+						Utility.Logger.Add( 3, string.Format( "{0} の展開に失敗しました。{1}", entrypath, ex.Message ) );
+						return null;
+					}
+				}
+			}
+
+		}
+
+
+		/// <summary>
+		/// アーカイブからファイルを選択し、ストリームを開きます。
+		/// </summary>
+		/// <param name="source">アーカイブ内のファイルのパス。</param>
+		/// <returns>ファイルのストリーム。オープンに失敗した場合は null を返します。</returns>
+		public static MemoryStream GetStreamFromArchive( string source ) {
+			return GetStreamFromArchive( AssetFilePath, source );
 		}
 
 

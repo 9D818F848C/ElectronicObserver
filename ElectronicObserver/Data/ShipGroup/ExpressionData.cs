@@ -1,4 +1,5 @@
 ﻿using ElectronicObserver.Utility.Mathematics;
+using ElectronicObserver.Window;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,95 +54,95 @@ namespace ElectronicObserver.Data.ShipGroup {
 
 		[IgnoreDataMember]
 		public static readonly Dictionary<string, string> LeftOperandNameTable = new Dictionary<string, string>() {
-			{ ".MasterID", "艦船固有ID" },
-			{ ".ShipID", "艦船ID" },
-			{ ".MasterShip.NameWithClass", "艦名" },
-			{ ".MasterShip.ShipType", "艦種" },
-			{ ".Level", "レベル" },
-			{ ".ExpTotal", "経験値" },
-			{ ".ExpNext", "次のレベルまで" },
-			{ ".ExpNextRemodel", "次の改装まで" },
-			{ ".HPCurrent", "現在HP" },
-			{ ".HPMax", "最大HP" },
-			{ ".HPRate", "HP割合" },
-			{ ".Condition", "コンディション" },
-			{ ".AllSlotMaster", "装備" },
-			{ ".SlotMaster[0]", "装備 #1" },	//checkme: 要る?
-			{ ".SlotMaster[1]", "装備 #2" },
-			{ ".SlotMaster[2]", "装備 #3" },
-			{ ".SlotMaster[3]", "装備 #4" },
-			{ ".SlotMaster[4]", "装備 #5" },
-			{ ".ExpansionSlotMaster", "補強装備" },
-			{ ".Aircraft[0]", "搭載 #1" },
-			{ ".Aircraft[1]", "搭載 #2" },
-			{ ".Aircraft[2]", "搭載 #3" },
-			{ ".Aircraft[3]", "搭載 #4" },
-			{ ".Aircraft[4]", "搭載 #5" },
-			{ ".AircraftTotal", "搭載機数合計" },
-			{ ".MasterShip.Aircraft[0]", "最大搭載 #1" },
-			{ ".MasterShip.Aircraft[1]", "最大搭載 #2" },
-			{ ".MasterShip.Aircraft[2]", "最大搭載 #3" },
-			{ ".MasterShip.Aircraft[3]", "最大搭載 #4" },
-			{ ".MasterShip.Aircraft[4]", "最大搭載 #5" },
-			{ ".MasterShip.AircraftTotal", "最大搭載機数" },		//要る？
-			{ ".AircraftRate[0]", "搭載割合 #1" },
-			{ ".AircraftRate[1]", "搭載割合 #2" },
-			{ ".AircraftRate[2]", "搭載割合 #3" },
-			{ ".AircraftRate[3]", "搭載割合 #4" },
-			{ ".AircraftRate[4]", "搭載割合 #5" },
-			{ ".AircraftTotalRate", "搭載割合合計" },
-			{ ".Fuel", "搭載燃料" },
-			{ ".Ammo", "搭載弾薬" },
-			{ ".FuelMax", "最大搭載燃料" },
-			{ ".AmmoMax", "最大搭載弾薬" },
-			{ ".FuelRate", "搭載燃料割合" },
-			{ ".AmmoRate", "搭載弾薬割合" },
-			{ ".SlotSize", "スロット数" },
-			{ ".RepairingDockID", "入渠ドック" },
-			{ ".RepairTime", "入渠時間" },
-			{ ".RepairSteel", "入渠消費鋼材" },
-			{ ".RepairFuel", "入渠消費燃料" },
+			{ ".MasterID", GeneralRes.UniqueID },
+			{ ".ShipID", GeneralRes.ShipID },
+			{ ".MasterShip.NameWithClass", GeneralRes.ShipName },
+			{ ".MasterShip.ShipType", GeneralRes.ShipType },
+			{ ".Level", GeneralRes.Level },
+			{ ".ExpTotal", GeneralRes.Experience },
+			{ ".ExpNext", GeneralRes.NextLevelNoFormat },
+			{ ".ExpNextRemodel", GeneralRes.ToNextRemodel },
+			{ ".HPCurrent", GeneralRes.CurrentHP },
+			{ ".HPMax", GeneralRes.MaxHP },
+			{ ".HPRate", GeneralRes.HPPercentage },
+			{ ".Condition", GeneralRes.Condition },
+			{ ".AllSlotMaster", GeneralRes.Equipment },
+			{ ".SlotMaster[0]", GeneralRes.Equipment + " #1" },	//checkme: 要る?
+			{ ".SlotMaster[1]", GeneralRes.Equipment + " #2" },
+			{ ".SlotMaster[2]", GeneralRes.Equipment + " #3" },
+			{ ".SlotMaster[3]", GeneralRes.Equipment + " #4" },
+			{ ".SlotMaster[4]", GeneralRes.Equipment + " #5" },
+			{ ".ExpansionSlotMaster", GeneralRes.Expansion },
+			{ ".Aircraft[0]", GeneralRes.EquippedPlane + " #1" },
+			{ ".Aircraft[1]", GeneralRes.EquippedPlane + " #2" },
+			{ ".Aircraft[2]", GeneralRes.EquippedPlane + " #3" },
+			{ ".Aircraft[3]", GeneralRes.EquippedPlane + " #4" },
+			{ ".Aircraft[4]", GeneralRes.EquippedPlane + " #5" },
+			{ ".AircraftTotal", GeneralRes.TotalEquippedPlanes },
+			{ ".MasterShip.Aircraft[0]", GeneralRes.PlaneCapacity + " #1" },
+			{ ".MasterShip.Aircraft[1]", GeneralRes.PlaneCapacity + " #2" },
+			{ ".MasterShip.Aircraft[2]", GeneralRes.PlaneCapacity + " #3" },
+			{ ".MasterShip.Aircraft[3]", GeneralRes.PlaneCapacity + " #4" },
+			{ ".MasterShip.Aircraft[4]", GeneralRes.PlaneCapacity + " #5" },
+			{ ".MasterShip.AircraftTotal", GeneralRes.TotalPlaneCapacity },		//要る？
+			{ ".AircraftRate[0]", GeneralRes.PlanePercentage + " #1" },
+			{ ".AircraftRate[1]", GeneralRes.PlanePercentage + " #2" },
+			{ ".AircraftRate[2]", GeneralRes.PlanePercentage + " #3" },
+			{ ".AircraftRate[3]", GeneralRes.PlanePercentage + " #4" },
+			{ ".AircraftRate[4]", GeneralRes.PlanePercentage + " #5" },
+			{ ".AircraftTotalRate", GeneralRes.TotalPlanePercentage },
+			{ ".Fuel", GeneralRes.CurrentFuel },
+			{ ".Ammo", GeneralRes.CurrentAmmo },
+			{ ".FuelMax", GeneralRes.MaxFuel },
+			{ ".AmmoMax", GeneralRes.MaxAmmo },
+			{ ".FuelRate", GeneralRes.FuelPercentage },
+			{ ".AmmoRate", GeneralRes.AmmoPercentage },
+			{ ".SlotSize", GeneralRes.SlotCount },
+			{ ".RepairingDockID", GeneralRes.RepairDock },
+			{ ".RepairTime", GeneralRes.RepairTime },
+			{ ".RepairSteel", GeneralRes.RepairSteel },
+			{ ".RepairFuel", GeneralRes.RepairFuel },
 			//強化値シリーズは省略
-			{ ".FirepowerBase", "基本火力" },
-			{ ".TorpedoBase", "基本雷装" },
-			{ ".AABase", "基本対空" },
-			{ ".ArmorBase", "基本装甲" },
-			{ ".EvasionBase", "基本回避" },
-			{ ".ASWBase", "基本対潜" },
-			{ ".LOSBase", "基本索敵" },
-			{ ".LuckBase", "基本運" },
-			{ ".FirepowerTotal", "合計火力" },
-			{ ".TorpedoTotal", "合計雷装" },
-			{ ".AATotal", "合計対空" },
-			{ ".ArmorTotal", "合計装甲" },
-			{ ".EvasionTotal", "合計回避" },
-			{ ".ASWTotal", "合計対潜" },
-			{ ".LOSTotal", "合計索敵" },
-			{ ".LuckTotal", "合計運" },
-			{ ".BomberTotal", "合計爆装" },
-			{ ".FirepowerRemain", "火力改修残り" },
-			{ ".TorpedoRemain", "雷装改修残り" },
-			{ ".AARemain", "対空改修残り" },
-			{ ".ArmorRemain", "装甲改修残り" },
-			{ ".LuckRemain", "運改修残り" },
-			{ ".Range", "射程" },		//現在の射程
-			{ ".MasterShip.Speed", "速力" },
-			{ ".MasterShip.Rarity", "レアリティ" },
-			{ ".IsLocked", "ロック" },
-			{ ".IsLockedByEquipment", "装備ロック" },
-			{ ".SallyArea", "出撃海域" },
-			{ ".FleetWithIndex", "所属艦隊" },
-			{ ".IsMarried", "ケッコンカッコカリ" },
-			{ ".AirBattlePower", "航空威力" },
-			{ ".ShellingPower", "砲撃威力" },
-			{ ".AircraftPower", "空撃威力" },
-			{ ".AntiSubmarinePower", "対潜威力" },
-			{ ".TorpedoPower", "雷撃威力" },
-			{ ".NightBattlePower", "夜戦威力" },
-			{ ".MasterShip.AlbumNo", "図鑑番号" },
-			{ ".MasterShip.NameReading", "艦名読み" },
-			{ ".MasterShip.RemodelBeforeShipID", "改装前艦船ID" },
-			{ ".MasterShip.RemodelAfterShipID", "改装後艦船ID" },
+			{ ".FirepowerBase", GeneralRes.Base + GeneralRes.Firepower },
+			{ ".TorpedoBase", GeneralRes.Base + GeneralRes.Torpedo },
+			{ ".AABase", GeneralRes.Base + GeneralRes.AntiAir },
+			{ ".ArmorBase", GeneralRes.Base + GeneralRes.Armor },
+			{ ".EvasionBase", GeneralRes.Base + GeneralRes.Evasion },
+			{ ".ASWBase", GeneralRes.Base + GeneralRes.ASW },
+			{ ".LOSBase", GeneralRes.Base + GeneralRes.LoS },
+			{ ".LuckBase", GeneralRes.Base + GeneralRes.Luck },
+			{ ".FirepowerTotal", GeneralRes.Total + GeneralRes.Firepower },
+			{ ".TorpedoTotal", GeneralRes.Total + GeneralRes.Torpedo },
+			{ ".AATotal", GeneralRes.Total + GeneralRes.AntiAir },
+			{ ".ArmorTotal", GeneralRes.Total + GeneralRes.Armor },
+			{ ".EvasionTotal", GeneralRes.Total + GeneralRes.Evasion },
+			{ ".ASWTotal", GeneralRes.Total + GeneralRes.ASW },
+			{ ".LOSTotal", GeneralRes.Total + GeneralRes.LoS },
+			{ ".LuckTotal", GeneralRes.Total + GeneralRes.Luck },
+			{ ".BomberTotal", GeneralRes.Total + GeneralRes.Bombers },
+			{ ".FirepowerRemain", GeneralRes.Firepower + GeneralRes.ModernizationRemaining },
+			{ ".TorpedoRemain", GeneralRes.Torpedo + GeneralRes.ModernizationRemaining },
+			{ ".AARemain", GeneralRes.AntiAir + GeneralRes.ModernizationRemaining },
+			{ ".ArmorRemain", GeneralRes.Armor + GeneralRes.ModernizationRemaining },
+			{ ".LuckRemain", GeneralRes.Luck + GeneralRes.ModernizationRemaining },
+			{ ".Range", GeneralRes.Range },		//現在の射程
+			{ ".MasterShip.Speed", GeneralRes.Speed },
+			{ ".MasterShip.Rarity", GeneralRes.Rarity },
+			{ ".IsLocked", GeneralRes.Lock },
+			{ ".IsLockedByEquipment", GeneralRes.Equipment + " " + GeneralRes.Lock },
+			{ ".SallyArea", GeneralRes.ShipLockFlag },
+			{ ".FleetWithIndex", GeneralRes.AssignedFleet },
+			{ ".IsMarried", GeneralRes.Married },
+			{ ".AirBattlePower", GeneralRes.AirPower },
+			{ ".ShellingPower", GeneralRes.Shelling + " "  + GeneralRes.Power },
+			{ ".AircraftPower", GeneralRes.Bombing + " " + GeneralRes.Power },
+			{ ".AntiSubmarinePower", GeneralRes.ASW + " " + GeneralRes.Power },
+			{ ".TorpedoPower", GeneralRes.Torpedo + " " + GeneralRes.Power },
+			{ ".NightBattlePower", GeneralRes.NightBattle + " " + GeneralRes.Power },
+			{ ".MasterShip.AlbumNo", GeneralRes.EncyclopediaNumber },
+			{ ".MasterShip.NameReading", GeneralRes.NameReading },
+			{ ".MasterShip.RemodelBeforeShipID", GeneralRes.BeforeRemodelID },
+			{ ".MasterShip.RemodelAfterShipID", GeneralRes.AfterRemodelID },
 			//マスターのパラメータ系もおそらく意味がないので省略		
 		};
 
@@ -150,20 +151,20 @@ namespace ElectronicObserver.Data.ShipGroup {
 
 		[IgnoreDataMember]
 		public static readonly Dictionary<ExpressionOperator, string> OperatorNameTable = new Dictionary<ExpressionOperator, string>() {
-			{ ExpressionOperator.Equal, "と等しい" },
-			{ ExpressionOperator.NotEqual, "と等しくない" },
-			{ ExpressionOperator.LessThan, "より小さい" },
-			{ ExpressionOperator.LessEqual, "以下" },
-			{ ExpressionOperator.GreaterThan, "より大きい" },
-			{ ExpressionOperator.GreaterEqual, "以上" },
-			{ ExpressionOperator.Contains, "を含む" },
-			{ ExpressionOperator.NotContains, "を含まない" },
-			{ ExpressionOperator.BeginWith, "から始まる" },
-			{ ExpressionOperator.NotBeginWith, "から始まらない" },
-			{ ExpressionOperator.EndWith, "で終わる" },
-			{ ExpressionOperator.NotEndWith, "で終わらない" },
-			{ ExpressionOperator.ArrayContains, "を含む" },
-			{ ExpressionOperator.ArrayNotContains, "を含まない" },
+			{ ExpressionOperator.Equal, GeneralRes.Equal },
+			{ ExpressionOperator.NotEqual, GeneralRes.NotEnrolled },
+			{ ExpressionOperator.LessThan, GeneralRes.LessThan },
+			{ ExpressionOperator.LessEqual, GeneralRes.LessThanOrEqual },
+			{ ExpressionOperator.GreaterThan, GeneralRes.GreaterThan },
+			{ ExpressionOperator.GreaterEqual, GeneralRes.GreaterThanOrEqual },
+			{ ExpressionOperator.Contains, GeneralRes.Contains },
+			{ ExpressionOperator.NotContains, GeneralRes.DoesNotContain },
+			{ ExpressionOperator.BeginWith, GeneralRes.BeginsWith },
+			{ ExpressionOperator.NotBeginWith, GeneralRes.DoesNotBeginWith },
+			{ ExpressionOperator.EndWith, GeneralRes.EndsWith },
+			{ ExpressionOperator.NotEndWith, GeneralRes.DoesNotEndWith },
+			{ ExpressionOperator.ArrayContains, GeneralRes.Contains },
+			{ ExpressionOperator.ArrayNotContains, GeneralRes.DoesNotContain },
 			
 		};
 
@@ -317,7 +318,7 @@ namespace ElectronicObserver.Data.ShipGroup {
 
 
 		public override string ToString() {
-			return string.Format( "{0} は {1} {2}", LeftOperandToString(), RightOperandToString(), OperatorToString() );
+			return string.Format( GeneralRes.Expression, LeftOperandToString(), RightOperandToString(), OperatorToString() );
 		}
 
 
@@ -348,29 +349,32 @@ namespace ElectronicObserver.Data.ShipGroup {
 				if ( ship != null )
 					return string.Format( "{0} ({1})", ship.MasterID, ship.NameWithLevel );
 				else
-					return string.Format( "{0} (未在籍)", (int)RightOperand );
+					return string.Format( "{0} {1}", (int)RightOperand, GeneralRes.NotEnrolled );
 
 			} else if ( LeftOperand == ".ShipID" ) {
 				var ship = KCDatabase.Instance.MasterShips[(int)RightOperand];
 				if ( ship != null )
 					return string.Format( "{0} ({1})", ship.ShipID, ship.NameWithClass );
 				else
-					return string.Format( "{0} (存在せず)", (int)RightOperand );
+					return string.Format( "{0} {1}", (int)RightOperand, GeneralRes.DoesNotExist );
 
 			} else if ( LeftOperand == ".MasterShip.ShipType" ) {
 				var shiptype = KCDatabase.Instance.ShipTypes[(int)RightOperand];
 				if ( shiptype != null )
-					return shiptype.Name;
+					return FormMain.Instance.Translator.GetTranslation(shiptype.Name, Utility.TranslationType.ShipTypes);
 				else
-					return string.Format( "{0} (未定義)", (int)RightOperand );
+					return string.Format( "{0} {1}", (int)RightOperand, GeneralRes.Undefined );
 
 			} else if ( LeftOperand.Contains( "SlotMaster" ) ) {
-				var eq = KCDatabase.Instance.MasterEquipments[(int)RightOperand];
-				if ( eq != null )
-					return eq.Name;
-				else
-					return string.Format( "{0} (未定義)", (int)RightOperand );
-
+				if ( (int)RightOperand == -1 ) {
+					return GeneralRes.None;
+				} else {
+					var eq = KCDatabase.Instance.MasterEquipments[(int)RightOperand];
+					if ( eq != null )
+						return eq.Name;
+					else
+						return string.Format( "{0} {1}", (int)RightOperand, GeneralRes.Undefined );
+				}
 			} else if ( LeftOperand.Contains( "Rate" ) && RightOperand is double ) {
 				return ( (double)RightOperand ).ToString( "P0" );
 
@@ -391,29 +395,29 @@ namespace ElectronicObserver.Data.ShipGroup {
 				if ( ship != null )
 					return string.Format( "{0} ({1})", (int)RightOperand, ship.NameWithClass );
 				else
-					return string.Format( "{0} (存在せず)", (int)RightOperand );
+					return string.Format( "{0} {1}", (int)RightOperand, GeneralRes.DoesNotExist );
 
 			} else if ( LeftOperand == ".MasterShip.RemodelAfterShipID" ) {
 
 				if ( ( (int)RightOperand ) == 0 )
-					return "最終改装";
+					return GeneralRes.FinalRemodel;
 
 				var ship = KCDatabase.Instance.MasterShips[(int)RightOperand];
 				if ( ship != null )
 					return string.Format( "{0} ({1})", ship.ShipID, ship.NameWithClass );
 				else
-					return string.Format( "{0} (存在せず)", (int)RightOperand );
+					return string.Format( "{0} {1}", (int)RightOperand, GeneralRes.DoesNotExist );
 
 			} else if ( LeftOperand == ".MasterShip.RemodelBeforeShipID" ) {
 
 				if ( ( (int)RightOperand ) == 0 )
-					return "未改装";
+					return GeneralRes.Unremodelled;
 
 				var ship = KCDatabase.Instance.MasterShips[(int)RightOperand];
 				if ( ship != null )
 					return string.Format( "{0} ({1})", ship.ShipID, ship.NameWithClass );
 				else
-					return string.Format( "{0} (存在せず)", (int)RightOperand );
+					return string.Format( "{0} {1}", (int)RightOperand, GeneralRes.DoesNotExist );
 
 			} else if ( RightOperand is bool ) {
 				return ( (bool)RightOperand ) ? "○" : "×";
