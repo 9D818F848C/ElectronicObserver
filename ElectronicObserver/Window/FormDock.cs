@@ -92,6 +92,7 @@ namespace ElectronicObserver.Window {
 
 				DockData dock = db.Docks[dockID];
 
+				RepairTime.BackColor = Color.Transparent;
 				ToolTipInfo.SetToolTip( ShipName, null );
 				ToolTipInfo.SetToolTip( RepairTime, null );
 
@@ -122,9 +123,16 @@ namespace ElectronicObserver.Window {
 			//タイマー更新時
 			public void Refresh( int dockID ) {
 
-				if ( RepairTime.Tag != null )
-					RepairTime.Text = DateTimeHelper.ToTimeRemainString( (DateTime)RepairTime.Tag );
+				if ( RepairTime.Tag != null ) {
 
+					var time = (DateTime)RepairTime.Tag;
+					
+					RepairTime.Text = DateTimeHelper.ToTimeRemainString( time );
+
+					if ( Utility.Configuration.Config.FormDock.BlinkAtCompletion && ( time - DateTime.Now ).TotalMilliseconds <= Utility.Configuration.Config.NotifierRepair.AccelInterval ) {
+						RepairTime.BackColor = DateTime.Now.Second % 2 == 0 ? Color.LightGreen : Color.Transparent;
+					}
+				}
 			}
 
 
@@ -133,6 +141,7 @@ namespace ElectronicObserver.Window {
                 RepairTime.ForeColor = parent.ForeColor;
                 ShipName.Font = parent.Font;
 				RepairTime.Font = parent.Font;
+				RepairTime.BackColor = Color.Transparent;
 			}
 		}
 

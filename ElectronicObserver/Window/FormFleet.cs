@@ -168,12 +168,29 @@ namespace ElectronicObserver.Window {
 
 				//索敵能力計算
 				SearchingAbility.Text = fleet.GetSearchingAbilityString();
-				ToolTipInfo.SetToolTip( SearchingAbility,
-					string.Format( GeneralRes.LoSTooltip,
-					fleet.GetSearchingAbilityString( 0 ),
-					fleet.GetSearchingAbilityString( 1 ),
-					fleet.GetSearchingAbilityString( 2 ) ) );
+				{
+					StringBuilder sb = new StringBuilder();
+					double probStart = fleet.GetContactProbability();
+					var probSelect = fleet.GetContactSelectionProbability();
+                    //GeneralRes.LoSTooltip
+					sb.AppendFormat( "(旧)2-5式: {0}\r\n2-5式(秋): {1}\r\n2-5新秋簡易式: {2}\r\n判定式(33): {3}\r\n\r\n触接開始率: \r\n　確保 {4:p1} / 優勢 {5:p1}\r\n",
+						fleet.GetSearchingAbilityString( 0 ),
+						fleet.GetSearchingAbilityString( 1 ),
+						fleet.GetSearchingAbilityString( 2 ),
+						fleet.GetSearchingAbilityString( 3 ),
+						probStart,
+						probStart * 0.6 );
 
+					if ( probSelect.Count > 0 ) {
+						sb.AppendLine( "触接選択率: " );
+
+						foreach ( var p in probSelect.OrderBy( p => p.Key ) ) {
+							sb.AppendFormat( "　命中{0} : {1:p1}\r\n", p.Key, p.Value );
+						}
+					}
+
+					ToolTipInfo.SetToolTip( SearchingAbility, sb.ToString() );
+				}
 			}
 
 
@@ -190,10 +207,11 @@ namespace ElectronicObserver.Window {
 			public void ConfigurationChanged( FormFleet parent ) {
 				Name.Font = parent.MainFont;
 				StateMain.Font = parent.MainFont;
+				StateMain.BackColor = Color.Transparent;
 				AirSuperiority.Font = parent.MainFont;
 				AirSuperiority.Font = parent.MainFont;
 				SearchingAbility.Font = parent.MainFont;
-				
+
 			}
 
 		}
@@ -638,7 +656,7 @@ namespace ElectronicObserver.Window {
 			o.APIList["api_req_kaisou/remodeling"].RequestReceived += ChangeOrganization;
 			o.APIList["api_req_kaisou/powerup"].ResponseReceived += ChangeOrganization;
 			o.APIList["api_req_hensei/preset_select"].ResponseReceived += ChangeOrganization;
-			
+
 			o.APIList["api_req_nyukyo/start"].RequestReceived += Updated;
 			o.APIList["api_req_nyukyo/speedchange"].RequestReceived += Updated;
 			o.APIList["api_req_hensei/change"].RequestReceived += Updated;
@@ -663,6 +681,7 @@ namespace ElectronicObserver.Window {
 			o.APIList["api_get_member/ship_deck"].ResponseReceived += Updated;
 			o.APIList["api_req_hensei/preset_select"].ResponseReceived += Updated;
 			o.APIList["api_req_kaisou/slot_exchange_index"].ResponseReceived += Updated;
+			o.APIList["api_get_member/require_info"].ResponseReceived += Updated;
 
 
 			//追加するときは FormFleetOverview にも同様に追加してください
@@ -832,7 +851,9 @@ namespace ElectronicObserver.Window {
 					int eqcount = 1;
 					foreach ( var eq in ship.SlotInstance ) {
 						if ( eq == null ) break;
-						sb.AppendFormat( @"""i{0}"":{{""id"":{1},""rf"":{2}}},", eqcount, eq.EquipmentID, Math.Max( eq.Level, eq.AircraftLevel ) );
+
+						// 水偵は改修レベル優先(熟練度にすると改修レベルに誤解されて 33式 の結果がずれるため)
+						sb.AppendFormat( @"""i{0}"":{{""id"":{1},""rf"":{2}}},", eqcount, eq.EquipmentID, eq.MasterEquipment.CategoryType == 10 ? eq.Level : Math.Max( eq.Level, eq.AircraftLevel ) );
 
 						eqcount++;
 					}

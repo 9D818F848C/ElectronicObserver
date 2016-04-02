@@ -38,6 +38,7 @@ None of these functions interfere with Kancolle's normal, legal operation.
 Please see the latest download information at the releases page on GitHub.
 That can be found [here](https://github.com/RyuuKitsune/ElectronicObserver/Releases).
 
+
 ### For Developers
 ---
 
@@ -54,9 +55,7 @@ This project is licensed under the MIT License, for more information, see [here.
 
 * [DynamicJson](http://dynamicjson.codeplex.com/) (JSON read/write) - [Ms-PL](https://github.com/andanteyk/ElectronicObserver/blob/master/Licenses/Ms-PL.txt)
 * [DockPanel Suite](http://dockpanelsuite.com/) (Window layout) - [MIT License](https://github.com/andanteyk/ElectronicObserver/blob/master/Licenses/DockPanelSuite.txt)
-* [Nekoxy](https://github.com/veigr/Nekoxy) (Network capture) - [MIT License](https://github.com/andanteyk/ElectronicObserver/blob/master/Licenses/Nekoxy.txt)
-    * [TrotiNet](http://trotinet.sourceforge.net/) - [GNU Lesser General Public License v3.0](https://github.com/andanteyk/ElectronicObserver/blob/master/Licenses/LGPL.txt)
-        * [log4net](https://logging.apache.org/log4net/) - [Apache License version 2.0](https://github.com/andanteyk/ElectronicObserver/blob/master/Licenses/Apache.txt)
+* [Titanium Web Proxy](https://github.com/RyuuKitsune/Titanium-Web-Proxy) (Network capture) - [MIT License](https://github.com/RyuuKitsune/Titanium-Web-Proxy/blob/master/LICENSE)
 
 ### Contact/Other
 ---
