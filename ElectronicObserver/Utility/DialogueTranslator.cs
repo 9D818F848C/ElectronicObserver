@@ -66,6 +66,11 @@ namespace ElectronicObserver.Utility
                     newIdentifier = "npc";
                     voiceLine = filename;
                     break;
+                case DialogueType.Enemy:
+                    data.Ship = "Enemy";
+                    newIdentifier = "enemy";
+                    voiceLine = filename;
+                    break;
                 case DialogueType.Shipgirl:
                     ShipDataMaster master;
                     // This lookup is gonna be slow if it's our first time.
@@ -167,7 +172,8 @@ namespace ElectronicObserver.Utility
     {
         Titlecall,
         NPC,
-        Shipgirl
+        Shipgirl,
+        Enemy
     }
 
     public class DialogueData

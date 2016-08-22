@@ -164,6 +164,9 @@ namespace ElectronicObserver.Observer {
                     case "kc9999":
                         DialogueTranslator.Add(DialogueType.NPC, "npc", substrings[4].Split('.')[0]);
                         break;
+                    case "kc9998":
+                        DialogueTranslator.Add(DialogueType.Enemy, "enemy", substrings[4].Split('.')[0]);
+                        break;
                     default:
                         DialogueTranslator.Add(DialogueType.Shipgirl, substrings[3].Substring(2), substrings[4].Split('.')[0]);
                         break;
