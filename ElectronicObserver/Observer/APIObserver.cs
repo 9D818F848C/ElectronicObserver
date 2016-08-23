@@ -33,6 +33,7 @@ namespace ElectronicObserver.Observer {
 		#endregion
 
 
+
 		public APIDictionary APIList { get; private set; }
 
 		public string ServerAddress { get; private set; }
@@ -43,7 +44,7 @@ namespace ElectronicObserver.Observer {
 
 		private Control UIControl;
 		private APIKancolleDB DBSender;
-
+        
         // Item 1: it's last modified time.
         // Item 2: the time we're expected to ask for cache control.
         private Dictionary<string, Tuple<DateTime, DateTime>> cacheControl;
@@ -103,6 +104,7 @@ namespace ElectronicObserver.Observer {
 			APIList.Add( new kcsapi.api_req_sortie.ld_airbattle() );
 			APIList.Add( new kcsapi.api_req_combined_battle.ld_airbattle() );
 			APIList.Add( new kcsapi.api_get_member.require_info() );
+			APIList.Add( new kcsapi.api_req_kaisou.slot_deprive() );
 
 			APIList.Add( new kcsapi.api_req_quest.clearitemget() );
 			APIList.Add( new kcsapi.api_req_nyukyo.start() );
@@ -116,6 +118,7 @@ namespace ElectronicObserver.Observer {
 			APIList.Add( new kcsapi.api_req_map.select_eventmap_rank() );
 			APIList.Add( new kcsapi.api_req_hensei.combined() );
 			APIList.Add( new kcsapi.api_req_member.updatecomment() );
+			APIList.Add( new kcsapi.api_req_quest.stop() );
 
 
 			ServerAddress = null;
@@ -411,9 +414,6 @@ namespace ElectronicObserver.Observer {
 
 		//	//response
 		//	//保存
-			
-
-		//}
 
 
 

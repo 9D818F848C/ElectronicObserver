@@ -322,7 +322,7 @@
             this.TableEquipmentName.Controls.Add(this.EquipmentName);
             this.TableEquipmentName.Location = new System.Drawing.Point(3, 25);
             this.TableEquipmentName.Name = "TableEquipmentName";
-            this.TableEquipmentName.Size = new System.Drawing.Size(392, 22);
+            this.TableEquipmentName.Size = new System.Drawing.Size(262, 22);
             this.TableEquipmentName.TabIndex = 19;
             // 
             // EquipmentType
@@ -330,9 +330,9 @@
             this.EquipmentType.BackColor = System.Drawing.Color.Transparent;
             this.EquipmentType.Location = new System.Drawing.Point(3, 3);
             this.EquipmentType.Name = "EquipmentType";
-            this.EquipmentType.Size = new System.Drawing.Size(200, 16);
+            this.EquipmentType.Size = new System.Drawing.Size(83, 16);
             this.EquipmentType.TabIndex = 7;
-            this.EquipmentType.Text = "Submarine-based Torpedo";
+            this.EquipmentType.Text = "Autogyro";
             // 
             // EquipmentName
             // 
@@ -360,9 +360,9 @@
             this.TableParameterSub.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.TableParameterSub.ColumnCount = 4;
             this.TableParameterSub.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.TableParameterSub.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+            this.TableParameterSub.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.TableParameterSub.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.TableParameterSub.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.TableParameterSub.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
             this.TableParameterSub.Controls.Add(this.imageLabel76, 3, 1);
             this.TableParameterSub.Controls.Add(this.Rarity, 3, 0);
             this.TableParameterSub.Controls.Add(this.Range, 1, 1);
@@ -376,7 +376,7 @@
             this.TableParameterSub.RowCount = 2;
             this.TableParameterSub.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TableParameterSub.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TableParameterSub.Size = new System.Drawing.Size(294, 44);
+            this.TableParameterSub.Size = new System.Drawing.Size(234, 44);
             this.TableParameterSub.TabIndex = 15;
             this.TableParameterSub.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.TableParameterSub_CellPaint);
             // 
@@ -385,7 +385,7 @@
             this.imageLabel76.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.imageLabel76.BackColor = System.Drawing.Color.Transparent;
             this.imageLabel76.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.imageLabel76.Location = new System.Drawing.Point(269, 25);
+            this.imageLabel76.Location = new System.Drawing.Point(209, 25);
             this.imageLabel76.Name = "imageLabel76";
             this.imageLabel76.Size = new System.Drawing.Size(22, 16);
             this.imageLabel76.TabIndex = 17;
@@ -397,9 +397,9 @@
             // 
             this.Rarity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.Rarity.BackColor = System.Drawing.Color.Transparent;
-            this.Rarity.Location = new System.Drawing.Point(177, 3);
+            this.Rarity.Location = new System.Drawing.Point(157, 3);
             this.Rarity.Name = "Rarity";
-            this.Rarity.Size = new System.Drawing.Size(114, 16);
+            this.Rarity.Size = new System.Drawing.Size(74, 16);
             this.Rarity.TabIndex = 16;
             this.Rarity.Text = "123";
             this.Rarity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -409,7 +409,7 @@
             this.Range.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.Range.BackColor = System.Drawing.Color.Transparent;
             this.Range.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.Range.Location = new System.Drawing.Point(105, 25);
+            this.Range.Location = new System.Drawing.Point(85, 25);
             this.Range.Name = "Range";
             this.Range.Size = new System.Drawing.Size(22, 16);
             this.Range.TabIndex = 16;
@@ -422,7 +422,7 @@
             this.Speed.BackColor = System.Drawing.Color.Transparent;
             this.Speed.ForeColor = System.Drawing.Color.Silver;
             this.Speed.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.Speed.Location = new System.Drawing.Point(105, 3);
+            this.Speed.Location = new System.Drawing.Point(85, 3);
             this.Speed.Name = "Speed";
             this.Speed.Size = new System.Drawing.Size(22, 16);
             this.Speed.TabIndex = 16;
@@ -433,7 +433,7 @@
             // 
             this.imageLabel72.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.imageLabel72.BackColor = System.Drawing.Color.Transparent;
-            this.imageLabel72.Location = new System.Drawing.Point(133, 25);
+            this.imageLabel72.Location = new System.Drawing.Point(113, 25);
             this.imageLabel72.Name = "imageLabel72";
             this.imageLabel72.Size = new System.Drawing.Size(38, 16);
             this.imageLabel72.TabIndex = 16;
@@ -445,7 +445,7 @@
             // 
             this.imageLabel71.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.imageLabel71.BackColor = System.Drawing.Color.Transparent;
-            this.imageLabel71.Location = new System.Drawing.Point(133, 3);
+            this.imageLabel71.Location = new System.Drawing.Point(113, 3);
             this.imageLabel71.Name = "imageLabel71";
             this.imageLabel71.Size = new System.Drawing.Size(38, 16);
             this.imageLabel71.TabIndex = 16;
@@ -570,8 +570,12 @@
             this.TableParameterMain.AutoSize = true;
             this.TableParameterMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.TableParameterMain.ColumnCount = 2;
-            this.TableParameterMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+            this.TableParameterMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.TableParameterMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.TableParameterMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TableParameterMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TableParameterMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TableParameterMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TableParameterMain.Controls.Add(this.Bomber, 1, 9);
             this.TableParameterMain.Controls.Add(this.TitleBomber, 0, 9);
             this.TableParameterMain.Controls.Add(this.LOS, 1, 7);
@@ -591,7 +595,7 @@
             this.TableParameterMain.Controls.Add(this.Evasion, 1, 6);
             this.TableParameterMain.Controls.Add(this.TitleAccuracy, 0, 8);
             this.TableParameterMain.Controls.Add(this.Accuracy, 1, 8);
-            this.TableParameterMain.Location = new System.Drawing.Point(6, 53);
+            this.TableParameterMain.Location = new System.Drawing.Point(3, 49);
             this.TableParameterMain.Name = "TableParameterMain";
             this.TableParameterMain.RowCount = 10;
             this.TableParameterMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -604,7 +608,8 @@
             this.TableParameterMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TableParameterMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.TableParameterMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TableParameterMain.Size = new System.Drawing.Size(150, 216);
+            this.TableParameterMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.TableParameterMain.Size = new System.Drawing.Size(110, 216);
             this.TableParameterMain.TabIndex = 5;
             this.TableParameterMain.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.TableParameterMain_CellPaint);
             // 
@@ -613,7 +618,7 @@
             this.Bomber.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.Bomber.BackColor = System.Drawing.Color.Transparent;
             this.Bomber.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.Bomber.Location = new System.Drawing.Point(125, 199);
+            this.Bomber.Location = new System.Drawing.Point(85, 199);
             this.Bomber.Name = "Bomber";
             this.Bomber.Size = new System.Drawing.Size(22, 14);
             this.Bomber.TabIndex = 20;
@@ -636,7 +641,7 @@
             this.LOS.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.LOS.BackColor = System.Drawing.Color.Transparent;
             this.LOS.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LOS.Location = new System.Drawing.Point(125, 157);
+            this.LOS.Location = new System.Drawing.Point(85, 157);
             this.LOS.Name = "LOS";
             this.LOS.Size = new System.Drawing.Size(22, 16);
             this.LOS.TabIndex = 12;
@@ -648,7 +653,7 @@
             this.ASW.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.ASW.BackColor = System.Drawing.Color.Transparent;
             this.ASW.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ASW.Location = new System.Drawing.Point(125, 113);
+            this.ASW.Location = new System.Drawing.Point(85, 113);
             this.ASW.Name = "ASW";
             this.ASW.Size = new System.Drawing.Size(22, 16);
             this.ASW.TabIndex = 10;

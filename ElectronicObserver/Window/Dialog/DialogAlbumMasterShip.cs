@@ -16,927 +16,1082 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ElectronicObserver.Window.Dialog {
-	public partial class DialogAlbumMasterShip : Form {
-
-		private int _shipID;
-
-		private ImageLabel[] Aircrafts;
-		private ImageLabel[] Equipments;
-
-
-		public DialogAlbumMasterShip() {
-			InitializeComponent();
-
-			Aircrafts = new ImageLabel[] { Aircraft1, Aircraft2, Aircraft3, Aircraft4, Aircraft5 };
-			Equipments = new ImageLabel[] { Equipment1, Equipment2, Equipment3, Equipment4, Equipment5 };
-
-
-			TitleHP.ImageList =
-			TitleFirepower.ImageList =
-			TitleTorpedo.ImageList =
-			TitleAA.ImageList =
-			TitleArmor.ImageList =
-			TitleASW.ImageList =
-			TitleEvasion.ImageList =
-			TitleLOS.ImageList =
-			TitleLuck.ImageList =
-			TitleSpeed.ImageList =
-			TitleRange.ImageList =
-			Rarity.ImageList =
-			Fuel.ImageList =
-			Ammo.ImageList =
-			TitleBuildingTime.ImageList =
-			MaterialFuel.ImageList =
-			MaterialAmmo.ImageList =
-			MaterialSteel.ImageList =
-			MaterialBauxite.ImageList =
-			PowerUpFirepower.ImageList =
-			PowerUpTorpedo.ImageList =
-			PowerUpAA.ImageList =
-			PowerUpArmor.ImageList =
-			RemodelBeforeLevel.ImageList =
-			RemodelBeforeAmmo.ImageList =
-			RemodelBeforeSteel.ImageList =
-			RemodelAfterLevel.ImageList =
-			RemodelAfterAmmo.ImageList =
-			RemodelAfterSteel.ImageList =
-				ResourceManager.Instance.Icons;
-
-			TitleAirSuperiority.ImageList =
-			TitleDayAttack.ImageList =
-			TitleNightAttack.ImageList =
-			Equipment1.ImageList =
-			Equipment2.ImageList =
-			Equipment3.ImageList =
-			Equipment4.ImageList =
-			Equipment5.ImageList =
-				ResourceManager.Instance.Equipments;
-
-			TitleHP.ImageIndex = (int)ResourceManager.IconContent.ParameterHP;
-			TitleFirepower.ImageIndex = (int)ResourceManager.IconContent.ParameterFirepower;
-			TitleTorpedo.ImageIndex = (int)ResourceManager.IconContent.ParameterTorpedo;
-			TitleAA.ImageIndex = (int)ResourceManager.IconContent.ParameterAA;
-			TitleArmor.ImageIndex = (int)ResourceManager.IconContent.ParameterArmor;
-			TitleASW.ImageIndex = (int)ResourceManager.IconContent.ParameterASW;
-			TitleEvasion.ImageIndex = (int)ResourceManager.IconContent.ParameterEvasion;
-			TitleLOS.ImageIndex = (int)ResourceManager.IconContent.ParameterLOS;
-			TitleLuck.ImageIndex = (int)ResourceManager.IconContent.ParameterLuck;
-			TitleSpeed.ImageIndex = (int)ResourceManager.IconContent.ParameterSpeed;
-			TitleRange.ImageIndex = (int)ResourceManager.IconContent.ParameterRange;
-			Fuel.ImageIndex = (int)ResourceManager.IconContent.ResourceFuel;
-			Ammo.ImageIndex = (int)ResourceManager.IconContent.ResourceAmmo;
-			TitleBuildingTime.ImageIndex = (int)ResourceManager.IconContent.FormArsenal;
-			MaterialFuel.ImageIndex = (int)ResourceManager.IconContent.ResourceFuel;
-			MaterialAmmo.ImageIndex = (int)ResourceManager.IconContent.ResourceAmmo;
-			MaterialSteel.ImageIndex = (int)ResourceManager.IconContent.ResourceSteel;
-			MaterialBauxite.ImageIndex = (int)ResourceManager.IconContent.ResourceBauxite;
-			PowerUpFirepower.ImageIndex = (int)ResourceManager.IconContent.ParameterFirepower;
-			PowerUpTorpedo.ImageIndex = (int)ResourceManager.IconContent.ParameterTorpedo;
-			PowerUpAA.ImageIndex = (int)ResourceManager.IconContent.ParameterAA;
-			PowerUpArmor.ImageIndex = (int)ResourceManager.IconContent.ParameterArmor;
-			RemodelBeforeAmmo.ImageIndex = (int)ResourceManager.IconContent.ResourceAmmo;
-			RemodelBeforeSteel.ImageIndex = (int)ResourceManager.IconContent.ResourceSteel;
-			RemodelAfterAmmo.ImageIndex = (int)ResourceManager.IconContent.ResourceAmmo;
-			RemodelAfterSteel.ImageIndex = (int)ResourceManager.IconContent.ResourceSteel;
-			TitleAirSuperiority.ImageIndex = (int)ResourceManager.EquipmentContent.CarrierBasedFighter;
-			TitleDayAttack.ImageIndex = (int)ResourceManager.EquipmentContent.Seaplane;
-			TitleNightAttack.ImageIndex = (int)ResourceManager.EquipmentContent.Torpedo;
+namespace ElectronicObserver.Window.Dialog
+{
+    public partial class DialogAlbumMasterShip : Form
+    {
+
+        private int _shipID;
+
+        private ImageLabel[] Aircrafts;
+        private ImageLabel[] Equipments;
+
+
+        public DialogAlbumMasterShip()
+        {
+            InitializeComponent();
+
+            Aircrafts = new ImageLabel[] { Aircraft1, Aircraft2, Aircraft3, Aircraft4, Aircraft5 };
+            Equipments = new ImageLabel[] { Equipment1, Equipment2, Equipment3, Equipment4, Equipment5 };
+
+
+            TitleHP.ImageList =
+            TitleFirepower.ImageList =
+            TitleTorpedo.ImageList =
+            TitleAA.ImageList =
+            TitleArmor.ImageList =
+            TitleASW.ImageList =
+            TitleEvasion.ImageList =
+            TitleLOS.ImageList =
+            TitleLuck.ImageList =
+            TitleSpeed.ImageList =
+            TitleRange.ImageList =
+            Rarity.ImageList =
+            Fuel.ImageList =
+            Ammo.ImageList =
+            TitleBuildingTime.ImageList =
+            MaterialFuel.ImageList =
+            MaterialAmmo.ImageList =
+            MaterialSteel.ImageList =
+            MaterialBauxite.ImageList =
+            PowerUpFirepower.ImageList =
+            PowerUpTorpedo.ImageList =
+            PowerUpAA.ImageList =
+            PowerUpArmor.ImageList =
+            RemodelBeforeLevel.ImageList =
+            RemodelBeforeAmmo.ImageList =
+            RemodelBeforeSteel.ImageList =
+            RemodelAfterLevel.ImageList =
+            RemodelAfterAmmo.ImageList =
+            RemodelAfterSteel.ImageList =
+                ResourceManager.Instance.Icons;
+
+            TitleAirSuperiority.ImageList =
+            TitleDayAttack.ImageList =
+            TitleNightAttack.ImageList =
+            Equipment1.ImageList =
+            Equipment2.ImageList =
+            Equipment3.ImageList =
+            Equipment4.ImageList =
+            Equipment5.ImageList =
+                ResourceManager.Instance.Equipments;
+
+            TitleHP.ImageIndex = (int)ResourceManager.IconContent.ParameterHP;
+            TitleFirepower.ImageIndex = (int)ResourceManager.IconContent.ParameterFirepower;
+            TitleTorpedo.ImageIndex = (int)ResourceManager.IconContent.ParameterTorpedo;
+            TitleAA.ImageIndex = (int)ResourceManager.IconContent.ParameterAA;
+            TitleArmor.ImageIndex = (int)ResourceManager.IconContent.ParameterArmor;
+            TitleASW.ImageIndex = (int)ResourceManager.IconContent.ParameterASW;
+            TitleEvasion.ImageIndex = (int)ResourceManager.IconContent.ParameterEvasion;
+            TitleLOS.ImageIndex = (int)ResourceManager.IconContent.ParameterLOS;
+            TitleLuck.ImageIndex = (int)ResourceManager.IconContent.ParameterLuck;
+            TitleSpeed.ImageIndex = (int)ResourceManager.IconContent.ParameterSpeed;
+            TitleRange.ImageIndex = (int)ResourceManager.IconContent.ParameterRange;
+            Fuel.ImageIndex = (int)ResourceManager.IconContent.ResourceFuel;
+            Ammo.ImageIndex = (int)ResourceManager.IconContent.ResourceAmmo;
+            TitleBuildingTime.ImageIndex = (int)ResourceManager.IconContent.FormArsenal;
+            MaterialFuel.ImageIndex = (int)ResourceManager.IconContent.ResourceFuel;
+            MaterialAmmo.ImageIndex = (int)ResourceManager.IconContent.ResourceAmmo;
+            MaterialSteel.ImageIndex = (int)ResourceManager.IconContent.ResourceSteel;
+            MaterialBauxite.ImageIndex = (int)ResourceManager.IconContent.ResourceBauxite;
+            PowerUpFirepower.ImageIndex = (int)ResourceManager.IconContent.ParameterFirepower;
+            PowerUpTorpedo.ImageIndex = (int)ResourceManager.IconContent.ParameterTorpedo;
+            PowerUpAA.ImageIndex = (int)ResourceManager.IconContent.ParameterAA;
+            PowerUpArmor.ImageIndex = (int)ResourceManager.IconContent.ParameterArmor;
+            RemodelBeforeAmmo.ImageIndex = (int)ResourceManager.IconContent.ResourceAmmo;
+            RemodelBeforeSteel.ImageIndex = (int)ResourceManager.IconContent.ResourceSteel;
+            RemodelAfterAmmo.ImageIndex = (int)ResourceManager.IconContent.ResourceAmmo;
+            RemodelAfterSteel.ImageIndex = (int)ResourceManager.IconContent.ResourceSteel;
+            TitleAirSuperiority.ImageIndex = (int)ResourceManager.EquipmentContent.CarrierBasedFighter;
+            TitleDayAttack.ImageIndex = (int)ResourceManager.EquipmentContent.Seaplane;
+            TitleNightAttack.ImageIndex = (int)ResourceManager.EquipmentContent.Torpedo;
+
+            ParameterLevel.Value = ParameterLevel.Maximum = ExpTable.ShipMaximumLevel;
+
+
+            TableBattle.Visible = false;
+            BasePanelShipGirl.Visible = false;
+
+
+            ControlHelper.SetDoubleBuffered(TableShipName);
+            ControlHelper.SetDoubleBuffered(TableParameterMain);
+            ControlHelper.SetDoubleBuffered(TableParameterSub);
+            ControlHelper.SetDoubleBuffered(TableConsumption);
+            ControlHelper.SetDoubleBuffered(TableEquipment);
+            ControlHelper.SetDoubleBuffered(TableArsenal);
+            ControlHelper.SetDoubleBuffered(TableRemodel);
+            ControlHelper.SetDoubleBuffered(TableBattle);
 
-			ParameterLevel.Value = ParameterLevel.Maximum = ExpTable.ShipMaximumLevel;
+            ControlHelper.SetDoubleBuffered(ShipView);
 
 
-			TableBattle.Visible = false;
-			BasePanelShipGirl.Visible = false;
+            //ShipView Initialize
+            ShipView.SuspendLayout();
 
+            ShipView_ShipID.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            ShipView_ShipType.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
 
-			ControlHelper.SetDoubleBuffered( TableShipName );
-			ControlHelper.SetDoubleBuffered( TableParameterMain );
-			ControlHelper.SetDoubleBuffered( TableParameterSub );
-			ControlHelper.SetDoubleBuffered( TableConsumption );
-			ControlHelper.SetDoubleBuffered( TableEquipment );
-			ControlHelper.SetDoubleBuffered( TableArsenal );
-			ControlHelper.SetDoubleBuffered( TableRemodel );
-			ControlHelper.SetDoubleBuffered( TableBattle );
 
-			ControlHelper.SetDoubleBuffered( ShipView );
+            ShipView.Rows.Clear();
 
+            List<DataGridViewRow> rows = new List<DataGridViewRow>(KCDatabase.Instance.MasterShips.Values.Count(s => s.Name != "なし"));
 
-			//ShipView Initialize
-			ShipView.SuspendLayout();
+            foreach (var ship in KCDatabase.Instance.MasterShips.Values)
+            {
 
-			ShipView_ShipID.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-			ShipView_ShipType.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                if (ship.Name == "なし") continue;
 
+                DataGridViewRow row = new DataGridViewRow();
+                row.CreateCells(ShipView);
+                row.SetValues(ship.ShipID, FormMain.Instance.Translator.GetTranslation(KCDatabase.Instance.ShipTypes[ship.ShipType].Name, Utility.TranslationType.ShipTypes), ship.NameWithClass);
+                row.Cells[ShipView_ShipType.Index].Tag = ship.ShipType;
+                row.Cells[ShipView_Name.Index].Tag = ship.IsAbyssalShip ? null : ship.NameReading;
+                rows.Add(row);
 
-			ShipView.Rows.Clear();
+            }
+            ShipView.Rows.AddRange(rows.ToArray());
 
-			List<DataGridViewRow> rows = new List<DataGridViewRow>( KCDatabase.Instance.MasterShips.Values.Count( s => s.Name != "なし" ) );
+            ShipView_ShipID.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
+            ShipView_ShipType.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
 
-			foreach ( var ship in KCDatabase.Instance.MasterShips.Values ) {
+            ShipView.Sort(ShipView_ShipID, ListSortDirection.Ascending);
+            ShipView.ResumeLayout();
+        }
 
-				if ( ship.Name == "なし" ) continue;
+        public DialogAlbumMasterShip(int shipID)
+            : this()
+        {
 
-				DataGridViewRow row = new DataGridViewRow();
-				row.CreateCells( ShipView );
-				row.SetValues( ship.ShipID, FormMain.Instance.Translator.GetTranslation(KCDatabase.Instance.ShipTypes[ship.ShipType].Name, Utility.TranslationType.ShipTypes), ship.NameWithClass );
-				rows.Add( row );
+            UpdateAlbumPage(shipID);
 
-			}
-			ShipView.Rows.AddRange( rows.ToArray() );
 
-			ShipView_ShipID.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
-			ShipView_ShipType.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
+            if (KCDatabase.Instance.MasterShips.ContainsKey(shipID))
+            {
+                var row = ShipView.Rows.OfType<DataGridViewRow>().First(r => (int)r.Cells[ShipView_ShipID.Index].Value == shipID);
+                if (row != null)
+                    ShipView.FirstDisplayedScrollingRowIndex = row.Index;
+            }
 
-			ShipView.Sort( ShipView_ShipID, ListSortDirection.Ascending );
-			ShipView.ResumeLayout();
-		}
+        }
 
-		public DialogAlbumMasterShip( int shipID )
-			: this() {
 
-			UpdateAlbumPage( shipID );
 
+        private void DialogAlbumMasterShip_Load(object sender, EventArgs e)
+        {
 
-			if ( KCDatabase.Instance.MasterShips.ContainsKey( shipID ) ) {
-				var row = ShipView.Rows.OfType<DataGridViewRow>().First( r => (int)r.Cells[ShipView_ShipID.Index].Value == shipID );
-				if ( row != null )
-					ShipView.FirstDisplayedScrollingRowIndex = row.Index;
-			}
+            this.Icon = ResourceManager.ImageToIcon(ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormAlbumShip]);
 
-		}
+        }
 
 
 
-		private void DialogAlbumMasterShip_Load( object sender, EventArgs e ) {
 
-			this.Icon = ResourceManager.ImageToIcon( ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormAlbumShip] );
+        private void ShipView_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
+        {
 
-		}
+            if (e.Column.Index == ShipView_ShipType.Index)
+            {
+                e.SortResult = (int)ShipView[e.Column.Index, e.RowIndex1].Tag - (int)ShipView[e.Column.Index, e.RowIndex2].Tag;
 
+            }
+            else if (e.Column.Index == ShipView_Name.Index)
+            {
 
+                // 艦娘優先; 艦娘同士なら読みで比べる、深海棲艦同士なら名前で比べる
 
+                string tag1 = ShipView[e.Column.Index, e.RowIndex1].Tag as string;
+                string tag2 = ShipView[e.Column.Index, e.RowIndex2].Tag as string;
 
-		private void ShipView_SortCompare( object sender, DataGridViewSortCompareEventArgs e ) {
+                if (tag1 != null)
+                {
+                    if (tag2 != null)
+                        e.SortResult = tag1.CompareTo(tag2);
+                    else
+                        e.SortResult = -1;
+                }
+                else
+                {
+                    if (tag2 != null)
+                        e.SortResult = 1;
+                    else
+                        e.SortResult = 0;
+                }
 
-			if ( e.Column.Name == ShipView_ShipType.Name ) {
-				e.SortResult =
-					KCDatabase.Instance.MasterShips[(int)ShipView.Rows[e.RowIndex1].Cells[0].Value].ShipType -
-					KCDatabase.Instance.MasterShips[(int)ShipView.Rows[e.RowIndex2].Cells[0].Value].ShipType;
-			} else {
-				e.SortResult = ( (IComparable)e.CellValue1 ).CompareTo( e.CellValue2 );
-			}
+                if (e.SortResult == 0)
+                    e.SortResult = ((string)e.CellValue1).CompareTo(e.CellValue2);
 
-			if ( e.SortResult == 0 ) {
-				e.SortResult = (int)( ShipView.Rows[e.RowIndex1].Tag ?? 0 ) - (int)( ShipView.Rows[e.RowIndex2].Tag ?? 0 );
-			}
+            }
+            else
+            {
+                e.SortResult = ((IComparable)e.CellValue1).CompareTo(e.CellValue2);
+            }
 
-			e.Handled = true;
-		}
+            if (e.SortResult == 0)
+            {
+                e.SortResult = (int)(ShipView.Rows[e.RowIndex1].Tag ?? 0) - (int)(ShipView.Rows[e.RowIndex2].Tag ?? 0);
+            }
 
-		private void ShipView_Sorted( object sender, EventArgs e ) {
+            e.Handled = true;
+        }
 
-			for ( int i = 0; i < ShipView.Rows.Count; i++ ) {
-				ShipView.Rows[i].Tag = i;
-			}
+        private void ShipView_Sorted(object sender, EventArgs e)
+        {
 
-		}
+            for (int i = 0; i < ShipView.Rows.Count; i++)
+            {
+                ShipView.Rows[i].Tag = i;
+            }
 
+        }
 
 
-		private void ShipView_CellMouseClick( object sender, DataGridViewCellMouseEventArgs e ) {
 
-			if ( e.RowIndex >= 0 ) {
-				int shipID = (int)ShipView.Rows[e.RowIndex].Cells[0].Value;
+        private void ShipView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
 
-				if ( ( e.Button & System.Windows.Forms.MouseButtons.Right ) != 0 ) {
-					Cursor = Cursors.AppStarting;
-					new DialogAlbumMasterShip( shipID ).Show( Owner );
-					Cursor = Cursors.Default;
+            if (e.RowIndex >= 0)
+            {
+                int shipID = (int)ShipView.Rows[e.RowIndex].Cells[0].Value;
 
-				} else if ( ( e.Button & System.Windows.Forms.MouseButtons.Left ) != 0 ) {
-					UpdateAlbumPage( shipID );
-				}
-			}
+                if ((e.Button & System.Windows.Forms.MouseButtons.Right) != 0)
+                {
+                    Cursor = Cursors.AppStarting;
+                    new DialogAlbumMasterShip(shipID).Show(Owner);
+                    Cursor = Cursors.Default;
 
-		}
+                }
+                else if ((e.Button & System.Windows.Forms.MouseButtons.Left) != 0)
+                {
+                    UpdateAlbumPage(shipID);
+                }
+            }
 
+        }
 
 
 
-		private void UpdateAlbumPage( int shipID ) {
 
-			KCDatabase db = KCDatabase.Instance;
-			ShipDataMaster ship = db.MasterShips[shipID];
+        private void UpdateAlbumPage(int shipID)
+        {
 
-			if ( ship == null ) return;
+            KCDatabase db = KCDatabase.Instance;
+            ShipDataMaster ship = db.MasterShips[shipID];
 
+            if (ship == null) return;
 
-			BasePanelShipGirl.SuspendLayout();
 
-			//header
-			TableShipName.SuspendLayout();
-			_shipID = shipID;
-			ShipID.Text = ship.ShipID.ToString();
-			AlbumNo.Text = ship.AlbumNo.ToString();
-			ResourceName.Text = string.Format( "{0} ver. {1}", ship.ResourceName, ship.ResourceVersion );
+            BasePanelShipGirl.SuspendLayout();
 
-			ShipType.Text = ship.IsLandBase ? EncycloRes.LandBase : FormMain.Instance.Translator.GetTranslation(db.ShipTypes[ship.ShipType].Name, Utility.TranslationType.ShipTypes);
-			ShipName.Text = ship.NameWithClass;
-			ToolTipInfo.SetToolTip( ShipName, !ship.IsAbyssalShip ? ship.NameReading : null );
-			TableShipName.ResumeLayout();
+            //header
+            TableShipName.SuspendLayout();
+            _shipID = shipID;
+            ShipID.Text = ship.ShipID.ToString();
+            AlbumNo.Text = ship.AlbumNo.ToString();
+            ResourceName.Text = string.Format("{0} ver. {1}/{2}/{3}",
+                ship.ResourceName, ship.ResourceGraphicVersion, ship.ResourceVoiceVersion, ship.ResourcePortVoiceVersion);
+            ToolTipInfo.SetToolTip(ResourceName, string.Format("リソース名: {0}\r\nグラフィック ver. {1}\r\nボイス ver. {2}\r\n母港ボイス ver. {3}",
+                ship.ResourceName, ship.ResourceGraphicVersion, ship.ResourceVoiceVersion, ship.ResourcePortVoiceVersion));
 
+            ShipType.Text = ship.IsLandBase ? EncycloRes.LandBase : FormMain.Instance.Translator.GetTranslation(db.ShipTypes[ship.ShipType].Name, Utility.TranslationType.ShipTypes);
+            ShipName.Text = ship.NameWithClass;
+            ToolTipInfo.SetToolTip(ShipName, !ship.IsAbyssalShip ? ship.NameReading : null);
+            TableShipName.ResumeLayout();
 
-			//main parameter
-			TableParameterMain.SuspendLayout();
 
-			if ( !ship.IsAbyssalShip ) {
+            //main parameter
+            TableParameterMain.SuspendLayout();
 
-				TitleParameterMin.Text = EncycloRes.Initial;
-				TitleParameterMax.Text = EncycloRes.Maximum;
+            if (!ship.IsAbyssalShip)
+            {
 
-				HPMin.Text = ship.HPMin.ToString();
-				HPMax.Text = ship.HPMaxMarried.ToString();
+                TitleParameterMin.Text = EncycloRes.Initial;
+                TitleParameterMax.Text = EncycloRes.Maximum;
 
-				FirepowerMin.Text = ship.FirepowerMin.ToString();
-				FirepowerMax.Text = ship.FirepowerMax.ToString();
+                HPMin.Text = ship.HPMin.ToString();
+                HPMax.Text = ship.HPMaxMarried.ToString();
 
-				TorpedoMin.Text = ship.TorpedoMin.ToString();
-				TorpedoMax.Text = ship.TorpedoMax.ToString();
+                FirepowerMin.Text = ship.FirepowerMin.ToString();
+                FirepowerMax.Text = ship.FirepowerMax.ToString();
 
-				AAMin.Text = ship.AAMin.ToString();
-				AAMax.Text = ship.AAMax.ToString();
+                TorpedoMin.Text = ship.TorpedoMin.ToString();
+                TorpedoMax.Text = ship.TorpedoMax.ToString();
 
-				ArmorMin.Text = ship.ArmorMin.ToString();
-				ArmorMax.Text = ship.ArmorMax.ToString();
+                AAMin.Text = ship.AAMin.ToString();
+                AAMax.Text = ship.AAMax.ToString();
 
-				ASWMin.Text = GetParameterMinBound( ship.ASW );
-				ASWMax.Text = GetParameterMax( ship.ASW );
+                ArmorMin.Text = ship.ArmorMin.ToString();
+                ArmorMax.Text = ship.ArmorMax.ToString();
 
-				EvasionMin.Text = GetParameterMinBound( ship.Evasion );
-				EvasionMax.Text = GetParameterMax( ship.Evasion );
+                ASWMin.Text = GetParameterMinBound(ship.ASW);
+                ASWMax.Text = GetParameterMax(ship.ASW);
 
-				LOSMin.Text = GetParameterMinBound( ship.LOS );
-				LOSMax.Text = GetParameterMax( ship.LOS );
+                EvasionMin.Text = GetParameterMinBound(ship.Evasion);
+                EvasionMax.Text = GetParameterMax(ship.Evasion);
 
-				LuckMin.Text = ship.LuckMin.ToString();
-				LuckMax.Text = ship.LuckMax.ToString();
+                LOSMin.Text = GetParameterMinBound(ship.LOS);
+                LOSMax.Text = GetParameterMax(ship.LOS);
 
-			} else {
+                LuckMin.Text = ship.LuckMin.ToString();
+                LuckMax.Text = ship.LuckMax.ToString();
 
-				int hp = ship.HPMin;
-				int firepower = ship.FirepowerMax;
-				int torpedo = ship.TorpedoMax;
-				int aa = ship.AAMax;
-				int armor = ship.ArmorMax;
-				int asw = ship.ASW != null && ship.ASW.Maximum != ShipParameterRecord.Parameter.MaximumDefault ? ship.ASW.Maximum : 0;
-				int evasion = ship.Evasion != null && ship.Evasion.Maximum != ShipParameterRecord.Parameter.MaximumDefault ? ship.Evasion.Maximum : 0;
-				int los = ship.LOS != null && ship.LOS.Maximum != ShipParameterRecord.Parameter.MaximumDefault ? ship.LOS.Maximum : 0;
-				int luck = ship.LuckMax;
+            }
+            else
+            {
 
-				if ( ship.DefaultSlot != null ) {
-					int count = ship.DefaultSlot.Count;
-					for ( int i = 0; i < count; i++ ) {
-						EquipmentDataMaster eq = KCDatabase.Instance.MasterEquipments[ship.DefaultSlot[i]];
-						if ( eq == null ) continue;
+                int hp = ship.HPMin;
+                int firepower = ship.FirepowerMax;
+                int torpedo = ship.TorpedoMax;
+                int aa = ship.AAMax;
+                int armor = ship.ArmorMax;
+                int asw = ship.ASW != null && ship.ASW.Maximum != ShipParameterRecord.Parameter.MaximumDefault ? ship.ASW.Maximum : 0;
+                int evasion = ship.Evasion != null && ship.Evasion.Maximum != ShipParameterRecord.Parameter.MaximumDefault ? ship.Evasion.Maximum : 0;
+                int los = ship.LOS != null && ship.LOS.Maximum != ShipParameterRecord.Parameter.MaximumDefault ? ship.LOS.Maximum : 0;
+                int luck = ship.LuckMax;
 
-						firepower += eq.Firepower;
-						torpedo += eq.Torpedo;
-						aa += eq.AA;
-						armor += eq.Armor;
-						asw += eq.ASW;
-						evasion += eq.Evasion;
-						los += eq.LOS;
-						luck += eq.Luck;
-					}
-				}
+                if (ship.DefaultSlot != null)
+                {
+                    int count = ship.DefaultSlot.Count;
+                    for (int i = 0; i < count; i++)
+                    {
+                        EquipmentDataMaster eq = KCDatabase.Instance.MasterEquipments[ship.DefaultSlot[i]];
+                        if (eq == null) continue;
 
-				TitleParameterMin.Text = EncycloRes.BaseValue;
-				TitleParameterMax.Text = EncycloRes.WithEquipValue;
+                        firepower += eq.Firepower;
+                        torpedo += eq.Torpedo;
+                        aa += eq.AA;
+                        armor += eq.Armor;
+                        asw += eq.ASW;
+                        evasion += eq.Evasion;
+                        los += eq.LOS;
+                        luck += eq.Luck;
+                    }
+                }
 
-				HPMin.Text = ship.HPMin.ToString();
-				HPMax.Text = hp.ToString();
+                TitleParameterMin.Text = EncycloRes.BaseValue;
+                TitleParameterMax.Text = EncycloRes.WithEquipValue;
 
-				FirepowerMin.Text = ship.FirepowerMax.ToString();
-				FirepowerMax.Text = firepower.ToString();
+                HPMin.Text = ship.HPMin.ToString();
+                HPMax.Text = hp.ToString();
 
-				TorpedoMin.Text = ship.TorpedoMax.ToString();
-				TorpedoMax.Text = torpedo.ToString();
+                FirepowerMin.Text = ship.FirepowerMax.ToString();
+                FirepowerMax.Text = firepower.ToString();
 
-				AAMin.Text = ship.AAMax.ToString();
-				AAMax.Text = aa.ToString();
+                TorpedoMin.Text = ship.TorpedoMax.ToString();
+                TorpedoMax.Text = torpedo.ToString();
 
-				ArmorMin.Text = ship.ArmorMax.ToString();
-				ArmorMax.Text = armor.ToString();
+                AAMin.Text = ship.AAMax.ToString();
+                AAMax.Text = aa.ToString();
 
-				ASWMin.Text = ship.ASW != null && ship.ASW.Maximum != ShipParameterRecord.Parameter.MaximumDefault ? ship.ASW.Maximum.ToString() : "???";
-				ASWMax.Text = asw.ToString();
+                ArmorMin.Text = ship.ArmorMax.ToString();
+                ArmorMax.Text = armor.ToString();
 
-				EvasionMin.Text = ship.Evasion != null && ship.Evasion.Maximum != ShipParameterRecord.Parameter.MaximumDefault ? ship.Evasion.Maximum.ToString() : "???";
-				EvasionMax.Text = evasion.ToString();
+                ASWMin.Text = ship.ASW != null && ship.ASW.Maximum != ShipParameterRecord.Parameter.MaximumDefault ? ship.ASW.Maximum.ToString() : "???";
+                ASWMax.Text = asw.ToString();
 
-				LOSMin.Text = ship.LOS != null && ship.LOS.Maximum != ShipParameterRecord.Parameter.MaximumDefault ? ship.LOS.Maximum.ToString() : "???";
-				LOSMax.Text = los.ToString();
+                EvasionMin.Text = ship.Evasion != null && ship.Evasion.Maximum != ShipParameterRecord.Parameter.MaximumDefault ? ship.Evasion.Maximum.ToString() : "???";
+                EvasionMax.Text = evasion.ToString();
 
-				LuckMin.Text = ship.LuckMax.ToString();
-				LuckMax.Text = luck.ToString();
+                LOSMin.Text = ship.LOS != null && ship.LOS.Maximum != ShipParameterRecord.Parameter.MaximumDefault ? ship.LOS.Maximum.ToString() : "???";
+                LOSMax.Text = los.ToString();
 
-			}
-			UpdateLevelParameter( ship.ShipID );
+                LuckMin.Text = ship.LuckMax.ToString();
+                LuckMax.Text = luck.ToString();
 
-			TableParameterMain.ResumeLayout();
+            }
+            UpdateLevelParameter(ship.ShipID);
 
+            TableParameterMain.ResumeLayout();
 
-			//sub parameter
-			TableParameterSub.SuspendLayout();
 
-			Speed.Text = Constants.GetSpeed( ship.Speed );
-			Range.Text = Constants.GetRange( ship.Range );
-			Rarity.Text = Constants.GetShipRarity( ship.Rarity );
-			Rarity.ImageIndex = (int)ResourceManager.IconContent.RarityRed + ship.Rarity;
+            //sub parameter
+            TableParameterSub.SuspendLayout();
 
-			TableParameterSub.ResumeLayout();
+            Speed.Text = Constants.GetSpeed(ship.Speed);
+            Range.Text = Constants.GetRange(ship.Range);
+            Rarity.Text = Constants.GetShipRarity(ship.Rarity);
+            Rarity.ImageIndex = (int)ResourceManager.IconContent.RarityRed + ship.Rarity;
 
-			TableConsumption.SuspendLayout();
+            TableParameterSub.ResumeLayout();
 
-			Fuel.Text = ship.Fuel.ToString();
-			Ammo.Text = ship.Ammo.ToString();
+            TableConsumption.SuspendLayout();
 
-			string tooltiptext = string.Format(
-				EncycloRes.RepairTooltip,
-				( ship.Fuel * 0.06 ),
-				( ship.Fuel * 0.032 ),
-				(int)( ship.Fuel * 0.06 * ( ship.HPMaxMarried - 1 ) ),
-				(int)( ship.Fuel * 0.032 * ( ship.HPMaxMarried - 1 ) )
-				);
+            Fuel.Text = ship.Fuel.ToString();
+            Ammo.Text = ship.Ammo.ToString();
 
-			ToolTipInfo.SetToolTip( TableConsumption, tooltiptext );
-			ToolTipInfo.SetToolTip( TitleConsumption, tooltiptext );
-			ToolTipInfo.SetToolTip( Fuel, tooltiptext );
-			ToolTipInfo.SetToolTip( Ammo, tooltiptext );
+            string tooltiptext = string.Format(
+                EncycloRes.RepairTooltip,
+                (ship.Fuel * 0.06),
+                (ship.Fuel * 0.032),
+                (int)(ship.Fuel * 0.06 * (ship.HPMaxMarried - 1)),
+                (int)(ship.Fuel * 0.032 * (ship.HPMaxMarried - 1))
+                );
 
-			TableConsumption.ResumeLayout();
+            ToolTipInfo.SetToolTip(TableConsumption, tooltiptext);
+            ToolTipInfo.SetToolTip(TitleConsumption, tooltiptext);
+            ToolTipInfo.SetToolTip(Fuel, tooltiptext);
+            ToolTipInfo.SetToolTip(Ammo, tooltiptext);
 
-			Description.Text = ship.MessageAlbum != "" ? ship.MessageAlbum : ship.MessageGet;
-			Description.Tag = ship.MessageAlbum != "" ? 1 : 0;
+            TableConsumption.ResumeLayout();
 
+            Description.Text = ship.MessageAlbum != "" ? ship.MessageAlbum : ship.MessageGet;
+            Description.Tag = ship.MessageAlbum != "" ? 1 : 0;
 
-			//equipment
-			TableEquipment.SuspendLayout();
 
-			for ( int i = 0; i < Equipments.Length; i++ ) {
+            //equipment
+            TableEquipment.SuspendLayout();
 
-				if ( ship.Aircraft[i] > 0 || i < ship.SlotSize )
-					Aircrafts[i].Text = ship.Aircraft[i].ToString();
-				else
-					Aircrafts[i].Text = "";
+            for (int i = 0; i < Equipments.Length; i++)
+            {
 
+                if (ship.Aircraft[i] > 0 || i < ship.SlotSize)
+                    Aircrafts[i].Text = ship.Aircraft[i].ToString();
+                else
+                    Aircrafts[i].Text = "";
 
-				ToolTipInfo.SetToolTip( Equipments[i], null );
 
-				if ( ship.DefaultSlot == null ) {
-					if ( i < ship.SlotSize ) {
-						Equipments[i].Text = "???";
-						Equipments[i].ImageIndex = (int)ResourceManager.EquipmentContent.Unknown;
-					} else {
-						Equipments[i].Text = "";
-						Equipments[i].ImageIndex = (int)ResourceManager.EquipmentContent.Locked;
-					}
+                ToolTipInfo.SetToolTip(Equipments[i], null);
 
-				} else if ( ship.DefaultSlot[i] != -1 ) {
-					EquipmentDataMaster eq = db.MasterEquipments[ship.DefaultSlot[i]];
-					Equipments[i].Text = eq.Name;
+                if (ship.DefaultSlot == null)
+                {
+                    if (i < ship.SlotSize)
+                    {
+                        Equipments[i].Text = "???";
+                        Equipments[i].ImageIndex = (int)ResourceManager.EquipmentContent.Unknown;
+                    }
+                    else
+                    {
+                        Equipments[i].Text = "";
+                        Equipments[i].ImageIndex = (int)ResourceManager.EquipmentContent.Locked;
+                    }
 
-					int eqicon = eq.EquipmentType[3];
-					if ( eqicon >= (int)ResourceManager.EquipmentContent.Locked )
-						eqicon = (int)ResourceManager.EquipmentContent.Unknown;
+                }
+                else if (ship.DefaultSlot[i] != -1)
+                {
+                    EquipmentDataMaster eq = db.MasterEquipments[ship.DefaultSlot[i]];
+                    if (eq == null)
+                    {
+                        Equipments[i].Text = GeneralRes.None;
+                        Equipments[i].ImageIndex = (int)ResourceManager.EquipmentContent.Nothing;
+                    }
+                    else
+                    {
+                        Equipments[i].Text = eq.Name;
 
-					Equipments[i].ImageIndex = eqicon;
+                        int eqicon = eq.EquipmentType[3];
+                        if (eqicon >= (int)ResourceManager.EquipmentContent.Locked)
+                            eqicon = (int)ResourceManager.EquipmentContent.Unknown;
 
-					{
-						StringBuilder sb = new StringBuilder();
+                        Equipments[i].ImageIndex = eqicon;
 
-						sb.AppendFormat( "{0} {1}\r\n", eq.CategoryTypeInstance.Name, eq.Name );
-						if ( eq.Firepower != 0 ) sb.AppendFormat( EncycloRes.Firepower + " {0}{1}\r\n", eq.Firepower > 0 ? "+" : "", eq.Firepower );
-						if ( eq.Torpedo != 0 ) sb.AppendFormat( EncycloRes.Torpedo + " {0}{1}\r\n", eq.Torpedo > 0 ? "+" : "", eq.Torpedo );
-						if ( eq.AA != 0 ) sb.AppendFormat( EncycloRes.AntiAir + " {0}{1}\r\n", eq.AA > 0 ? "+" : "", eq.AA );
-						if ( eq.Armor != 0 ) sb.AppendFormat( EncycloRes.Armor + " {0}{1}\r\n", eq.Armor > 0 ? "+" : "", eq.Armor );
-						if ( eq.ASW != 0 ) sb.AppendFormat( EncycloRes.ASW + " {0}{1}\r\n", eq.ASW > 0 ? "+" : "", eq.ASW );
-						if ( eq.Evasion != 0 ) sb.AppendFormat( EncycloRes.Evasion + " {0}{1}\r\n", eq.Evasion > 0 ? "+" : "", eq.Evasion );
-						if ( eq.LOS != 0 ) sb.AppendFormat( EncycloRes.LoS + " {0}{1}\r\n", eq.LOS > 0 ? "+" : "", eq.LOS );
-						if ( eq.Accuracy != 0 ) sb.AppendFormat( EncycloRes.Accuracy + " {0}{1}\r\n", eq.Accuracy > 0 ? "+" : "", eq.Accuracy );
-						if ( eq.Bomber != 0 ) sb.AppendFormat( EncycloRes.DiveBomb + " {0}{1}\r\n", eq.Bomber > 0 ? "+" : "", eq.Bomber );
-						sb.AppendLine( EncycloRes.RightClickForMore );
+                        {
+                            StringBuilder sb = new StringBuilder();
 
-						ToolTipInfo.SetToolTip( Equipments[i], sb.ToString() );
-					}
+                            sb.AppendFormat("{0} {1}\r\n", eq.CategoryTypeInstance.Name, eq.Name);
+                            if (eq.Firepower != 0) sb.AppendFormat(EncycloRes.Firepower + " {0}{1}\r\n", eq.Firepower > 0 ? "+" : "", eq.Firepower);
+                            if (eq.Torpedo != 0) sb.AppendFormat(EncycloRes.Torpedo + " {0}{1}\r\n", eq.Torpedo > 0 ? "+" : "", eq.Torpedo);
+                            if (eq.AA != 0) sb.AppendFormat(EncycloRes.AntiAir + " {0}{1}\r\n", eq.AA > 0 ? "+" : "", eq.AA);
+                            if (eq.Armor != 0) sb.AppendFormat(EncycloRes.Armor + " {0}{1}\r\n", eq.Armor > 0 ? "+" : "", eq.Armor);
+                            if (eq.ASW != 0) sb.AppendFormat(EncycloRes.ASW + " {0}{1}\r\n", eq.ASW > 0 ? "+" : "", eq.ASW);
+                            if (eq.Evasion != 0) sb.AppendFormat(EncycloRes.Evasion + " {0}{1}\r\n", eq.Evasion > 0 ? "+" : "", eq.Evasion);
+                            if (eq.LOS != 0) sb.AppendFormat(EncycloRes.LoS + " {0}{1}\r\n", eq.LOS > 0 ? "+" : "", eq.LOS);
+                            if (eq.Accuracy != 0) sb.AppendFormat(EncycloRes.Accuracy + " {0}{1}\r\n", eq.Accuracy > 0 ? "+" : "", eq.Accuracy);
+                            if (eq.Bomber != 0) sb.AppendFormat(EncycloRes.DiveBomb + " {0}{1}\r\n", eq.Bomber > 0 ? "+" : "", eq.Bomber);
+                            sb.AppendLine(EncycloRes.RightClickForMore);
 
-				} else if ( i < ship.SlotSize ) {
-					Equipments[i].Text = EncycloRes.None;
-					Equipments[i].ImageIndex = (int)ResourceManager.EquipmentContent.Nothing;
+                            ToolTipInfo.SetToolTip(Equipments[i], sb.ToString());
+                        }
+                    }
 
-				} else {
-					Equipments[i].Text = "";
-					Equipments[i].ImageIndex = (int)ResourceManager.EquipmentContent.Locked;
-				}
-			}
+                }
+                else if (i < ship.SlotSize)
+                {
+                    Equipments[i].Text = EncycloRes.None;
+                    Equipments[i].ImageIndex = (int)ResourceManager.EquipmentContent.Nothing;
 
-			TableEquipment.ResumeLayout();
+                }
+                else
+                {
+                    Equipments[i].Text = "";
+                    Equipments[i].ImageIndex = (int)ResourceManager.EquipmentContent.Locked;
+                }
+            }
 
+            TableEquipment.ResumeLayout();
 
-			//arsenal
-			TableArsenal.SuspendLayout();
-			BuildingTime.Text = DateTimeHelper.ToTimeRemainString( new TimeSpan( 0, ship.BuildingTime, 0 ) );
 
-			MaterialFuel.Text = ship.Material[0].ToString();
-			MaterialAmmo.Text = ship.Material[1].ToString();
-			MaterialSteel.Text = ship.Material[2].ToString();
-			MaterialBauxite.Text = ship.Material[3].ToString();
+            //arsenal
+            TableArsenal.SuspendLayout();
+            BuildingTime.Text = DateTimeHelper.ToTimeRemainString(new TimeSpan(0, ship.BuildingTime, 0));
 
-			PowerUpFirepower.Text = ship.PowerUp[0].ToString();
-			PowerUpTorpedo.Text = ship.PowerUp[1].ToString();
-			PowerUpAA.Text = ship.PowerUp[2].ToString();
-			PowerUpArmor.Text = ship.PowerUp[3].ToString();
+            MaterialFuel.Text = ship.Material[0].ToString();
+            MaterialAmmo.Text = ship.Material[1].ToString();
+            MaterialSteel.Text = ship.Material[2].ToString();
+            MaterialBauxite.Text = ship.Material[3].ToString();
 
-			TableArsenal.ResumeLayout();
+            PowerUpFirepower.Text = ship.PowerUp[0].ToString();
+            PowerUpTorpedo.Text = ship.PowerUp[1].ToString();
+            PowerUpAA.Text = ship.PowerUp[2].ToString();
+            PowerUpArmor.Text = ship.PowerUp[3].ToString();
 
+            TableArsenal.ResumeLayout();
 
-			//remodel
-			if ( !ship.IsAbyssalShip ) {
 
-				TableRemodel.SuspendLayout();
+            //remodel
+            if (!ship.IsAbyssalShip)
+            {
 
-				if ( ship.RemodelBeforeShipID == 0 ) {
-					RemodelBeforeShipName.Text = EncycloRes.None;
-					RemodelBeforeLevel.Text = "";
-					RemodelBeforeLevel.ImageIndex = -1;
-					ToolTipInfo.SetToolTip( RemodelBeforeLevel, null );
-					RemodelBeforeAmmo.Text = "-";
-					RemodelBeforeSteel.Text = "-";
-				} else {
-					ShipDataMaster sbefore = ship.RemodelBeforeShip;
-					RemodelBeforeShipName.Text = sbefore.Name;
-					RemodelBeforeLevel.Text = string.Format( "Lv. {0}", sbefore.RemodelAfterLevel );
-					RemodelBeforeLevel.ImageIndex = sbefore.NeedCatapult > 0 ? (int)ResourceManager.IconContent.ItemCatapult : sbefore.NeedBlueprint > 0 ? (int)ResourceManager.IconContent.ItemBlueprint : -1;
-					ToolTipInfo.SetToolTip( RemodelBeforeLevel, GetRemodelItem( sbefore ) );
-					RemodelBeforeAmmo.Text = sbefore.RemodelAmmo.ToString();
-					RemodelBeforeSteel.Text = sbefore.RemodelSteel.ToString();
-				}
+                TableRemodel.SuspendLayout();
 
-				if ( ship.RemodelAfterShipID == 0 ) {
-					RemodelAfterShipName.Text = EncycloRes.None;
-					RemodelAfterLevel.Text = "";
-					RemodelAfterLevel.ImageIndex = -1;
-					ToolTipInfo.SetToolTip( RemodelAfterLevel, null );
-					RemodelAfterAmmo.Text = "-";
-					RemodelAfterSteel.Text = "-";
-				} else {
-					RemodelAfterShipName.Text = ship.RemodelAfterShip.Name;
-					RemodelAfterLevel.Text = string.Format( "Lv. {0}", ship.RemodelAfterLevel );
-					RemodelAfterLevel.ImageIndex = ship.NeedCatapult > 0 ? (int)ResourceManager.IconContent.ItemCatapult : ship.NeedBlueprint > 0 ? (int)ResourceManager.IconContent.ItemBlueprint : -1;
-					ToolTipInfo.SetToolTip( RemodelAfterLevel, GetRemodelItem( ship ) );
-					RemodelAfterAmmo.Text = ship.RemodelAmmo.ToString();
-					RemodelAfterSteel.Text = ship.RemodelSteel.ToString();
-				}
-				TableRemodel.ResumeLayout();
+                if (ship.RemodelBeforeShipID == 0)
+                {
+                    RemodelBeforeShipName.Text = EncycloRes.None;
+                    RemodelBeforeLevel.Text = "";
+                    RemodelBeforeLevel.ImageIndex = -1;
+                    ToolTipInfo.SetToolTip(RemodelBeforeLevel, null);
+                    RemodelBeforeAmmo.Text = "-";
+                    RemodelBeforeSteel.Text = "-";
+                }
+                else
+                {
+                    ShipDataMaster sbefore = ship.RemodelBeforeShip;
+                    RemodelBeforeShipName.Text = sbefore.Name;
+                    RemodelBeforeLevel.Text = string.Format("Lv. {0}", sbefore.RemodelAfterLevel);
+                    RemodelBeforeLevel.ImageIndex = sbefore.NeedCatapult > 0 ? (int)ResourceManager.IconContent.ItemCatapult : sbefore.NeedBlueprint > 0 ? (int)ResourceManager.IconContent.ItemBlueprint : -1;
+                    ToolTipInfo.SetToolTip(RemodelBeforeLevel, GetRemodelItem(sbefore));
+                    RemodelBeforeAmmo.Text = sbefore.RemodelAmmo.ToString();
+                    RemodelBeforeSteel.Text = sbefore.RemodelSteel.ToString();
+                }
 
+                if (ship.RemodelAfterShipID == 0)
+                {
+                    RemodelAfterShipName.Text = EncycloRes.None;
+                    RemodelAfterLevel.Text = "";
+                    RemodelAfterLevel.ImageIndex = -1;
+                    ToolTipInfo.SetToolTip(RemodelAfterLevel, null);
+                    RemodelAfterAmmo.Text = "-";
+                    RemodelAfterSteel.Text = "-";
+                }
+                else
+                {
+                    RemodelAfterShipName.Text = ship.RemodelAfterShip.Name;
+                    RemodelAfterLevel.Text = string.Format("Lv. {0}", ship.RemodelAfterLevel);
+                    RemodelAfterLevel.ImageIndex = ship.NeedCatapult > 0 ? (int)ResourceManager.IconContent.ItemCatapult : ship.NeedBlueprint > 0 ? (int)ResourceManager.IconContent.ItemBlueprint : -1;
+                    ToolTipInfo.SetToolTip(RemodelAfterLevel, GetRemodelItem(ship));
+                    RemodelAfterAmmo.Text = ship.RemodelAmmo.ToString();
+                    RemodelAfterSteel.Text = ship.RemodelSteel.ToString();
+                }
+                TableRemodel.ResumeLayout();
 
-				TableRemodel.Visible = true;
-				TableBattle.Visible = false;
 
+                TableRemodel.Visible = true;
+                TableBattle.Visible = false;
 
-			} else {
 
-				TableBattle.SuspendLayout();
+            }
+            else
+            {
 
-				AirSuperiority.Text = Calculator.GetAirSuperiority( ship ).ToString();
-				DayAttack.Text = Constants.GetDayAttackKind( Calculator.GetDayAttackKind( ship.DefaultSlot == null ? null : ship.DefaultSlot.ToArray(), ship.ShipID, -1 ) );
-				NightAttack.Text = Constants.GetNightAttackKind( Calculator.GetNightAttackKind( ship.DefaultSlot == null ? null : ship.DefaultSlot.ToArray(), ship.ShipID, -1 ) );
+                TableBattle.SuspendLayout();
 
-				TableBattle.ResumeLayout();
+                AirSuperiority.Text = Calculator.GetAirSuperiority(ship).ToString();
+                DayAttack.Text = Constants.GetDayAttackKind(Calculator.GetDayAttackKind(ship.DefaultSlot == null ? null : ship.DefaultSlot.ToArray(), ship.ShipID, -1));
+                NightAttack.Text = Constants.GetNightAttackKind(Calculator.GetNightAttackKind(ship.DefaultSlot == null ? null : ship.DefaultSlot.ToArray(), ship.ShipID, -1));
 
-				TableRemodel.Visible = false;
-				TableBattle.Visible = true;
+                TableBattle.ResumeLayout();
 
-			}
+                TableRemodel.Visible = false;
+                TableBattle.Visible = true;
 
+            }
 
 
 
-			BasePanelShipGirl.ResumeLayout();
-			BasePanelShipGirl.Visible = true;
 
+            BasePanelShipGirl.ResumeLayout();
+            BasePanelShipGirl.Visible = true;
 
-			this.Text = EncycloRes.ShipEncyclopedia + " - " + ship.NameWithClass;
 
-		}
+            this.Text = EncycloRes.ShipEncyclopedia + " - " + ship.NameWithClass;
 
+        }
 
-		private void UpdateLevelParameter( int shipID ) {
 
-			ShipDataMaster ship = KCDatabase.Instance.MasterShips[shipID];
+        private void UpdateLevelParameter(int shipID)
+        {
 
-			if ( ship == null )
-				return;
+            ShipDataMaster ship = KCDatabase.Instance.MasterShips[shipID];
 
-			if ( !ship.IsAbyssalShip ) {
-				ASWLevel.Text = EstimateParameter( (int)ParameterLevel.Value, ship.ASW );
-				EvasionLevel.Text = EstimateParameter( (int)ParameterLevel.Value, ship.Evasion );
-				LOSLevel.Text = EstimateParameter( (int)ParameterLevel.Value, ship.LOS );
-				ASWLevel.Visible =
-				ASWSeparater.Visible =
-				EvasionLevel.Visible =
-				EvasionSeparater.Visible =
-				LOSLevel.Visible =
-				LOSSeparater.Visible = true;
+            if (ship == null)
+                return;
 
-			} else {
-				ASWLevel.Visible =
-				ASWSeparater.Visible =
-				EvasionLevel.Visible =
-				EvasionSeparater.Visible =
-				LOSLevel.Visible =
-				LOSSeparater.Visible = false;
-			}
-		}
+            if (!ship.IsAbyssalShip)
+            {
+                ASWLevel.Text = EstimateParameter((int)ParameterLevel.Value, ship.ASW);
+                EvasionLevel.Text = EstimateParameter((int)ParameterLevel.Value, ship.Evasion);
+                LOSLevel.Text = EstimateParameter((int)ParameterLevel.Value, ship.LOS);
+                ASWLevel.Visible =
+                ASWSeparater.Visible =
+                EvasionLevel.Visible =
+                EvasionSeparater.Visible =
+                LOSLevel.Visible =
+                LOSSeparater.Visible = true;
 
-		private string EstimateParameter( int level, ShipParameterRecord.Parameter param ) {
+            }
+            else
+            {
+                ASWLevel.Visible =
+                ASWSeparater.Visible =
+                EvasionLevel.Visible =
+                EvasionSeparater.Visible =
+                LOSLevel.Visible =
+                LOSSeparater.Visible = false;
+            }
+        }
 
-			if ( param == null || param.Maximum == ShipParameterRecord.Parameter.MaximumDefault )
-				return "???";
+        private string EstimateParameter(int level, ShipParameterRecord.Parameter param)
+        {
 
-			int min = (int)( param.MinimumEstMin + ( param.Maximum - param.MinimumEstMin ) * level / 99.0 );
-			int max = (int)( param.MinimumEstMax + ( param.Maximum - param.MinimumEstMax ) * level / 99.0 );
+            if (param == null || param.Maximum == ShipParameterRecord.Parameter.MaximumDefault)
+                return "???";
 
-			if ( min == max )
-				return min.ToString();
-			else
-				return string.Format( "{0}～{1}", Math.Min( min, max ), Math.Max( min, max ) );
-		}
+            int min = (int)(param.MinimumEstMin + (param.Maximum - param.MinimumEstMin) * level / 99.0);
+            int max = (int)(param.MinimumEstMax + (param.Maximum - param.MinimumEstMax) * level / 99.0);
 
+            if (min == max)
+                return min.ToString();
+            else
+                return string.Format("{0}～{1}", Math.Min(min, max), Math.Max(min, max));
+        }
 
-		private string GetParameterMinBound( ShipParameterRecord.Parameter param ) {
 
-			if ( param == null || param.MinimumEstMax == ShipParameterRecord.Parameter.MaximumDefault )
-				return "???";
-			else if ( param.MinimumEstMin == param.MinimumEstMax )
-				return param.MinimumEstMin.ToString();
-			else if ( param.MinimumEstMin == ShipParameterRecord.Parameter.MinimumDefault && param.MinimumEstMax == param.Maximum )
-				return "???";
-			else
-				return string.Format( "{0}～{1}", param.MinimumEstMin, param.MinimumEstMax );
+        private string GetParameterMinBound(ShipParameterRecord.Parameter param)
+        {
 
-		}
+            if (param == null || param.MinimumEstMax == ShipParameterRecord.Parameter.MaximumDefault)
+                return "???";
+            else if (param.MinimumEstMin == param.MinimumEstMax)
+                return param.MinimumEstMin.ToString();
+            else if (param.MinimumEstMin == ShipParameterRecord.Parameter.MinimumDefault && param.MinimumEstMax == param.Maximum)
+                return "???";
+            else
+                return string.Format("{0}～{1}", param.MinimumEstMin, param.MinimumEstMax);
 
-		private string GetParameterMax( ShipParameterRecord.Parameter param ) {
+        }
 
-			if ( param == null || param.Maximum == ShipParameterRecord.Parameter.MaximumDefault )
-				return "???";
-			else
-				return param.Maximum.ToString();
+        private string GetParameterMax(ShipParameterRecord.Parameter param)
+        {
 
-		}
+            if (param == null || param.Maximum == ShipParameterRecord.Parameter.MaximumDefault)
+                return "???";
+            else
+                return param.Maximum.ToString();
 
+        }
 
-		private void ParameterLevel_ValueChanged( object sender, EventArgs e ) {
-			if ( _shipID != -1 ) {
-				LevelTimer.Start();
-				//UpdateLevelParameter( _shipID );
-			}
-		}
 
-		private void LevelTimer_Tick( object sender, EventArgs e ) {
-			if ( _shipID != -1 )
-				UpdateLevelParameter( _shipID );
-		}
+        private void ParameterLevel_ValueChanged(object sender, EventArgs e)
+        {
+            if (_shipID != -1)
+            {
+                LevelTimer.Start();
+                //UpdateLevelParameter( _shipID );
+            }
+        }
 
+        private void LevelTimer_Tick(object sender, EventArgs e)
+        {
+            if (_shipID != -1)
+                UpdateLevelParameter(_shipID);
+        }
 
-		private void TableParameterMain_CellPaint( object sender, TableLayoutCellPaintEventArgs e ) {
-			e.Graphics.DrawLine( Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1 );
-			/*/
+
+        private void TableParameterMain_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
+        {
+            e.Graphics.DrawLine(Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+            /*/
 			if ( e.Column == 0 )
 				e.Graphics.DrawLine( Pens.Silver, e.CellBounds.Right - 1, e.CellBounds.Y, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1 );
 			//*/
-		}
+        }
 
-		private void TableParameterSub_CellPaint( object sender, TableLayoutCellPaintEventArgs e ) {
-			e.Graphics.DrawLine( Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1 );
-		}
+        private void TableParameterSub_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
+        {
+            e.Graphics.DrawLine(Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+        }
 
-		private void TableConsumption_CellPaint( object sender, TableLayoutCellPaintEventArgs e ) {
-			e.Graphics.DrawLine( Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1 );
-		}
+        private void TableConsumption_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
+        {
+            e.Graphics.DrawLine(Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+        }
 
-		private void TableEquipment_CellPaint( object sender, TableLayoutCellPaintEventArgs e ) {
-			e.Graphics.DrawLine( Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1 );
-		}
+        private void TableEquipment_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
+        {
+            e.Graphics.DrawLine(Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+        }
 
-		private void TableArsenal_CellPaint( object sender, TableLayoutCellPaintEventArgs e ) {
-			e.Graphics.DrawLine( Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1 );
-		}
+        private void TableArsenal_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
+        {
+            e.Graphics.DrawLine(Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+        }
 
-		private void TableRemodel_CellPaint( object sender, TableLayoutCellPaintEventArgs e ) {
-			if ( e.Row % 2 == 1 )
-				e.Graphics.DrawLine( Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1 );
-		}
-
-
-
-		private void RemodelBeforeShipName_MouseClick( object sender, MouseEventArgs e ) {
-
-			if ( _shipID == -1 ) return;
-			var ship = KCDatabase.Instance.MasterShips[_shipID];
-
-			if ( ship != null && ship.RemodelBeforeShipID != 0 ) {
-
-				if ( ( e.Button & System.Windows.Forms.MouseButtons.Right ) != 0 )
-					new DialogAlbumMasterShip( ship.RemodelBeforeShipID ).Show( Owner );
-
-				else if ( ( e.Button & System.Windows.Forms.MouseButtons.Left ) != 0 )
-					UpdateAlbumPage( ship.RemodelBeforeShipID );
-			}
-		}
-
-		private void RemodelAfterShipName_MouseClick( object sender, MouseEventArgs e ) {
-
-			if ( _shipID == -1 ) return;
-			var ship = KCDatabase.Instance.MasterShips[_shipID];
-
-			if ( ship != null && ship.RemodelAfterShipID != 0 ) {
-
-				if ( ( e.Button & System.Windows.Forms.MouseButtons.Right ) != 0 )
-					new DialogAlbumMasterShip( ship.RemodelAfterShipID ).Show( Owner );
-
-				else if ( ( e.Button & System.Windows.Forms.MouseButtons.Left ) != 0 )
-					UpdateAlbumPage( ship.RemodelAfterShipID );
-			}
-		}
+        private void TableRemodel_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
+        {
+            if (e.Row % 2 == 1)
+                e.Graphics.DrawLine(Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+        }
 
 
 
-		private void Equipment_MouseClick( object sender, MouseEventArgs e ) {
+        private void RemodelBeforeShipName_MouseClick(object sender, MouseEventArgs e)
+        {
 
-			if ( e.Button == System.Windows.Forms.MouseButtons.Right ) {
+            if (_shipID == -1) return;
+            var ship = KCDatabase.Instance.MasterShips[_shipID];
 
-				for ( int i = 0; i < Equipments.Length; i++ ) {
-					if ( sender == Equipments[i] ) {
+            if (ship != null && ship.RemodelBeforeShipID != 0)
+            {
 
-						if ( _shipID != -1 ) {
-							ShipDataMaster ship = KCDatabase.Instance.MasterShips[_shipID];
+                if ((e.Button & System.Windows.Forms.MouseButtons.Right) != 0)
+                    new DialogAlbumMasterShip(ship.RemodelBeforeShipID).Show(Owner);
 
-							if ( ship != null && ship.DefaultSlot != null && i < ship.DefaultSlot.Count && ship.DefaultSlot[i] != -1 ) {
-								Cursor = Cursors.AppStarting;
-								new DialogAlbumMasterEquipment( ship.DefaultSlot[i] ).Show( Owner );
-								Cursor = Cursors.Default;
-							}
-						}
-					}
-				}
+                else if ((e.Button & System.Windows.Forms.MouseButtons.Left) != 0)
+                    UpdateAlbumPage(ship.RemodelBeforeShipID);
+            }
+        }
 
-			}
-		}
+        private void RemodelAfterShipName_MouseClick(object sender, MouseEventArgs e)
+        {
+
+            if (_shipID == -1) return;
+            var ship = KCDatabase.Instance.MasterShips[_shipID];
+
+            if (ship != null && ship.RemodelAfterShipID != 0)
+            {
+
+                if ((e.Button & System.Windows.Forms.MouseButtons.Right) != 0)
+                    new DialogAlbumMasterShip(ship.RemodelAfterShipID).Show(Owner);
+
+                else if ((e.Button & System.Windows.Forms.MouseButtons.Left) != 0)
+                    UpdateAlbumPage(ship.RemodelAfterShipID);
+            }
+        }
 
 
-		private string GetRemodelItem( ShipDataMaster ship ) {
-			StringBuilder sb = new StringBuilder();
-			if ( ship.NeedBlueprint > 0 )
-				sb.AppendLine( EncycloRes.Blueprint + ": " + ship.NeedBlueprint );
-			if ( ship.NeedCatapult > 0 )
-				sb.AppendLine( EncycloRes.PrototypeCatapult + ": " + ship.NeedCatapult );
 
-			return sb.ToString();
-		}
+        private void Equipment_MouseClick(object sender, MouseEventArgs e)
+        {
+
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+
+                for (int i = 0; i < Equipments.Length; i++)
+                {
+                    if (sender == Equipments[i])
+                    {
+
+                        if (_shipID != -1)
+                        {
+                            ShipDataMaster ship = KCDatabase.Instance.MasterShips[_shipID];
+
+                            if (ship != null && ship.DefaultSlot != null && i < ship.DefaultSlot.Count && KCDatabase.Instance.MasterEquipments.ContainsKey(ship.DefaultSlot[i]))
+                            {
+                                Cursor = Cursors.AppStarting;
+                                new DialogAlbumMasterEquipment(ship.DefaultSlot[i]).Show(Owner);
+                                Cursor = Cursors.Default;
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
 
 
-		private void StripMenu_File_OutputCSVUser_Click( object sender, EventArgs e ) {
+        private string GetRemodelItem(ShipDataMaster ship)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (ship.NeedBlueprint > 0)
+                sb.AppendLine(EncycloRes.Blueprint + ": " + ship.NeedBlueprint);
+            if (ship.NeedCatapult > 0)
+                sb.AppendLine(EncycloRes.PrototypeCatapult + ": " + ship.NeedCatapult);
 
-			if ( SaveCSVDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK ) {
+            return sb.ToString();
+        }
 
-				try {
 
-					using ( StreamWriter sw = new StreamWriter( SaveCSVDialog.FileName, false, Utility.Configuration.Config.Log.FileEncoding ) ) {
+        private void StripMenu_File_OutputCSVUser_Click(object sender, EventArgs e)
+        {
 
-						sw.WriteLine( EncycloRes.ShipCSVUserFormat );
-						string arg = string.Format( "{{{0}}}", string.Join( "},{", Enumerable.Range( 0, 59 ) ) );
+            if (SaveCSVDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
 
-						foreach ( ShipDataMaster ship in KCDatabase.Instance.MasterShips.Values ) {
+                try
+                {
 
-							if ( ship.Name == "なし" ) continue;
+                    using (StreamWriter sw = new StreamWriter(SaveCSVDialog.FileName, false, Utility.Configuration.Config.Log.FileEncoding))
+                    {
+                        sw.WriteLine(EncycloRes.ShipCSVUserFormat);
+                        string arg = string.Format("{{{0}}}", string.Join("},{", Enumerable.Range(0, 62)));
 
-							sw.WriteLine( arg,
-								ship.ShipID,
-								ship.AlbumNo,
+
+                        foreach (ShipDataMaster ship in KCDatabase.Instance.MasterShips.Values)
+                        {
+
+                            if (ship.Name == "なし") continue;
+
+                            sw.WriteLine(arg,
+                                ship.ShipID,
+                                ship.AlbumNo,
                                 FormMain.Instance.Translator.GetTranslation(KCDatabase.Instance.ShipTypes[ship.ShipType].Name, Utility.TranslationType.ShipTypes),
-								ship.Name,
-								ship.NameReading,
-								ship.RemodelBeforeShipID > 0 ? ship.RemodelBeforeShip.Name : "-",
-								ship.RemodelAfterShipID > 0 ? ship.RemodelAfterShip.Name : "-",
-								ship.RemodelAfterLevel,
-								ship.RemodelAmmo,
-								ship.RemodelSteel,
-								ship.NeedBlueprint > 0 ? ship.NeedBlueprint + EncycloRes.Sheets : "-",
-								ship.HPMin,
-								ship.HPMaxMarried,
-								ship.FirepowerMin,
-								ship.FirepowerMax,
-								ship.TorpedoMin,
-								ship.TorpedoMax,
-								ship.AAMin,
-								ship.AAMax,
-								ship.ArmorMin,
-								ship.ArmorMax,
-								ship.ASW != null && !ship.ASW.IsMinimumDefault ? ship.ASW.Minimum.ToString() : "???",
-								ship.ASW != null && !ship.ASW.IsMaximumDefault ? ship.ASW.Maximum.ToString() : "???",
-								ship.Evasion != null && !ship.Evasion.IsMinimumDefault ? ship.Evasion.Minimum.ToString() : "???",
-								ship.Evasion != null && !ship.Evasion.IsMaximumDefault ? ship.Evasion.Maximum.ToString() : "???",
-								ship.LOS != null && !ship.LOS.IsMinimumDefault ? ship.LOS.Minimum.ToString() : "???",
-								ship.LOS != null && !ship.LOS.IsMaximumDefault ? ship.LOS.Maximum.ToString() : "???",
-								ship.LuckMin,
-								ship.LuckMax,
-								Constants.GetSpeed( ship.Speed ),
-								Constants.GetRange( ship.Range ),
-								Constants.GetShipRarity( ship.Rarity ),
-								ship.SlotSize,
-								ship.Aircraft[0],
-								ship.Aircraft[1],
-								ship.Aircraft[2],
-								ship.Aircraft[3],
-								ship.Aircraft[4],
-								ship.DefaultSlot != null ? ( ship.DefaultSlot[0] != -1 ? KCDatabase.Instance.MasterEquipments[ship.DefaultSlot[0]].Name : ( ship.SlotSize > 0 ? EncycloRes.None : "" ) ) : "???",
-								ship.DefaultSlot != null ? ( ship.DefaultSlot[1] != -1 ? KCDatabase.Instance.MasterEquipments[ship.DefaultSlot[1]].Name : ( ship.SlotSize > 1 ? EncycloRes.None : "" ) ) : "???",
-								ship.DefaultSlot != null ? ( ship.DefaultSlot[2] != -1 ? KCDatabase.Instance.MasterEquipments[ship.DefaultSlot[2]].Name : ( ship.SlotSize > 2 ? EncycloRes.None : "" ) ) : "???",
-								ship.DefaultSlot != null ? ( ship.DefaultSlot[3] != -1 ? KCDatabase.Instance.MasterEquipments[ship.DefaultSlot[3]].Name : ( ship.SlotSize > 3 ? EncycloRes.None : "" ) ) : "???",
-								ship.DefaultSlot != null ? ( ship.DefaultSlot[4] != -1 ? KCDatabase.Instance.MasterEquipments[ship.DefaultSlot[4]].Name : ( ship.SlotSize > 4 ? EncycloRes.None : "" ) ) : "???",
-								DateTimeHelper.ToTimeRemainString( new TimeSpan( 0, ship.BuildingTime, 0 ) ),
-								ship.Material[0],
-								ship.Material[1],
-								ship.Material[2],
-								ship.Material[3],
-								ship.PowerUp[0],
-								ship.PowerUp[1],
-								ship.PowerUp[2],
-								ship.PowerUp[3],
-								ship.MessageGet.Replace( "\n", "<br>" ),
-								ship.MessageAlbum.Replace( "\n", "<br>" ),
-								ship.Fuel,
-								ship.Ammo,
-								Constants.GetVoiceFlag( ship.VoiceFlag ),
-								ship.ResourceName,
-								ship.ResourceVersion
-								);
+                                ship.Name,
+                                ship.NameReading,
+                                ship.RemodelBeforeShipID > 0 ? ship.RemodelBeforeShip.Name : "-",
+                                ship.RemodelAfterShipID > 0 ? ship.RemodelAfterShip.Name : "-",
+                                ship.RemodelAfterLevel,
+                                ship.RemodelAmmo,
+                                ship.RemodelSteel,
+                                ship.NeedBlueprint > 0 ? ship.NeedBlueprint + EncycloRes.Sheets : "-",
+                                ship.NeedCatapult > 0 ? ship.NeedCatapult + "個" : "-",
+                                ship.HPMin,
+                                ship.HPMaxMarried,
+                                ship.FirepowerMin,
+                                ship.FirepowerMax,
+                                ship.TorpedoMin,
+                                ship.TorpedoMax,
+                                ship.AAMin,
+                                ship.AAMax,
+                                ship.ArmorMin,
+                                ship.ArmorMax,
+                                ship.ASW != null && !ship.ASW.IsMinimumDefault ? ship.ASW.Minimum.ToString() : "???",
+                                ship.ASW != null && !ship.ASW.IsMaximumDefault ? ship.ASW.Maximum.ToString() : "???",
+                                ship.Evasion != null && !ship.Evasion.IsMinimumDefault ? ship.Evasion.Minimum.ToString() : "???",
+                                ship.Evasion != null && !ship.Evasion.IsMaximumDefault ? ship.Evasion.Maximum.ToString() : "???",
+                                ship.LOS != null && !ship.LOS.IsMinimumDefault ? ship.LOS.Minimum.ToString() : "???",
+                                ship.LOS != null && !ship.LOS.IsMaximumDefault ? ship.LOS.Maximum.ToString() : "???",
+                                ship.LuckMin,
+                                ship.LuckMax,
+                                Constants.GetSpeed(ship.Speed),
+                                Constants.GetRange(ship.Range),
+                                Constants.GetShipRarity(ship.Rarity),
+                                ship.SlotSize,
+                                ship.Aircraft[0],
+                                ship.Aircraft[1],
+                                ship.Aircraft[2],
+                                ship.Aircraft[3],
+                                ship.Aircraft[4],
+                                ship.DefaultSlot != null ? (ship.DefaultSlot[0] != -1 ? KCDatabase.Instance.MasterEquipments[ship.DefaultSlot[0]].Name : (ship.SlotSize > 0 ? EncycloRes.None : "")) : "???",
+                                ship.DefaultSlot != null ? (ship.DefaultSlot[1] != -1 ? KCDatabase.Instance.MasterEquipments[ship.DefaultSlot[1]].Name : (ship.SlotSize > 1 ? EncycloRes.None : "")) : "???",
+                                ship.DefaultSlot != null ? (ship.DefaultSlot[2] != -1 ? KCDatabase.Instance.MasterEquipments[ship.DefaultSlot[2]].Name : (ship.SlotSize > 2 ? EncycloRes.None : "")) : "???",
+                                ship.DefaultSlot != null ? (ship.DefaultSlot[3] != -1 ? KCDatabase.Instance.MasterEquipments[ship.DefaultSlot[3]].Name : (ship.SlotSize > 3 ? EncycloRes.None : "")) : "???",
+                                ship.DefaultSlot != null ? (ship.DefaultSlot[4] != -1 ? KCDatabase.Instance.MasterEquipments[ship.DefaultSlot[4]].Name : (ship.SlotSize > 4 ? EncycloRes.None : "")) : "???",
+                                DateTimeHelper.ToTimeRemainString(new TimeSpan(0, ship.BuildingTime, 0)),
+                                ship.Material[0],
+                                ship.Material[1],
+                                ship.Material[2],
+                                ship.Material[3],
+                                ship.PowerUp[0],
+                                ship.PowerUp[1],
+                                ship.PowerUp[2],
+                                ship.PowerUp[3],
+                                ship.MessageGet.Replace("\n", "<br>"),
+                                ship.MessageAlbum.Replace("\n", "<br>"),
+                                ship.Fuel,
+                                ship.Ammo,
+                                Constants.GetVoiceFlag(ship.VoiceFlag),
+                                ship.ResourceName,
+                                ship.ResourceGraphicVersion,
+                                ship.ResourceVoiceVersion,
+                                ship.ResourcePortVoiceVersion
+                                );
 
-						}
+                        }
 
-					}
+                    }
 
-				} catch ( Exception ex ) {
+                }
+                catch (Exception ex)
+                {
 
-					Utility.ErrorReporter.SendErrorReport( ex, EncycloRes.FailedToOutputCSV );
-					MessageBox.Show( EncycloRes.FailedToOutputCSV + "\r\n" + ex.Message, Properties.Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Error );
-				}
+                    Utility.ErrorReporter.SendErrorReport(ex, EncycloRes.FailedToOutputCSV);
+                    MessageBox.Show(EncycloRes.FailedToOutputCSV + "\r\n" + ex.Message, Properties.Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
 
-			}
+            }
 
-		}
-
-
-		private void StripMenu_File_OutputCSVData_Click( object sender, EventArgs e ) {
-
-			if ( SaveCSVDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK ) {
-
-				try {
-
-					using ( StreamWriter sw = new StreamWriter( SaveCSVDialog.FileName, false, Utility.Configuration.Config.Log.FileEncoding ) ) {
-                        
-						sw.WriteLine( EncycloRes.ShipCSVDataFormat );
-						string arg = string.Format( "{{{0}}}", string.Join( "},{", Enumerable.Range( 0, 69 ) ) );
-
-						foreach ( ShipDataMaster ship in KCDatabase.Instance.MasterShips.Values ) {
-
-							sw.WriteLine( arg,
-								ship.ShipID,
-								ship.AlbumNo,
-								ship.Name,
-								ship.NameReading,
-								ship.ShipType,
-								ship.RemodelBeforeShipID,
-								ship.RemodelAfterShipID,
-								ship.RemodelAfterLevel,
-								ship.RemodelAmmo,
-								ship.RemodelSteel,
-								ship.NeedBlueprint,
-								ship.HPMin,
-								ship.HPMax,
-								ship.HPMaxMarried,
-								ship.FirepowerMin,
-								ship.FirepowerMax,
-								ship.TorpedoMin,
-								ship.TorpedoMax,
-								ship.AAMin,
-								ship.AAMax,
-								ship.ArmorMin,
-								ship.ArmorMax,
-								ship.ASW != null ? ship.ASW.MinimumEstMin : ShipParameterRecord.Parameter.MinimumDefault,
-								ship.ASW != null ? ship.ASW.MinimumEstMax : ShipParameterRecord.Parameter.MaximumDefault,
-								ship.ASW != null ? ship.ASW.Maximum : ShipParameterRecord.Parameter.MaximumDefault,
-								ship.ASW != null ? ship.ASW.GetEstParameterMin( ExpTable.ShipMaximumLevel ) : ShipParameterRecord.Parameter.MinimumDefault,
-								ship.ASW != null ? ship.ASW.GetEstParameterMax( ExpTable.ShipMaximumLevel ) : ShipParameterRecord.Parameter.MaximumDefault,
-								ship.Evasion != null ? ship.Evasion.MinimumEstMin : ShipParameterRecord.Parameter.MinimumDefault,
-								ship.Evasion != null ? ship.Evasion.MinimumEstMax : ShipParameterRecord.Parameter.MaximumDefault,
-								ship.Evasion != null ? ship.Evasion.Maximum : ShipParameterRecord.Parameter.MaximumDefault,
-								ship.Evasion != null ? ship.Evasion.GetEstParameterMin( ExpTable.ShipMaximumLevel ) : ShipParameterRecord.Parameter.MinimumDefault,
-								ship.Evasion != null ? ship.Evasion.GetEstParameterMax( ExpTable.ShipMaximumLevel ) : ShipParameterRecord.Parameter.MaximumDefault,
-								ship.LOS != null ? ship.LOS.MinimumEstMin : ShipParameterRecord.Parameter.MinimumDefault,
-								ship.LOS != null ? ship.LOS.MinimumEstMax : ShipParameterRecord.Parameter.MaximumDefault,
-								ship.LOS != null ? ship.LOS.Maximum : ShipParameterRecord.Parameter.MaximumDefault,
-								ship.LOS != null ? ship.LOS.GetEstParameterMin( ExpTable.ShipMaximumLevel ) : ShipParameterRecord.Parameter.MinimumDefault,
-								ship.LOS != null ? ship.LOS.GetEstParameterMax( ExpTable.ShipMaximumLevel ) : ShipParameterRecord.Parameter.MaximumDefault,
-								ship.LuckMin,
-								ship.LuckMax,
-								ship.Speed,
-								ship.Range,
-								ship.Rarity,
-								ship.SlotSize,
-								ship.Aircraft[0],
-								ship.Aircraft[1],
-								ship.Aircraft[2],
-								ship.Aircraft[3],
-								ship.Aircraft[4],
-								ship.DefaultSlot != null ? ship.DefaultSlot[0] : -1,
-								ship.DefaultSlot != null ? ship.DefaultSlot[1] : -1,
-								ship.DefaultSlot != null ? ship.DefaultSlot[2] : -1,
-								ship.DefaultSlot != null ? ship.DefaultSlot[3] : -1,
-								ship.DefaultSlot != null ? ship.DefaultSlot[4] : -1,
-								ship.BuildingTime,
-								ship.Material[0],
-								ship.Material[1],
-								ship.Material[2],
-								ship.Material[3],
-								ship.PowerUp[0],
-								ship.PowerUp[1],
-								ship.PowerUp[2],
-								ship.PowerUp[3],
-								ship.MessageGet.Replace( "\n", "<br>" ),
-								ship.MessageAlbum.Replace( "\n", "<br>" ),
-								ship.Fuel,
-								ship.Ammo,
-								ship.VoiceFlag,
-								ship.ResourceName,
-								ship.ResourceVersion
-								);
-
-						}
-
-					}
-
-				} catch ( Exception ex ) {
-
-					Utility.ErrorReporter.SendErrorReport( ex, EncycloRes.FailedToOutputCSV );
-					MessageBox.Show( EncycloRes.FailedToOutputCSV + "\r\n" + ex.Message, Properties.Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Error );
-				}
-
-			}
-
-		}
+        }
 
 
+        private void StripMenu_File_OutputCSVData_Click(object sender, EventArgs e)
+        {
 
-		private void DialogAlbumMasterShip_FormClosed( object sender, FormClosedEventArgs e ) {
+            if (SaveCSVDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
 
-			ResourceManager.DestroyIcon( Icon );
+                try
+                {
 
-		}
-
-
-
-		private void Description_Click( object sender, EventArgs e ) {
-
-			int tag = Description.Tag as int? ?? 0;
-			ShipDataMaster ship = KCDatabase.Instance.MasterShips[_shipID];
-
-			if ( ship == null ) return;
-
-			if ( tag == 0 && ship.MessageAlbum.Length > 0 ) {
-				Description.Text = ship.MessageAlbum;
-				Description.Tag = 1;
-
-			} else {
-				Description.Text = ship.MessageGet;
-				Description.Tag = 0;
-			}
-		}
+                    using (StreamWriter sw = new StreamWriter(SaveCSVDialog.FileName, false, Utility.Configuration.Config.Log.FileEncoding))
+                    {
+                        sw.WriteLine(string.Format(EncycloRes.ShipCSVDataFormat, ExpTable.ShipMaximumLevel));
+                        string arg = string.Format("{{{0}}}", string.Join("},{", Enumerable.Range(0, 72)));
 
 
-		private void ResourceName_MouseClick( object sender, MouseEventArgs e ) {
+                        foreach (ShipDataMaster ship in KCDatabase.Instance.MasterShips.Values)
+                        {
 
-			if ( e.Button == System.Windows.Forms.MouseButtons.Right ) {
+                            sw.WriteLine(arg,
+                                ship.ShipID,
+                                ship.AlbumNo,
+                                ship.Name,
+                                ship.NameReading,
+                                ship.ShipType,
+                                ship.RemodelBeforeShipID,
+                                ship.RemodelAfterShipID,
+                                ship.RemodelAfterLevel,
+                                ship.RemodelAmmo,
+                                ship.RemodelSteel,
+                                ship.NeedBlueprint,
+                                ship.NeedCatapult,
+                                ship.HPMin,
+                                ship.HPMax,
+                                ship.HPMaxMarried,
+                                ship.FirepowerMin,
+                                ship.FirepowerMax,
+                                ship.TorpedoMin,
+                                ship.TorpedoMax,
+                                ship.AAMin,
+                                ship.AAMax,
+                                ship.ArmorMin,
+                                ship.ArmorMax,
+                                ship.ASW != null ? ship.ASW.MinimumEstMin : ShipParameterRecord.Parameter.MinimumDefault,
+                                ship.ASW != null ? ship.ASW.MinimumEstMax : ShipParameterRecord.Parameter.MaximumDefault,
+                                ship.ASW != null ? ship.ASW.Maximum : ShipParameterRecord.Parameter.MaximumDefault,
+                                ship.ASW != null ? ship.ASW.GetEstParameterMin(ExpTable.ShipMaximumLevel) : ShipParameterRecord.Parameter.MinimumDefault,
+                                ship.ASW != null ? ship.ASW.GetEstParameterMax(ExpTable.ShipMaximumLevel) : ShipParameterRecord.Parameter.MaximumDefault,
+                                ship.Evasion != null ? ship.Evasion.MinimumEstMin : ShipParameterRecord.Parameter.MinimumDefault,
+                                ship.Evasion != null ? ship.Evasion.MinimumEstMax : ShipParameterRecord.Parameter.MaximumDefault,
+                                ship.Evasion != null ? ship.Evasion.Maximum : ShipParameterRecord.Parameter.MaximumDefault,
+                                ship.Evasion != null ? ship.Evasion.GetEstParameterMin(ExpTable.ShipMaximumLevel) : ShipParameterRecord.Parameter.MinimumDefault,
+                                ship.Evasion != null ? ship.Evasion.GetEstParameterMax(ExpTable.ShipMaximumLevel) : ShipParameterRecord.Parameter.MaximumDefault,
+                                ship.LOS != null ? ship.LOS.MinimumEstMin : ShipParameterRecord.Parameter.MinimumDefault,
+                                ship.LOS != null ? ship.LOS.MinimumEstMax : ShipParameterRecord.Parameter.MaximumDefault,
+                                ship.LOS != null ? ship.LOS.Maximum : ShipParameterRecord.Parameter.MaximumDefault,
+                                ship.LOS != null ? ship.LOS.GetEstParameterMin(ExpTable.ShipMaximumLevel) : ShipParameterRecord.Parameter.MinimumDefault,
+                                ship.LOS != null ? ship.LOS.GetEstParameterMax(ExpTable.ShipMaximumLevel) : ShipParameterRecord.Parameter.MaximumDefault,
+                                ship.LuckMin,
+                                ship.LuckMax,
+                                ship.Speed,
+                                ship.Range,
+                                ship.Rarity,
+                                ship.SlotSize,
+                                ship.Aircraft[0],
+                                ship.Aircraft[1],
+                                ship.Aircraft[2],
+                                ship.Aircraft[3],
+                                ship.Aircraft[4],
+                                ship.DefaultSlot != null ? ship.DefaultSlot[0] : -1,
+                                ship.DefaultSlot != null ? ship.DefaultSlot[1] : -1,
+                                ship.DefaultSlot != null ? ship.DefaultSlot[2] : -1,
+                                ship.DefaultSlot != null ? ship.DefaultSlot[3] : -1,
+                                ship.DefaultSlot != null ? ship.DefaultSlot[4] : -1,
+                                ship.BuildingTime,
+                                ship.Material[0],
+                                ship.Material[1],
+                                ship.Material[2],
+                                ship.Material[3],
+                                ship.PowerUp[0],
+                                ship.PowerUp[1],
+                                ship.PowerUp[2],
+                                ship.PowerUp[3],
+                                ship.MessageGet.Replace("\n", "<br>"),
+                                ship.MessageAlbum.Replace("\n", "<br>"),
+                                ship.Fuel,
+                                ship.Ammo,
+                                ship.VoiceFlag,
+                                ship.ResourceName,
+                                ship.ResourceGraphicVersion,
+                                ship.ResourceVoiceVersion,
+                                ship.ResourcePortVoiceVersion
+                                );
 
-				var ship = KCDatabase.Instance.MasterShips[_shipID];
-				if ( ship != null ) {
-					Clipboard.SetData( DataFormats.StringFormat, ship.ResourceName );
-				}
-			}
+                        }
 
-		}
+                    }
+
+                }
+                catch (Exception ex)
+                {
+
+                    Utility.ErrorReporter.SendErrorReport(ex, EncycloRes.FailedToOutputCSV);
+                    MessageBox.Show(EncycloRes.FailedToOutputCSV + "\r\n" + ex.Message, Properties.Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+            }
+
+        }
+
+
+
+        private void DialogAlbumMasterShip_FormClosed(object sender, FormClosedEventArgs e)
+        {
+
+            ResourceManager.DestroyIcon(Icon);
+
+        }
+
+
+
+        private void Description_Click(object sender, EventArgs e)
+        {
+
+            int tag = Description.Tag as int? ?? 0;
+            ShipDataMaster ship = KCDatabase.Instance.MasterShips[_shipID];
+
+            if (ship == null) return;
+
+            if (tag == 0 && ship.MessageAlbum.Length > 0)
+            {
+                Description.Text = ship.MessageAlbum;
+                Description.Tag = 1;
+
+            }
+            else
+            {
+                Description.Text = ship.MessageGet;
+                Description.Tag = 0;
+            }
+        }
+
+
+        private void ResourceName_MouseClick(object sender, MouseEventArgs e)
+        {
+
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+
+                var ship = KCDatabase.Instance.MasterShips[_shipID];
+                if (ship != null)
+                {
+                    Clipboard.SetData(DataFormats.StringFormat, ship.ResourceName);
+                }
+            }
+
+        }
+
+		private void StripMenu_Edit_EditParameter_Click(object sender, EventArgs e)
+        {
+
+            if (_shipID <= 0)
+            {
+                MessageBox.Show("艦船を選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                return;
+            }
+
+            using (var dialog = new DialogAlbumShipParameter(_shipID))
+            {
+                dialog.ShowDialog(this);
+                UpdateAlbumPage(_shipID);
+            }
+        }
 	}
 }

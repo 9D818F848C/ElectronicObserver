@@ -1,5 +1,6 @@
 ﻿using ElectronicObserver.Data;
 using ElectronicObserver.Resource.Record;
+using ElectronicObserver.Utility.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,11 +102,11 @@ namespace ElectronicObserver.Utility.Data {
 		/// 各装備カテゴリにおける制空値の熟練度ボーナス
 		/// </summary>
 		private static readonly Dictionary<int, int[]> AircraftLevelBonus = new Dictionary<int, int[]>() {
-			{ 6, new int[] { 0, 0, 2, 5, 9, 14, 14, 22, 22 } },	//艦上戦闘機
-			{ 7, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 } },		//艦上爆撃機
-			{ 8, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 } },		//艦上攻撃機
-			{ 11, new int[] { 0, 1, 1, 1, 1, 3, 3, 6, 6 } },	//水上爆撃機
-			{ 45, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 } },	//水上戦闘機
+			{ 6, new int[] { 0, 0, 2, 5, 9, 14, 14, 22, 22 } },		//艦上戦闘機
+			{ 7, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 } },			//艦上爆撃機
+			{ 8, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 } },			//艦上攻撃機
+			{ 11, new int[] { 0, 1, 1, 1, 1, 3, 3, 6, 6 } },		//水上爆撃機
+			{ 45, new int[] { 0, 0, 2, 5, 9, 14, 14, 22, 22 } },	//水上戦闘機
 		};
 
 		/// <summary>
@@ -140,7 +141,21 @@ namespace ElectronicObserver.Utility.Data {
 					int category = eq.MasterEquipment.CategoryType;
 
 					if ( AircraftLevelBonus.ContainsKey( category ) ) {
-						air += (int)( eq.MasterEquipment.AA * Math.Sqrt( aircrafts[i] ) + Math.Sqrt( AircraftExpTable[eq.AircraftLevel] / 10.0 ) + AircraftLevelBonus[category][eq.AircraftLevel] );
+
+						double levelRate;
+						switch ( category ) {
+							case 6:		// 艦上戦闘機
+								levelRate = 0.2;
+								break;
+							case 7:		// 艦上爆撃機
+								levelRate = 0.25;
+								break;
+							default:
+								levelRate = 0;
+								break;
+						}
+
+						air += (int)( ( eq.MasterEquipment.AA + levelRate * eq.Level ) * Math.Sqrt( aircrafts[i] ) + Math.Sqrt( AircraftExpTable[eq.AircraftLevel] / 10.0 ) + AircraftLevelBonus[category][eq.AircraftLevel] );
 					}
 
 				}
@@ -441,7 +456,8 @@ namespace ElectronicObserver.Utility.Data {
 						continue;
 
 					if ( eqs[i].CategoryType == 9 ||	// 艦上偵察機
-						eqs[i].CategoryType == 10 ) {	// 水上偵察機
+						eqs[i].CategoryType == 10 ||	// 水上偵察機
+						eqs[i].CategoryType == 41 ) {	// 大型飛行艇
 
 						successProb += 0.04 * eqs[i].LOS * Math.Sqrt( ship.Aircraft[i] );
 					}
@@ -472,7 +488,7 @@ namespace ElectronicObserver.Utility.Data {
 						case 8:		// 艦上攻撃機
 						case 9:		// 艦上偵察機
 						case 10:	// 水上偵察機
-
+						case 41:	// 大型飛行艇
 							if ( !probs.ContainsKey( eq.Accuracy ) )
 								probs.Add( eq.Accuracy, 1.0 );
 
@@ -508,13 +524,19 @@ namespace ElectronicObserver.Utility.Data {
 					switch ( eq.CategoryType ) {
 
 						case 24:	// 上陸用舟艇
-							tp += 8;
+							if ( eq.EquipmentID == 166 )	// 陸戦隊
+								tp += 13;
+							else
+								tp += 8;
 							break;
 						case 30:	// 簡易輸送部材
 							tp += 5;
 							break;
 						case 43:	// 戦闘糧食
 							tp += 1;
+							break;
+						case 46:	// 特型内火艇
+							tp += 10;
 							break;
 					}
 				}
@@ -785,8 +807,8 @@ namespace ElectronicObserver.Utility.Data {
 				if ( eq == null ) continue;
 
 				if ( eq.IconType == 16 ) {	//高角砲
-					// 10cm連装高角砲+高射装置 or 12.7cm高角砲+高射装置 or 90mm単装高角砲
-					if ( eq.EquipmentID == 122 || eq.EquipmentID == 130 || eq.EquipmentID == 135 ) {
+					// 10cm連装高角砲+高射装置 or 12.7cm高角砲+高射装置 or 90mm単装高角砲 or 5inch連装砲 Mk.28 mod.2
+					if ( eq.EquipmentID == 122 || eq.EquipmentID == 130 || eq.EquipmentID == 135 || eq.EquipmentID == 172 ) {
 						highangle_director++;
 					}
 					highangle++;
@@ -807,7 +829,8 @@ namespace ElectronicObserver.Utility.Data {
 					aashell++;
 
 				} else if ( eq.CategoryType == 21 ) {	//対空機銃
-					if ( eq.EquipmentID == 131 ) {		//25mm三連装機銃 集中配備
+					// 25mm三連装機銃 集中配備 or Bofors 40mm四連装機関砲 or QF 2ポンド8連装ポンポン砲
+					if ( eq.EquipmentID == 131 || eq.EquipmentID == 173 || eq.EquipmentID == 191 ) {
 						aagun_concentrated++;
 					}
 					aagun++;
@@ -960,6 +983,11 @@ namespace ElectronicObserver.Utility.Data {
 					return false;
 			}
 
+		}
+
+
+		public static TimeSpan CalculateDockingUnitTime( ShipData ship ) {
+			return new TimeSpan( DateTimeHelper.FromAPITimeSpan( ship.RepairTime ).Add( TimeSpan.FromSeconds( -30 ) ).Ticks / ( ship.HPMax - ship.HPCurrent ) );
 		}
 
 	}

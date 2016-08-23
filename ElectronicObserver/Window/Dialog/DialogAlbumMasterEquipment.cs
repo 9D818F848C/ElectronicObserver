@@ -365,9 +365,9 @@ namespace ElectronicObserver.Window.Dialog {
 				try {
 
 					using ( StreamWriter sw = new StreamWriter( SaveCSVDialog.FileName, false, Utility.Configuration.Config.Log.FileEncoding ) ) {
-
+                        
 						sw.WriteLine( EncycloRes.EquipCSVUserFormat );
-						string arg = string.Format( "{{{0}}}", string.Join( "},{", Enumerable.Range( 0, 26 ) ) );
+						string arg = string.Format( "{{{0}}}", string.Join( "},{", Enumerable.Range( 0, 27 ) ) );
 
 						foreach ( EquipmentDataMaster eq in KCDatabase.Instance.MasterEquipments.Values ) {
 
@@ -397,7 +397,8 @@ namespace ElectronicObserver.Window.Dialog {
 								eq.Material[2],
 								eq.Material[3],
 								eq.Message.Replace( "\n", "<br>" ),
-								eq.ResourceVersion
+								eq.AircraftDistance,
+								eq.AircraftCost
 								);
 
 						}
@@ -423,10 +424,9 @@ namespace ElectronicObserver.Window.Dialog {
 				try {
 
 					using ( StreamWriter sw = new StreamWriter( SaveCSVDialog.FileName, false, Utility.Configuration.Config.Log.FileEncoding ) ) {
-
+                        
 						sw.WriteLine( EncycloRes.EquipCSVDataFormat );
-						string arg = string.Format( "{{{0}}}", string.Join( "},{", Enumerable.Range( 0, 24 ) ) );
-
+						string arg = string.Format( "{{{0}}}", string.Join( "},{", Enumerable.Range( 0, 26 ) ) );
 						foreach ( EquipmentDataMaster eq in KCDatabase.Instance.MasterEquipments.Values ) {
 
 							sw.WriteLine( arg,
@@ -454,7 +454,8 @@ namespace ElectronicObserver.Window.Dialog {
 								eq.Material[2],
 								eq.Material[3],
 								eq.Message.Replace( "\n", "<br>" ),
-								eq.ResourceVersion
+								eq.AircraftDistance,
+								eq.AircraftCost
 								);
 
 						}

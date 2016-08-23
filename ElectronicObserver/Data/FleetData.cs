@@ -468,6 +468,9 @@ namespace ElectronicObserver.Data {
 
 				case 2:
 					return Calculator.GetSearchingAbility_TinyAutumn( this );
+
+				case 3:
+					return Calculator.GetSearchingAbility_33( this );
 			}
 		}
 
@@ -481,7 +484,7 @@ namespace ElectronicObserver.Data {
 		/// <summary>
 		/// 指定の計算式で、索敵能力を表す文字列を取得します。
 		/// </summary>
-		/// <param name="index">計算式。0-2</param>
+		/// <param name="index">計算式。0-3</param>
 		public string GetSearchingAbilityString( int index ) {
 			switch ( index ) {
 				default:
@@ -495,7 +498,7 @@ namespace ElectronicObserver.Data {
 					return Calculator.GetSearchingAbility_TinyAutumn( this ).ToString();
 
 				case 3:
-					return Calculator.GetSearchingAbility_33( this ).ToString( "F2" );
+					return ( (int)( Calculator.GetSearchingAbility_33( this ) * 100 ) / 100 ).ToString( "F2" );
 			}
 		}
 
@@ -572,8 +575,7 @@ namespace ElectronicObserver.Data {
 					timer = new DateTime( ntime );
 					label.Text = FleetRes.Docking + DateTimeHelper.ToTimeRemainString( timer );
 					label.ImageIndex = (int)ResourceManager.IconContent.FleetDocking;
-
-					tooltip.SetToolTip( label, FleetRes.CompletionTime + ": " + timer );
+					tooltip.SetToolTip( label, FleetRes.CompletionTime + ": " + DateTimeHelper.TimeToCSVString(timer) );
 
 					return FleetStates.Docking;
 				}
@@ -610,8 +612,11 @@ namespace ElectronicObserver.Data {
 				timer = fleet.ExpeditionTime;
 				label.Text = FleetRes.OnExped + DateTimeHelper.ToTimeRemainString( timer );
 				label.ImageIndex = (int)ResourceManager.IconContent.FleetExpedition;
-
-				tooltip.SetToolTip( label, string.Format( "{0} : {1}\r\n" + FleetRes.CompletionTime + " : {2}", KCDatabase.Instance.Mission[fleet.ExpeditionDestination].ID, KCDatabase.Instance.Mission[fleet.ExpeditionDestination].Name, timer ) );
+                
+				tooltip.SetToolTip( label, string.Format( "{0} : {1}\r\n" + FleetRes.CompletionTime + " : {2}", 
+                    KCDatabase.Instance.Mission[fleet.ExpeditionDestination].ID, 
+                    KCDatabase.Instance.Mission[fleet.ExpeditionDestination].Name, 
+                    DateTimeHelper.TimeToCSVString(timer) ) );
 
 				return FleetStates.Expedition;
 			}
@@ -636,8 +641,32 @@ namespace ElectronicObserver.Data {
 
 					label.Text = FleetRes.AnchorageRepairing + DateTimeHelper.ToTimeElapsedString( KCDatabase.Instance.Fleet.AnchorageRepairingTimer );
 					label.ImageIndex = (int)ResourceManager.IconContent.FleetAnchorageRepairing;
+                    
+					StringBuilder sb = new StringBuilder();
+					sb.AppendFormat( FleetRes.StartTime + ": {0}\r\n修理時間 :\r\n",
+						DateTimeHelper.TimeToCSVString( KCDatabase.Instance.Fleet.AnchorageRepairingTimer ) );
 
-					tooltip.SetToolTip( label, string.Format( FleetRes.StartTime + ": {0}", KCDatabase.Instance.Fleet.AnchorageRepairingTimer ) );
+					for ( int i = 0; i < fleet.Members.Count; i++ ) {
+						var ship = fleet.MembersInstance[i];
+						if ( ship != null && ship.HPRate < 1.0 ) {
+							var totaltime = DateTimeHelper.FromAPITimeSpan( ship.RepairTime );
+							var unittime = Calculator.CalculateDockingUnitTime( ship );
+							sb.AppendFormat( "#{0} : {1:00}:{2:00}:{3:00} @ {4:00}:{5:00}:{6:00} x -{7} HP\r\n",
+								i + 1,
+								(int)totaltime.TotalHours,
+								totaltime.Minutes,
+								totaltime.Seconds,
+								(int)unittime.TotalHours,
+								unittime.Minutes,
+								unittime.Seconds,
+								ship.HPMax - ship.HPCurrent
+								);
+						} else {
+							sb.Append( "#" ).Append( i + 1 ).Append( " : ----\r\n" );
+						}
+					}
+
+					tooltip.SetToolTip( label, sb.ToString() );
 
 					return FleetStates.AnchorageRepairing;
 				}
@@ -688,9 +717,8 @@ namespace ElectronicObserver.Data {
 						label.ImageIndex = (int)ResourceManager.IconContent.ConditionTired;
 					else
 						label.ImageIndex = (int)ResourceManager.IconContent.ConditionLittleTired;
-
-
-					tooltip.SetToolTip( label, string.Format( FleetRes.EstimatedRecoveryTime + ": {0}", timer ) );
+                    
+					tooltip.SetToolTip( label, string.Format( FleetRes.EstimatedRecoveryTime + ": {0}", DateTimeHelper.TimeToCSVString( timer ) ) );
 
 					return FleetStates.Tired;
 

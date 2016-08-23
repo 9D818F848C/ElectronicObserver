@@ -1331,7 +1331,12 @@ namespace ElectronicObserver.Window {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Lv合計: {0} / 平均: {1:0.00}\r\n{2}艦隊\r\nドラム缶搭載: {3}個 ({4}艦)\r\n大発動艇搭載: {5}個\r\n総積載: 燃 {6} / 弾 {7}\r\n(1戦当たり 燃 {8} / 弾 {9}).
+        ///   Looks up a localized string similar to Lv合計: {0} / 平均: {1:0.00}
+        ///{2}艦隊
+        ///ドラム缶搭載: {3}個 ({4}艦)
+        ///大発動艇搭載: {5}個 ({6}艦, +{7:p1})
+        ///総積載: 燃 {8} / 弾 {9}
+        ///(1戦当たり 燃 {10} / 弾 {11}).
         /// </summary>
         internal static string FleetTooltip {
             get {

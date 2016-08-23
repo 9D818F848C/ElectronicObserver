@@ -7,6 +7,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -75,11 +76,16 @@ namespace Browser {
 
 		private VolumeManager _volumeManager;
 
+		private string _lastScreenShotPath;
+
 
 		private NumericUpDown ToolMenu_Other_Volume_VolumeControl {
 			get { return (NumericUpDown)( (ToolStripControlHost)ToolMenu_Other_Volume.DropDownItems["ToolMenu_Other_Volume_VolumeControlHost"] ).Control; }
 		}
 
+		private PictureBox ToolMenu_Other_LastScreenShot_Control {
+			get { return (PictureBox)( (ToolStripControlHost)ToolMenu_Other_LastScreenShot.DropDownItems["ToolMenu_Other_LastScreenShot_ImageHost"] ).Control; }
+		}
 
 
 
@@ -127,7 +133,33 @@ namespace Browser {
 
 				ToolMenu_Other_Volume.DropDownItems.Add( host );
 			}
+
+			// スクリーンショットプレビューコントロールの追加
+			{
+				double zoomrate = 0.5;
+				var control = new PictureBox();
+				control.Name = "ToolMenu_Other_LastScreenShot_Image";
+				control.SizeMode = PictureBoxSizeMode.Zoom;
+				control.Size = new Size( (int)( KanColleSize.Width * zoomrate ), (int)( KanColleSize.Height * zoomrate ) );
+				control.Margin = new Padding();
+				control.Image = new Bitmap( (int)( KanColleSize.Width * zoomrate ), (int)( KanColleSize.Height * zoomrate ), PixelFormat.Format24bppRgb );
+				using ( var g = Graphics.FromImage( control.Image ) ) {
+					g.Clear( SystemColors.Control );
+					g.DrawString( "スクリーンショットをまだ撮影していません。\r\n", Font, Brushes.Black, new Point( 4, 4 ) );
+				}
+
+				var host = new ToolStripControlHost( control, "ToolMenu_Other_LastScreenShot_ImageHost" );
+
+				host.Size = new Size( control.Width + control.Margin.Horizontal, control.Height + control.Margin.Vertical );
+				host.AutoSize = false;
+				control.Location = new Point( control.Margin.Left, control.Margin.Top );
+
+				host.Click += ToolMenu_Other_LastScreenShot_ImageHost_Click;
+
+				ToolMenu_Other_LastScreenShot.DropDownItems.Insert( 0, host );
+			}
 		}
+
 
 
 		private void FormBrowser_Load( object sender, EventArgs e ) {
@@ -512,10 +544,10 @@ namespace Browser {
 						image.Save( path, format );
 					}
 
-				}
+                }
 
-
-				AddLog( 2, string.Format( Resources.ScreenshotSaved, path ) );
+                _lastScreenShotPath = path;
+                AddLog( 2, string.Format( Resources.ScreenshotSaved, path ) );
 
 			} catch ( Exception ex ) {
 
@@ -979,6 +1011,36 @@ namespace Browser {
 			ToolMenu_Other_Alignment_Invisible.Checked = !Configuration.IsToolMenuVisible;
 		}
 
+
+		private void ToolMenu_Other_LastScreenShot_DropDownOpening( object sender, EventArgs e ) {
+
+			try {
+
+				using ( var fs = new FileStream( _lastScreenShotPath, FileMode.Open, FileAccess.Read ) ) {
+					if ( ToolMenu_Other_LastScreenShot_Control.Image != null )
+						ToolMenu_Other_LastScreenShot_Control.Image.Dispose();
+
+					ToolMenu_Other_LastScreenShot_Control.Image = Image.FromStream( fs );
+				}
+
+			} catch ( Exception ) {
+				// *ぷちっ*
+			}
+
+		}
+
+		void ToolMenu_Other_LastScreenShot_ImageHost_Click( object sender, EventArgs e ) {
+			if ( _lastScreenShotPath != null && System.IO.File.Exists( _lastScreenShotPath ) )
+				System.Diagnostics.Process.Start( _lastScreenShotPath );
+		}
+
+		private void ToolMenu_Other_LastScreenShot_OpenScreenShotFolder_Click( object sender, EventArgs e ) {
+			if ( System.IO.Directory.Exists( Configuration.ScreenShotPath ) )
+				System.Diagnostics.Process.Start( Configuration.ScreenShotPath );
+		}
+
+
+
 		protected override void WndProc( ref Message m ) {
 
 			if ( m.Msg == WM_ERASEBKGND )
@@ -1104,9 +1166,6 @@ namespace Browser {
 			IntPtr lpszUrlName );
 
 		#endregion
-
-
-
 
 	}
 

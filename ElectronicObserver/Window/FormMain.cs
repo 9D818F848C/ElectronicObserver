@@ -85,7 +85,7 @@ namespace ElectronicObserver.Window {
             Translator = new DynamicTranslator();
             Instance = this;
             this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-            Utility.Configuration.Instance.Load();
+            Utility.Configuration.Instance.Load(this);
             InitializeComponent();
             ThemeBase thm;
             switch (Configuration.Config.UI.Theme)
@@ -104,11 +104,9 @@ namespace ElectronicObserver.Window {
         }
 
 		private async void FormMain_Load( object sender, EventArgs e ) {
-			if ( !Directory.Exists( "Settings" ) )
-				Directory.CreateDirectory( "Settings" );
-
-
-			Utility.Configuration.Instance.Load();
+            if (!Directory.Exists("Settings"))
+                Directory.CreateDirectory("Settings");
+			Utility.Configuration.Instance.Load( this );
 			Utility.Logger.Instance.LogAdded += new Utility.LogAddedEventHandler( ( Utility.Logger.LogData data ) => {
 				if ( InvokeRequired ) {
 					// Invokeはメッセージキューにジョブを投げて待つので、別のBeginInvokeされたジョブが既にキューにあると、
@@ -278,6 +276,8 @@ namespace ElectronicObserver.Window {
 
 			StripMenu_File_Layout_LockLayout.Checked = c.Life.LockLayout;
 			//MainDockPanel.CanCloseFloatWindowInLock = c.Life.CanCloseFloatWindowInLock;
+
+			StripMenu_File_Layout_TopMost.Checked = c.Life.TopMost;
 
 			if ( !c.Control.UseSystemVolume )
 				_volumeUpdateState = -1;
@@ -1179,6 +1179,12 @@ namespace ElectronicObserver.Window {
 
 		}
 
+		private void StripMenu_File_Layout_TopMost_Click( object sender, EventArgs e ) {
+
+			Utility.Configuration.Config.Life.TopMost = StripMenu_File_Layout_TopMost.Checked;
+			ConfigurationChanged();
+
+		}
 
 
 
@@ -1200,68 +1206,80 @@ namespace ElectronicObserver.Window {
 
 		#region フォーム表示
 
+		/// <summary>
+		/// 子フォームを表示します。既に表示されている場合はフォームをある点に移動します。（失踪対策）
+		/// </summary>
+		/// <param name="form"></param>
+		private void ShowForm( DockContent form ) {
+			if ( form.IsFloat && form.Visible ) {
+				form.FloatPane.FloatWindow.Location = new Point( 128, 128 );
+			}
+
+			form.Show( MainDockPanel );
+		}
+
 		private void StripMenu_View_Fleet_1_Click( object sender, EventArgs e ) {
-			fFleet[0].Show( MainDockPanel );
+			ShowForm( fFleet[0] );
 		}
 
 		private void StripMenu_View_Fleet_2_Click( object sender, EventArgs e ) {
-			fFleet[1].Show( MainDockPanel );
+			ShowForm( fFleet[1] );
 		}
 
 		private void StripMenu_View_Fleet_3_Click( object sender, EventArgs e ) {
-			fFleet[2].Show( MainDockPanel );
+			ShowForm( fFleet[2] );
 		}
 
 		private void StripMenu_View_Fleet_4_Click( object sender, EventArgs e ) {
-			fFleet[3].Show( MainDockPanel );
+			ShowForm( fFleet[3] );
 		}
 
 		private void StripMenu_View_Dock_Click( object sender, EventArgs e ) {
-			fDock.Show( MainDockPanel );
+			ShowForm( fDock );
 		}
 
 		private void StripMenu_View_Arsenal_Click( object sender, EventArgs e ) {
-			fArsenal.Show( MainDockPanel );
+			ShowForm( fArsenal );
 		}
 
 		private void StripMenu_View_Headquarters_Click( object sender, EventArgs e ) {
-			fHeadquarters.Show( MainDockPanel );
+			ShowForm( fHeadquarters );
 		}
 
 		private void StripMenu_View_Information_Click( object sender, EventArgs e ) {
-			fInformation.Show( MainDockPanel );
+			ShowForm( fInformation );
 		}
 
 		private void StripMenu_View_Compass_Click( object sender, EventArgs e ) {
-			fCompass.Show( MainDockPanel );
+			ShowForm( fCompass );
 		}
 
 		private void StripMenu_View_Log_Click( object sender, EventArgs e ) {
-			fLog.Show( MainDockPanel );
+			ShowForm( fLog );
 		}
 
 		private void StripMenu_View_Quest_Click( object sender, EventArgs e ) {
-			fQuest.Show( MainDockPanel );
+			ShowForm( fQuest );
 		}
 
 		private void StripMenu_View_Battle_Click( object sender, EventArgs e ) {
-			fBattle.Show( MainDockPanel );
+			ShowForm( fBattle );
 		}
 
 		private void StripMenu_View_FleetOverview_Click( object sender, EventArgs e ) {
-			fFleetOverview.Show( MainDockPanel );
+			ShowForm( fFleetOverview );
 		}
 
 		private void StripMenu_View_ShipGroup_Click( object sender, EventArgs e ) {
-			fShipGroup.Show( MainDockPanel );
+			ShowForm( fShipGroup );
 		}
 
 		private void StripMenu_View_Browser_Click( object sender, EventArgs e ) {
-			fBrowser.Show( MainDockPanel );
+			ShowForm( fBrowser );
 		}
 
 		private void StripMenu_WindowCapture_SubWindow_Click( object sender, EventArgs e ) {
-			fWindowCapture.Show( MainDockPanel );
+			ShowForm( fWindowCapture );
 		}
 
         private void StripMenu_View_XPCalculator_Click(object sender, EventArgs e)
@@ -1278,7 +1296,6 @@ namespace ElectronicObserver.Window {
 
 
 
-
-
+        
     }
 }
